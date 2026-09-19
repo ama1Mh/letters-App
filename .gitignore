@@ -32,3 +32,64 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# --- LetterApp additions ---
+
+# Secrets / env (never commit; keep the example file)
+.env
+.env.*
+!.env.example
+*.pem
+*.p8
+*.p12
+*.key
+*.mobileprovision
+service-account*.json
+credentials.json
+
+# Node / package managers
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Expo / React Native
+.expo/
+.expo-shared/
+dist/
+web-build/
+expo-env.d.ts
+.metro-health-check*
+
+# Continuous Native Generation (expo prebuild output; see PLAN.md)
+android/
+ios/
+Pods/
+
+# EAS
+.eas/
+eas-build-local/
+
+# TypeScript / test / tooling output
+*.tsbuildinfo
+coverage/
+.eslintcache
+.jest-cache/
+
+# Supabase local dev
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+supabase/functions/.env*
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
