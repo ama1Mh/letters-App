@@ -167,6 +167,7 @@ Implementation notes (design details built on the rules above):
 | DEC-031 | Email + password (verified) and Google Sign-In; Apple Sign-In with iOS | Default |
 | DEC-032 | Crash reporting: Sentry; analytics: opt-in only | Default |
 | DEC-033 | Monetization out of scope for MVP | Default |
+| DEC-034 | **Branching model (2026-09-19, owner):** `main` = stable/release · `dev` = integration/development · `feature/*` = feature branches created from `dev` and merged back into `dev` · `dev` merges into `main` only for stable releases. Repo has `.gitattributes` (`* text=auto eol=lf`) and `core.longpaths=true` (repo-local) | Accepted |
 
 ---
 
@@ -189,3 +190,4 @@ Implementation notes (design details built on the rules above):
 | 2026-09-18 | Created. Recorded owner decisions 1–6 (temporary name, framework, receive setting = invite-only default, email search opt-in, Latin usernames, preset avatars, `letterapp://` scheme, Arabic/MSA/Western digits/Gregorian). Added DEC-007 (pen-pal connection flow) as *needs confirmation*. |
 | 2026-09-18 | **DEC-007 → Accepted.** Request + accept/decline flow is in the MVP alongside invite link/code/QR (auto-accepted). Rules recorded; OPEN-1 removed. Cooldown/limit numbers explicitly provisional (OPEN-5). |
 | 2026-09-18 | **OPEN-3 resolved:** development Android package ID = `com.letterapp.dev` (dev-only; production ID decided at naming freeze). |
+| 2026-09-19 | Phase 1 started (owner "go"). Added DEC-034 (branching model, `.gitattributes`, `core.longpaths`). |
