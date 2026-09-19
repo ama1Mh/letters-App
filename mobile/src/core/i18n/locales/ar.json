@@ -1,0 +1,37 @@
+{
+  "app": {
+    "name": "LetterApp"
+  },
+  "tabs": {
+    "inbox": "الوارد",
+    "drafts": "المسودات",
+    "sent": "المرسلة",
+    "profile": "الملف الشخصي"
+  },
+  "inbox": {
+    "emptyTitle": "لا توجد رسائل بعد",
+    "emptyBody": "ستظهر هنا الرسائل الواردة."
+  },
+  "drafts": {
+    "emptyTitle": "لا توجد مسودات",
+    "emptyBody": "ستظهر هنا الرسائل التي لم تُرسل بعد."
+  },
+  "sent": {
+    "emptyTitle": "لا توجد رسائل مرسلة",
+    "emptyBody": "ستظهر هنا الرسائل المرسلة والمجدولة."
+  },
+  "profile": {
+    "language": "اللغة"
+  },
+  "language": {
+    "title": "اللغة",
+    "system": "لغة الجهاز",
+    "systemHint": "يتبع إعدادات الجهاز",
+    "english": "English",
+    "arabic": "العربية",
+    "restartTitle": "إعادة التشغيل مطلوبة",
+    "restartMessage": "يلزم إعادة تشغيل التطبيق لتغيير اتجاه الواجهة.",
+    "restartNow": "إعادة التشغيل الآن",
+    "restartLater": "لاحقًا"
+  }
+}

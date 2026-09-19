@@ -5,7 +5,7 @@ const expoConfig = require('eslint-config-expo/flat');
 const i18next = require('eslint-plugin-i18next');
 
 const SOURCE_FILES = ['app/**/*.{ts,tsx}', 'src/**/*.{ts,tsx}'];
-const TEST_FILES = ['**/__tests__/**', '**/*.test.{ts,tsx}'];
+const TEST_FILES = ['**/__tests__/**', '**/*.test.{ts,tsx}', 'jest.setup.ts'];
 
 // --- Rule 1: physical (left/right) style properties are banned; use logical ones. ---
 // Matches: marginLeft/Right, paddingLeft/Right, left, right, borderLeft/Right(Width|Color),

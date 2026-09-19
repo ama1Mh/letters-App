@@ -26,6 +26,9 @@ const config: ExpoConfig = {
   },
   plugins: [
     'expo-router',
+    // Declares en/ar to the OS (per-app language on Android 13+) and RTL support. `forcesRTL` is
+    // deliberately unset: direction is managed at runtime by src/core/i18n/direction.ts.
+    ['expo-localization', { supportsRTL: true, supportedLocales: ['en', 'ar'] }],
     [
       'expo-splash-screen',
       {

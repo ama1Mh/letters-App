@@ -1,0 +1,37 @@
+{
+  "app": {
+    "name": "LetterApp"
+  },
+  "tabs": {
+    "inbox": "Inbox",
+    "drafts": "Drafts",
+    "sent": "Sent",
+    "profile": "Profile"
+  },
+  "inbox": {
+    "emptyTitle": "No letters yet",
+    "emptyBody": "Letters you receive will appear here."
+  },
+  "drafts": {
+    "emptyTitle": "No drafts",
+    "emptyBody": "Letters you have not sent yet will appear here."
+  },
+  "sent": {
+    "emptyTitle": "No sent letters",
+    "emptyBody": "Sent and scheduled letters will appear here."
+  },
+  "profile": {
+    "language": "Language"
+  },
+  "language": {
+    "title": "Language",
+    "system": "Device language",
+    "systemHint": "Follows your device settings",
+    "english": "English",
+    "arabic": "العربية",
+    "restartTitle": "Restart required",
+    "restartMessage": "The app needs to restart to change the layout direction.",
+    "restartNow": "Restart now",
+    "restartLater": "Later"
+  }
+}
