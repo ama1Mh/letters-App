@@ -3,7 +3,7 @@
 Digital letter-writing app: create letters, save drafts, send now or schedule, receive/reply, customize letter design, get notified on delivery. Android first, iOS later. **Arabic + English (RTL/LTR) from day one.**
 
 ## Project status
-**Planning only (Phase 0). No application code exists.** Do not scaffold or implement anything until the owner says "go" for a specific phase. This directory is not yet a git repository.
+**Planning only (Phase 0). No application code exists.** Do not scaffold or implement anything until the owner says "go" for a specific phase. This directory is a git repository (working branch `dev`, remote `origin`).
 
 ## Read first
 1. `docs/DECISIONS.md` — **authoritative** decisions. If it conflicts with `docs/PLAN.md`, DECISIONS.md wins.
@@ -75,4 +75,4 @@ Not valid until Phase 1 creates the project. Planned: `npx expo start`, `npx exp
 ## Environment (this machine)
 - Windows 11, PowerShell primary (Git Bash available). Project path is short (`D:\dev\tab\letters`) — keep it that way (Windows path-length issues with Android builds).
 - Use `.gitattributes` with LF line endings for source files when the repo is initialized.
-- Android SDK is expected at `D:\Android\Sdk` (env vars already set). Current setup state and to-dos: `docs/PHASE0_CHECKLIST.md`.
+- Android SDK is at `D:\APPS\Android\Sdk` (`ANDROID_HOME` / `ANDROID_SDK_ROOT`, env vars already set); AVDs are stored at `D:\APPS\Android\avd` (`ANDROID_AVD_HOME`). Current setup state and to-dos: `docs/PHASE0_CHECKLIST.md`.
