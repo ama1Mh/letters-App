@@ -55,20 +55,66 @@ export function probeIntl(): IntlProbeRow[] {
 
 export const PLURAL_SAMPLES = [0, 1, 2, 3, 11, 100] as const;
 
-/** Arabic needs all six CLDR categories; Hermes/ICU support is what we are checking. */
-export function probeArabicPlurals(): { count: number; category: string }[] {
+/** Which Intl constructors this JS engine actually provides (Hermes ships only some of them). */
+export const INTL_FEATURES = [
+  'DateTimeFormat',
+  'NumberFormat',
+  'PluralRules',
+  'RelativeTimeFormat',
+  'ListFormat',
+  'Collator',
+  'Segmenter',
+  'Locale',
+  'DisplayNames',
+] as const;
+
+export function probeIntlSupport(): { feature: string; available: boolean }[] {
+  const intl = (globalThis as { Intl?: Record<string, unknown> }).Intl;
+  return INTL_FEATURES.map((feature) => ({
+    feature,
+    available: typeof intl?.[feature] === 'function',
+  }));
+}
+
+export function formatIntlSupport(): string {
+  return probeIntlSupport()
+    .map(({ feature, available }) => feature + ':' + (available ? 'yes' : 'NO'))
+    .join('  ');
+}
+
+/**
+ * Arabic needs all six CLDR categories. Returns null when `Intl.PluralRules` is missing, which
+ * is itself a finding: i18next depends on it for plurals.
+ */
+export function probeArabicPlurals(): { count: number; category: string }[] | null {
+  if (typeof Intl === 'undefined' || typeof Intl.PluralRules !== 'function') return null;
   const rules = new Intl.PluralRules('ar');
   return PLURAL_SAMPLES.map((count) => ({ count, category: rules.select(count) }));
 }
 
-const STRONG_RTL = /[֐-ࣿיִ-﷿ﹰ-﻿]/u;
-const STRONG_LTR = /[A-Za-zÀ-ɏ]/u;
+// Code-point ranges (not regex escapes): Hebrew/Arabic blocks and Arabic presentation forms.
+function isStrongRtl(code: number): boolean {
+  return (
+    (code >= 0x0590 && code <= 0x08ff) ||
+    (code >= 0xfb1d && code <= 0xfdff) ||
+    (code >= 0xfe70 && code <= 0xfeff)
+  );
+}
+
+function isStrongLtr(code: number): boolean {
+  return (
+    (code >= 0x41 && code <= 0x5a) ||
+    (code >= 0x61 && code <= 0x7a) ||
+    (code >= 0xc0 && code <= 0x24f)
+  );
+}
 
 /** First-strong direction of a text, ignoring digits/punctuation. `null` when undecidable. */
 export function firstStrongDirection(text: string): 'ltr' | 'rtl' | null {
   for (const char of text) {
-    if (STRONG_RTL.test(char)) return 'rtl';
-    if (STRONG_LTR.test(char)) return 'ltr';
+    const code = char.codePointAt(0) ?? 0;
+    if (isStrongRtl(code)) return 'rtl';
+    if (isStrongLtr(code)) return 'ltr';
   }
   return null;
 }

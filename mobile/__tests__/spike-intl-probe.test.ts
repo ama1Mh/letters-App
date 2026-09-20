@@ -18,7 +18,7 @@ describe('spike intl probe (Node ICU; the real answer for Hermes comes from the 
   });
 
   it('reports all six Arabic plural categories', () => {
-    const categories = probeArabicPlurals().map((row) => row.category);
+    const categories = (probeArabicPlurals() ?? []).map((row) => row.category);
     expect(categories).toEqual(['zero', 'one', 'two', 'few', 'many', 'other']);
   });
 

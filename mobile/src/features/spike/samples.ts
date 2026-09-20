@@ -56,7 +56,9 @@ export const LABELS = {
   fonts: 'Arabic fonts (system families)',
   intl: 'Intl (Hermes)',
   intlBare: 'bare locales below show what to avoid',
+  support: 'Intl constructors available',
   plurals: 'Arabic plural categories',
+  pluralsMissing: 'Intl.PluralRules is MISSING in this engine',
   datePicker:
     'Native date picker language: NOT in this build. Needs @react-native-community/datetimepicker (native module, requires a rebuild). Awaiting owner approval.',
   language: 'Language switch and reload',

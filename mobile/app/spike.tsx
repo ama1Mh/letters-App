@@ -10,7 +10,12 @@ import { I18nManager, Platform, Pressable, ScrollView, Text, TextInput, View } f
 import { AppText } from '@/components/AppText';
 import { reloadApp } from '@/core/i18n/direction';
 import { useTheme } from '@/core/theme/useTheme';
-import { firstStrongDirection, probeArabicPlurals, probeIntl } from '@/features/spike/intlProbe';
+import {
+  firstStrongDirection,
+  probeArabicPlurals,
+  probeIntl,
+  formatIntlSupport,
+} from '@/features/spike/intlProbe';
 import {
   FONT_FAMILIES,
   FONT_WEIGHTS,
@@ -219,8 +224,14 @@ function IntlSection() {
           <Mono>{`  calendar=${row.calendar} numbering=${row.numberingSystem}`}</Mono>
         </View>
       ))}
+      <AppText variant="title">{LABELS.support}</AppText>
+      <Mono>{formatIntlSupport()}</Mono>
       <AppText variant="title">{LABELS.plurals}</AppText>
-      <Mono>{plurals.map(({ count, category }) => `${count}:${category}`).join('  ')}</Mono>
+      <Mono>
+        {plurals
+          ? plurals.map(({ count, category }) => `${count}:${category}`).join('  ')
+          : LABELS.pluralsMissing}
+      </Mono>
       <AppText variant="muted">{LABELS.datePicker}</AppText>
     </Section>
   );
