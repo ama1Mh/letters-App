@@ -1,3 +1,5 @@
+import './polyfills'; // Must stay first: installs Intl.PluralRules before i18next is imported.
+
 import { getLocales } from 'expo-localization';
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';

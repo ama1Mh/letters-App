@@ -66,6 +66,7 @@ export const INTL_FEATURES = [
   'Segmenter',
   'Locale',
   'DisplayNames',
+  'getCanonicalLocales',
 ] as const;
 
 export function probeIntlSupport(): { feature: string; available: boolean }[] {
@@ -76,6 +77,7 @@ export function probeIntlSupport(): { feature: string; available: boolean }[] {
   }));
 }
 
+/** Availability only: Hermes reports every function as native code, so we cannot tell a polyfill apart. */
 export function formatIntlSupport(): string {
   return probeIntlSupport()
     .map(({ feature, available }) => feature + ':' + (available ? 'yes' : 'NO'))
@@ -83,12 +85,12 @@ export function formatIntlSupport(): string {
 }
 
 /**
- * Arabic needs all six CLDR categories. Returns null when `Intl.PluralRules` is missing, which
- * is itself a finding: i18next depends on it for plurals.
+ * Plural category per sample count. Arabic needs all six CLDR categories, English two. Returns
+ * null when `Intl.PluralRules` is missing (the spike's original finding, DEC-037).
  */
-export function probeArabicPlurals(): { count: number; category: string }[] | null {
+export function probePlurals(locale: string): { count: number; category: string }[] | null {
   if (typeof Intl === 'undefined' || typeof Intl.PluralRules !== 'function') return null;
-  const rules = new Intl.PluralRules('ar');
+  const rules = new Intl.PluralRules(locale);
   return PLURAL_SAMPLES.map((count) => ({ count, category: rules.select(count) }));
 }
 

@@ -1,9 +1,5 @@
 // TEMPORARY with the Phase 1 spike: delete together with src/features/spike/.
-import {
-  firstStrongDirection,
-  probeArabicPlurals,
-  probeIntl,
-} from '../src/features/spike/intlProbe';
+import { firstStrongDirection, probePlurals, probeIntl } from '../src/features/spike/intlProbe';
 
 describe('spike intl probe (Node ICU; the real answer for Hermes comes from the device)', () => {
   it('explicit locales give Gregorian dates and Western digits', () => {
@@ -17,9 +13,23 @@ describe('spike intl probe (Node ICU; the real answer for Hermes comes from the 
     }
   });
 
-  it('reports all six Arabic plural categories', () => {
-    const categories = (probeArabicPlurals() ?? []).map((row) => row.category);
-    expect(categories).toEqual(['zero', 'one', 'two', 'few', 'many', 'other']);
+  it('reports plural categories per language', () => {
+    expect((probePlurals('ar') ?? []).map((row) => row.category)).toEqual([
+      'zero',
+      'one',
+      'two',
+      'few',
+      'many',
+      'other',
+    ]);
+    expect((probePlurals('en') ?? []).map((row) => row.category)).toEqual([
+      'other',
+      'one',
+      'other',
+      'other',
+      'other',
+      'other',
+    ]);
   });
 
   it('detects first-strong direction', () => {

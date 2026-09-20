@@ -12,7 +12,7 @@ import { reloadApp } from '@/core/i18n/direction';
 import { useTheme } from '@/core/theme/useTheme';
 import {
   firstStrongDirection,
-  probeArabicPlurals,
+  probePlurals,
   probeIntl,
   formatIntlSupport,
 } from '@/features/spike/intlProbe';
@@ -22,6 +22,7 @@ import {
   LABELS,
   LRI,
   MIXED_LINES,
+  PLURAL_LOCALES,
   PDI,
   SAMPLE_ARABIC,
   SAMPLE_LATIN,
@@ -86,6 +87,10 @@ function RuntimeSection() {
     `I18nManager.isRTL: ${String(constants.isRTL)}`,
     `doLeftAndRightSwapInRTL: ${String(constants.doLeftAndRightSwapInRTL)}`,
     `device languageTag: ${locale?.languageTag} (${locale?.textDirection})`,
+    `device locales: ${getLocales()
+      .map((item) => item.languageTag)
+      .join(', ')}`,
+    `Intl default locale: ${new Intl.DateTimeFormat().resolvedOptions().locale}`,
     `device digits: decimal '${locale?.decimalSeparator}' group '${locale?.digitGroupingSeparator}'`,
     `device calendar: ${calendar?.calendar} tz ${calendar?.timeZone}`,
     `platform: ${Platform.OS} ${String(Platform.Version)}`,
@@ -212,7 +217,7 @@ function FontsSection() {
 function IntlSection() {
   const { spacing } = useTheme();
   const rows = probeIntl();
-  const plurals = probeArabicPlurals();
+  const plurals = { ar: probePlurals('ar'), en: probePlurals('en') };
   return (
     <Section title={LABELS.intl}>
       <AppText variant="muted">{LABELS.intlBare}</AppText>
@@ -227,11 +232,15 @@ function IntlSection() {
       <AppText variant="title">{LABELS.support}</AppText>
       <Mono>{formatIntlSupport()}</Mono>
       <AppText variant="title">{LABELS.plurals}</AppText>
-      <Mono>
-        {plurals
-          ? plurals.map(({ count, category }) => `${count}:${category}`).join('  ')
-          : LABELS.pluralsMissing}
-      </Mono>
+      {PLURAL_LOCALES.map((locale) => (
+        <Mono key={locale}>
+          {plurals[locale]
+            ? locale +
+              ' ' +
+              plurals[locale].map(({ count, category }) => count + ':' + category).join('  ')
+            : locale + ' ' + LABELS.pluralsMissing}
+        </Mono>
+      ))}
       <AppText variant="muted">{LABELS.datePicker}</AppText>
     </Section>
   );

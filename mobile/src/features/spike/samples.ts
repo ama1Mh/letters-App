@@ -35,6 +35,8 @@ export const MIXED_LINES: readonly {
   },
 ];
 
+export const PLURAL_LOCALES = ['ar', 'en'] as const;
+
 export const FONT_FAMILIES = ['sans-serif', 'sans-serif-medium', 'serif', 'monospace'] as const;
 export const FONT_WEIGHTS = ['400', '600', '700'] as const;
 
@@ -57,7 +59,7 @@ export const LABELS = {
   intl: 'Intl (Hermes)',
   intlBare: 'bare locales below show what to avoid',
   support: 'Intl constructors available',
-  plurals: 'Arabic plural categories',
+  plurals: 'Plural categories (Intl.PluralRules)',
   pluralsMissing: 'Intl.PluralRules is MISSING in this engine',
   datePicker:
     'Native date picker language: NOT in this build. Needs @react-native-community/datetimepicker (native module, requires a rebuild). Awaiting owner approval.',
