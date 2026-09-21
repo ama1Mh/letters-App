@@ -3,7 +3,7 @@
 Digital letter-writing app: create letters, save drafts, send now or schedule, receive/reply, customize letter design, get notified on delivery. Android first, iOS later. **Arabic + English (RTL/LTR) from day one.**
 
 ## Project status
-**Phase 1 (Foundation + i18n/RTL spike) is in progress.** `mobile/` exists (Expo SDK 57, i18n en/ar, RTL manager, tabs shell); `shared/` and `supabase/` do not exist yet. Do not start the next phase until the owner says "go" for it. This directory is a git repository (working branch `dev`, remote `origin`).
+**Phase 1 (Foundation + i18n/RTL spike) is done; Phase 2 (Auth & profiles) is in progress.** `mobile/` exists (Expo SDK 57, i18n en/ar, RTL manager, tabs shell, username/display-name domain rules); `supabase/` has the first migration (`profiles`) and pgTAP tests, run in CI only (no local Docker); `shared/` does not exist yet. Do not start the next phase until the owner says "go" for it. This directory is a git repository (working branch `dev`, remote `origin`).
 
 ## Read first
 1. `docs/DECISIONS.md` — **authoritative** decisions. If it conflicts with `docs/PLAN.md`, DECISIONS.md wins.
@@ -22,7 +22,7 @@ Digital letter-writing app: create letters, save drafts, send now or schedule, r
 React Native + Expo (current stable SDK) + **TypeScript strict** · Expo Router · TanStack Query · Zustand · react-hook-form + zod · expo-sqlite (offline drafts) · expo-secure-store · i18next + expo-localization · Supabase (Auth, Postgres/RLS, Edge Functions in Deno/TS, pg_cron, Realtime) · Expo Push Service · Jest + RNTL · pgTAP · Maestro · EAS Build.
 Use **development builds**, not Expo Go, for anything touching push, Google Sign-In, or native modules.
 
-## Layout (`docs/` and `mobile/` exist; `shared/` and `supabase/` are planned)
+## Layout (`docs/`, `mobile/` and `supabase/` exist; `shared/` is planned)
 ```
 docs/            PLAN.md, DECISIONS.md, PHASE0_CHECKLIST.md, ARABIC_REVIEW.md (Phase 1)
 shared/          design-catalog.json, avatar-catalog.json  (used by app AND DB validation)
