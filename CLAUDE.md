@@ -54,6 +54,8 @@ adb shell am start -a android.intent.action.VIEW -d "letterapp://expo-developmen
 ```
 Gotchas (details in `docs/DECISIONS.md`, OPEN-4 findings): `CI=1` disables Metro file watching, so restart Metro after edits; killing the `npx` task does not stop Metro (kill the node process on port 8081); the emulator needs the `debug_http_host` preference set to `localhost:8081` or bundle downloads fail intermittently; in Git Bash set `MSYS_NO_PATHCONV=1` for `adb` paths.
 
+App configuration: copy `mobile/.env.example` to `mobile/.env` (git-ignored) and fill in the Supabase URL and anon/publishable key from the dashboard, never a `service_role` key; restart Metro after editing. Without it the app still starts, and only the Supabase client (created on first use) reports the missing values.
+
 Not yet valid or not yet verified: `npx supabase …` (Phase 2), `npx expo run:android`, EAS builds. Add them here when they are verified.
 
 ## Hard rules
