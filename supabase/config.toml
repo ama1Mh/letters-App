@@ -1,0 +1,9 @@
+# Local Supabase stack, used by CI (`supabase start`, `supabase test db`) and by anyone with Docker.
+# Kept deliberately minimal: unspecified keys take the CLI defaults. Auth redirect URLs and the
+# Postgres major version are added when the app's email flows and the hosted project exist.
+project_id = "letters"
+
+[auth.email]
+# Users must confirm their email before they can sign in (PLAN §6.3).
+enable_confirmations = true
+double_confirm_changes = true
