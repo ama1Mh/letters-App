@@ -3,7 +3,7 @@
 Digital letter-writing app: create letters, save drafts, send now or schedule, receive/reply, customize letter design, get notified on delivery. Android first, iOS later. **Arabic + English (RTL/LTR) from day one.**
 
 ## Project status
-**Planning only (Phase 0). No application code exists.** Do not scaffold or implement anything until the owner says "go" for a specific phase. This directory is a git repository (working branch `dev`, remote `origin`).
+**Phase 1 (Foundation + i18n/RTL spike) is in progress.** `mobile/` exists (Expo SDK 57, i18n en/ar, RTL manager, tabs shell, a temporary `__DEV__`-only `/spike` route); `shared/` and `supabase/` do not exist yet. Do not start the next phase until the owner says "go" for it. This directory is a git repository (working branch `dev`, remote `origin`).
 
 ## Read first
 1. `docs/DECISIONS.md` — **authoritative** decisions. If it conflicts with `docs/PLAN.md`, DECISIONS.md wins.
@@ -22,7 +22,7 @@ Digital letter-writing app: create letters, save drafts, send now or schedule, r
 React Native + Expo (current stable SDK) + **TypeScript strict** · Expo Router · TanStack Query · Zustand · react-hook-form + zod · expo-sqlite (offline drafts) · expo-secure-store · i18next + expo-localization · Supabase (Auth, Postgres/RLS, Edge Functions in Deno/TS, pg_cron, Realtime) · Expo Push Service · Jest + RNTL · pgTAP · Maestro · EAS Build.
 Use **development builds**, not Expo Go, for anything touching push, Google Sign-In, or native modules.
 
-## Planned layout (does not exist yet)
+## Layout (`docs/` and `mobile/` exist; `shared/` and `supabase/` are planned)
 ```
 docs/            PLAN.md, DECISIONS.md, PHASE0_CHECKLIST.md, ARABIC_REVIEW.md (Phase 1)
 shared/          design-catalog.json, avatar-catalog.json  (used by app AND DB validation)
@@ -32,7 +32,29 @@ supabase/        migrations/, functions/, tests/ (pgTAP)
 `domain/` is pure TypeScript (no React, no Supabase imports): permission rules, direction detection, username/display-name validation, design validation.
 
 ## Commands
-Not valid until Phase 1 creates the project. Planned: `npx expo start`, `npx expo run:android` / EAS dev build, `npm test`, `npm run lint`, `npm run typecheck`, `npx supabase db reset`, `npx supabase test db`. **Replace this section with the real, verified commands at the end of Phase 1.**
+Verified on this machine (Windows, 7 GB RAM) on 2026-09-20. Run from `mobile/` unless noted. CI (`.github/workflows/ci.yml`) runs the first four.
+```
+npm run typecheck | npm run lint | npm run format:check | npm test
+```
+Local Android dev build, one ABI (`APP_VARIANT` is `dev`, `preview` or `production`; production throws until the naming freeze):
+```
+APP_VARIANT=dev npx expo prebuild --platform android --no-install     # creates git-ignored android/
+cd android && APP_VARIANT=dev ./gradlew.bat app:assembleDebug -PreactNativeArchitectures=x86_64 --max-workers=2
+./gradlew.bat --stop                                                   # free the Gradle daemon before booting the emulator
+```
+APK: `mobile/android/app/build/outputs/apk/debug/app-debug.apk` (~1.5 h cold, minutes when cached).
+
+Run on the emulator (**never run Gradle and the emulator at the same time**; Metro + emulator is already tight):
+```
+emulator -avd Pixel5_API35 -no-snapshot-save -no-boot-anim -memory 1536
+adb install -r <apk above>
+adb reverse tcp:8081 tcp:8081
+APP_VARIANT=dev CI=1 npx expo start --dev-client --port 8081
+adb shell am start -a android.intent.action.VIEW -d "letterapp://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081" com.letterapp.dev
+```
+Gotchas (details in `docs/DECISIONS.md`, OPEN-4 findings): `CI=1` disables Metro file watching, so restart Metro after edits; killing the `npx` task does not stop Metro (kill the node process on port 8081); the emulator needs the `debug_http_host` preference set to `localhost:8081` or bundle downloads fail intermittently; in Git Bash set `MSYS_NO_PATHCONV=1` for `adb` paths. Open the spike screen with `letterapp://spike`.
+
+Not yet valid or not yet verified: `npx supabase …` (Phase 2), `npx expo run:android`, EAS builds. Add them here when they are verified.
 
 ## Hard rules
 
