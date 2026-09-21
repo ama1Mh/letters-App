@@ -3,11 +3,12 @@ const preset = require('jest-expo/jest-preset');
 /** @type {import('jest').Config} */
 module.exports = {
   preset: 'jest-expo',
-  // @formatjs packages ship ES modules only; let Babel transform them (needed by the Intl polyfills).
+  // @formatjs (Intl polyfills) and @noble (AES for the session storage) ship ES modules only; let
+  // Babel transform them.
   transformIgnorePatterns: [
     preset.transformIgnorePatterns[0].replace(
       '|standard-navigation))',
-      '|standard-navigation|@formatjs))',
+      '|standard-navigation|@formatjs|@noble))',
     ),
     ...preset.transformIgnorePatterns.slice(1),
   ],
