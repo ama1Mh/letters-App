@@ -25,6 +25,12 @@ const TEMPORARY_NAME = 'LetterApp';
 const SLUG = 'letterapp';
 const ANDROID_PACKAGE_BASE = 'com.letterapp';
 
+/**
+ * Brand words that usernames and display names may not take (DEC-010). Add the final brand at the
+ * naming freeze (OPEN-2). The database keeps its own copy of this list, so change both together.
+ */
+export const RESERVED_BRAND_WORDS: readonly string[] = [SLUG];
+
 const DEFAULT_VARIANT: AppVariant = 'dev';
 
 const NON_PRODUCTION: Record<Exclude<AppVariant, 'production'>, BrandConfig> = {
