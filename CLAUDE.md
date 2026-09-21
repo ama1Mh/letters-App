@@ -3,7 +3,7 @@
 Digital letter-writing app: create letters, save drafts, send now or schedule, receive/reply, customize letter design, get notified on delivery. Android first, iOS later. **Arabic + English (RTL/LTR) from day one.**
 
 ## Project status
-**Phase 1 (Foundation + i18n/RTL spike) is in progress.** `mobile/` exists (Expo SDK 57, i18n en/ar, RTL manager, tabs shell, a temporary `__DEV__`-only `/spike` route); `shared/` and `supabase/` do not exist yet. Do not start the next phase until the owner says "go" for it. This directory is a git repository (working branch `dev`, remote `origin`).
+**Phase 1 (Foundation + i18n/RTL spike) is in progress.** `mobile/` exists (Expo SDK 57, i18n en/ar, RTL manager, tabs shell); `shared/` and `supabase/` do not exist yet. Do not start the next phase until the owner says "go" for it. This directory is a git repository (working branch `dev`, remote `origin`).
 
 ## Read first
 1. `docs/DECISIONS.md` — **authoritative** decisions. If it conflicts with `docs/PLAN.md`, DECISIONS.md wins.
@@ -52,7 +52,7 @@ adb reverse tcp:8081 tcp:8081
 APP_VARIANT=dev CI=1 npx expo start --dev-client --port 8081
 adb shell am start -a android.intent.action.VIEW -d "letterapp://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081" com.letterapp.dev
 ```
-Gotchas (details in `docs/DECISIONS.md`, OPEN-4 findings): `CI=1` disables Metro file watching, so restart Metro after edits; killing the `npx` task does not stop Metro (kill the node process on port 8081); the emulator needs the `debug_http_host` preference set to `localhost:8081` or bundle downloads fail intermittently; in Git Bash set `MSYS_NO_PATHCONV=1` for `adb` paths. Open the spike screen with `letterapp://spike`.
+Gotchas (details in `docs/DECISIONS.md`, OPEN-4 findings): `CI=1` disables Metro file watching, so restart Metro after edits; killing the `npx` task does not stop Metro (kill the node process on port 8081); the emulator needs the `debug_http_host` preference set to `localhost:8081` or bundle downloads fail intermittently; in Git Bash set `MSYS_NO_PATHCONV=1` for `adb` paths.
 
 Not yet valid or not yet verified: `npx supabase …` (Phase 2), `npx expo run:android`, EAS builds. Add them here when they are verified.
 
