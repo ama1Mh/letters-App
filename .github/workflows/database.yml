@@ -29,4 +29,20 @@ jobs:
       - name: Start the local stack (applies supabase/migrations)
         run: supabase start
       - name: Run pgTAP tests
-        run: supabase test db
+        run: |
+          set -o pipefail
+          supabase test db 2>&1 | tee pgtap.log
+      - name: Check that the tests really ran
+        # A green run with zero or few tests would be a silent failure. The summary is also
+        # published as an annotation so it can be read without downloading the logs.
+        if: always()
+        run: |
+          summary=$(grep -E '^(Files=|Result:)' pgtap.log | tr '\n' ' ')
+          echo "::notice title=pgTAP summary::${summary:-no summary line found}"
+          tests=$(grep -oE 'Tests=[0-9]+' pgtap.log | head -1 | cut -d= -f2)
+          # profiles.test.sql has 154 assertions today. Raise this floor when tests are added.
+          min=150
+          if [ -z "$tests" ] || [ "$tests" -lt "$min" ]; then
+            echo "::error title=pgTAP::expected at least $min tests, saw ${tests:-none}"
+            exit 1
+          fi
