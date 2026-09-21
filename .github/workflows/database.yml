@@ -1,0 +1,32 @@
+name: Database
+
+# Runs the pgTAP tests against a throwaway local Supabase stack (Docker on the runner), so no
+# cloud project or secrets are needed. Only triggers when database files change.
+on:
+  push:
+    branches: [dev, main, 'feature/**']
+    paths:
+      - 'supabase/**'
+      - '.github/workflows/database.yml'
+  pull_request:
+    paths:
+      - 'supabase/**'
+      - '.github/workflows/database.yml'
+
+concurrency:
+  group: database-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pgtap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Start the local stack (applies supabase/migrations)
+        run: supabase start
+      - name: Run pgTAP tests
+        run: supabase test db
