@@ -12,7 +12,9 @@ import type { BlobStore, KeyStore, RandomBytes } from './encryptedStorage';
 /** Bump the suffix to rotate the key format; old ciphertext is then discarded, not misread. */
 const ENCRYPTION_KEY_NAME = 'session-encryption-key-v1';
 
-// Readable after the first unlock so a background token refresh works, never synced or backed up.
+// `keychainAccessible` is an iOS (Keychain) setting; Android ignores it, and there the key is
+// protected by the Android Keystore instead. On iOS it makes the key readable after the first
+// unlock (so a background token refresh works) and keeps it on this device (no iCloud sync/backup).
 const SECURE_OPTIONS: SecureStore.SecureStoreOptions = {
   keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
 };

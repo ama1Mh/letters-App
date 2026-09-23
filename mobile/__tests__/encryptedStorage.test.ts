@@ -1,6 +1,8 @@
+import { gcm } from '@noble/ciphers/aes.js';
 import { randomBytes as nodeRandomBytes } from 'crypto';
 
 import { base64ToBytes, bytesToBase64 } from '../src/core/encoding/base64';
+import { encodeUtf8 } from '../src/core/encoding/utf8';
 import {
   BLOB_KEY_PREFIX,
   createEncryptedStorage,
@@ -215,6 +217,213 @@ describe('encrypted session storage', () => {
       expect(await storage.getItem('key-b')).toBeNull();
       expect(corruptions).toEqual(['decrypt_failed']);
       expect(await storage.getItem('key-a')).toBe(SESSION); // the original is untouched
+    });
+  });
+
+  describe('associated data', () => {
+    /** Seals `value` by hand into a blob: [version][nonce][ciphertext+tag], with chosen AAD. */
+    function sealByHand(opts: {
+      keyBase64: string;
+      headerVersion: number;
+      aad: Uint8Array;
+      value: string;
+    }) {
+      const nonce = randomBytes(NONCE_LENGTH);
+      const sealed = gcm(base64ToBytes(opts.keyBase64), nonce, opts.aad).encrypt(
+        encodeUtf8(opts.value),
+      );
+      const blob = new Uint8Array(1 + NONCE_LENGTH + sealed.length);
+      blob[0] = opts.headerVersion;
+      blob.set(nonce, 1);
+      blob.set(sealed, 1 + NONCE_LENGTH);
+      return bytesToBase64(blob);
+    }
+    const aadOf = (version: number, storageKey: string) =>
+      Uint8Array.from([version, ...encodeUtf8(storageKey)]);
+
+    async function storedKey() {
+      const stores = makeStorage();
+      await stores.storage.setItem('seed', 'seed'); // creates the encryption key
+      return { ...stores, keyBase64: stores.state.key as string };
+    }
+
+    it('accepts a blob sealed with the documented associated data (version byte + storage key)', async () => {
+      const { storage, blobs, keyBase64, corruptions } = await storedKey();
+      blobs.set(
+        BLOB_KEY_PREFIX + KEY,
+        sealByHand({
+          keyBase64,
+          headerVersion: FORMAT_VERSION,
+          aad: aadOf(FORMAT_VERSION, KEY),
+          value: 'by-hand',
+        }),
+      );
+      expect(await storage.getItem(KEY)).toBe('by-hand');
+      expect(corruptions).toEqual([]);
+    });
+
+    it('rejects a blob whose associated data lacks the version byte (storage key only)', async () => {
+      const { storage, blobs, keyBase64, corruptions } = await storedKey();
+      blobs.set(
+        BLOB_KEY_PREFIX + KEY,
+        sealByHand({
+          keyBase64,
+          headerVersion: FORMAT_VERSION,
+          aad: encodeUtf8(KEY),
+          value: 'legacy',
+        }),
+      );
+      expect(await storage.getItem(KEY)).toBeNull();
+      expect(corruptions).toEqual(['decrypt_failed']);
+    });
+
+    it('authenticates the version byte: a blob sealed for another version fails even with the accepted header', async () => {
+      const { storage, blobs, keyBase64, corruptions } = await storedKey();
+      // A valid GCM seal, but over version 2; only the header byte says 1.
+      blobs.set(
+        BLOB_KEY_PREFIX + KEY,
+        sealByHand({
+          keyBase64,
+          headerVersion: FORMAT_VERSION,
+          aad: aadOf(FORMAT_VERSION + 1, KEY),
+          value: 'other-version',
+        }),
+      );
+      expect(await storage.getItem(KEY)).toBeNull();
+      expect(corruptions).toEqual(['decrypt_failed']);
+    });
+
+    it('still binds the storage key', async () => {
+      const { storage, blobs, keyBase64, corruptions } = await storedKey();
+      blobs.set(
+        BLOB_KEY_PREFIX + KEY,
+        sealByHand({
+          keyBase64,
+          headerVersion: FORMAT_VERSION,
+          aad: aadOf(FORMAT_VERSION, 'some-other-key'),
+          value: 'wrong-key-binding',
+        }),
+      );
+      expect(await storage.getItem(KEY)).toBeNull();
+      expect(corruptions).toEqual(['decrypt_failed']);
+    });
+  });
+
+  describe('discarding invalid data', () => {
+    const NAME = BLOB_KEY_PREFIX + KEY;
+
+    /** Simulates a write that lands right after `getItem` read the blob: on the first read of the
+     *  blob, hands back what was there and then replaces it with `newer`. */
+    function writeAfterFirstRead(blobs: Map<string, string>, blobStore: BlobStore, newer: string) {
+      const realGet = blobStore.getItem.bind(blobStore);
+      let reads = 0;
+      blobStore.getItem = async (key) => {
+        const value = await realGet(key);
+        if (key === NAME && ++reads === 1) blobs.set(NAME, newer);
+        return value;
+      };
+    }
+
+    async function validBlobFor(value: string) {
+      const other = makeStorage();
+      await other.storage.setItem(KEY, value);
+      return { blob: other.blobs.get(NAME) as string, key: other.state.key as string };
+    }
+
+    it('keeps a newer value written while a tampered one was being rejected', async () => {
+      const { storage, blobs, blobStore, state, corruptions } = makeStorage();
+      await storage.setItem(KEY, SESSION);
+      const { blob: newer, key } = await validBlobFor('newer session');
+      state.key = key; // same key, so the newer blob is readable
+      editBlob(blobs, (b) => Uint8Array.from(b, (v, i) => (i === 20 ? v ^ 1 : v)));
+      writeAfterFirstRead(blobs, blobStore, newer);
+
+      expect(await storage.getItem(KEY)).toBeNull(); // the value that was read was invalid
+      expect(corruptions).toEqual(['decrypt_failed']); // and is still reported as such
+      expect(blobs.get(NAME)).toBe(newer); // but the newer blob was not deleted
+      expect(await storage.getItem(KEY)).toBe('newer session');
+    });
+
+    it('keeps a newer value written while a missing key was being handled', async () => {
+      const { storage, blobs, blobStore, state, corruptions } = makeStorage();
+      await storage.setItem(KEY, SESSION);
+      const { blob: newer } = await validBlobFor('newer session');
+      state.key = null;
+      writeAfterFirstRead(blobs, blobStore, newer);
+
+      expect(await storage.getItem(KEY)).toBeNull();
+      expect(corruptions).toEqual(['key_missing']);
+      expect(blobs.get(NAME)).toBe(newer);
+    });
+
+    it('keeps a newer value written while non-base64 text was being rejected', async () => {
+      const { storage, blobs, blobStore, corruptions } = makeStorage();
+      await storage.setItem(KEY, SESSION);
+      blobs.set(NAME, 'not base64 !!');
+      writeAfterFirstRead(blobs, blobStore, 'newer');
+
+      expect(await storage.getItem(KEY)).toBeNull();
+      expect(corruptions).toEqual(['invalid_format']);
+      expect(blobs.get(NAME)).toBe('newer');
+    });
+
+    it('still deletes the invalid blob when nothing changed', async () => {
+      const { storage, blobs } = makeStorage();
+      await storage.setItem(KEY, SESSION);
+      editBlob(blobs, (b) => Uint8Array.from(b, (v, i) => (i === 20 ? v ^ 1 : v)));
+      expect(await storage.getItem(KEY)).toBeNull();
+      expect(blobs.has(NAME)).toBe(false);
+    });
+
+    it('reports the original reason and returns null when deleting the invalid blob fails', async () => {
+      const { storage, blobs, blobStore, corruptions } = makeStorage();
+      await storage.setItem(KEY, SESSION);
+      editBlob(blobs, (b) => Uint8Array.from(b, (v, i) => (i === 20 ? v ^ 1 : v)));
+      blobStore.removeItem = async () => {
+        throw new Error('disk full');
+      };
+
+      expect(await storage.getItem(KEY)).toBeNull();
+      expect(corruptions).toEqual(['decrypt_failed']);
+      expect(blobs.has(NAME)).toBe(true); // left in place; the next read rejects it again
+    });
+
+    it('reports the original reason, and deletes nothing, when re-reading the blob fails', async () => {
+      const { storage, blobs, blobStore, corruptions } = makeStorage();
+      await storage.setItem(KEY, SESSION);
+      editBlob(blobs, (b) => Uint8Array.from(b, (v, i) => (i === 20 ? v ^ 1 : v)));
+      const realGet = blobStore.getItem.bind(blobStore);
+      let reads = 0;
+      blobStore.getItem = async (key) => {
+        if (++reads > 1) throw new Error('database locked');
+        return realGet(key);
+      };
+
+      expect(await storage.getItem(KEY)).toBeNull();
+      expect(corruptions).toEqual(['decrypt_failed']);
+      expect(blobs.has(NAME)).toBe(true);
+    });
+
+    it('does not swallow storage errors on the first read, on writes, or on removes', async () => {
+      const { storage, blobStore } = makeStorage();
+      await storage.setItem(KEY, SESSION);
+
+      const realGet = blobStore.getItem;
+      blobStore.getItem = async () => {
+        throw new Error('read failed');
+      };
+      await expect(storage.getItem(KEY)).rejects.toThrow('read failed');
+      blobStore.getItem = realGet;
+
+      blobStore.setItem = async () => {
+        throw new Error('write failed');
+      };
+      await expect(storage.setItem(KEY, 'x')).rejects.toThrow('write failed');
+
+      blobStore.removeItem = async () => {
+        throw new Error('remove failed');
+      };
+      await expect(storage.removeItem(KEY)).rejects.toThrow('remove failed');
     });
   });
 
