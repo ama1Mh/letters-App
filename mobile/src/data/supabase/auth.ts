@@ -108,6 +108,14 @@ export interface AuthRepository {
     locale: AppLocale;
     discoverableByEmail: boolean;
   }): Promise<void>;
+  /** Direct column update (DEC-038 already grants `authenticated` UPDATE on exactly these columns
+   *  - see profiles.sql's `grant update (...)` - so no dedicated RPC exists for this, unlike
+   *  onboarding). Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
+  updateReceiveSettings(input: {
+    receiveMode: ReceiveMode;
+    discoverableByUsername: boolean;
+    discoverableByEmail: boolean;
+  }): Promise<void>;
 }
 
 interface ProfileRow {
@@ -264,6 +272,22 @@ export function createSupabaseAuthRepository(client: SupabaseClient): AuthReposi
         p_discoverable_by_email: discoverableByEmail,
       });
       if (error) throw new AuthActionError(resolveErrorCode(error, ONBOARDING_CODES));
+    },
+
+    async updateReceiveSettings({ receiveMode, discoverableByUsername, discoverableByEmail }) {
+      const {
+        data: { session },
+      } = await client.auth.getSession();
+      if (!session) throw new AuthActionError('not_authenticated');
+      const { error } = await client
+        .from('profiles')
+        .update({
+          receive_mode: receiveMode,
+          discoverable_by_username: discoverableByUsername,
+          discoverable_by_email: discoverableByEmail,
+        })
+        .eq('id', session.user.id);
+      if (error) throw new AuthActionError<'not_authenticated' | 'unknown'>('unknown');
     },
   };
 }

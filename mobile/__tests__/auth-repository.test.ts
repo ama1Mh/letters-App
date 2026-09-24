@@ -16,12 +16,19 @@ type Overrides = {
   rpc?: unknown;
   profileRow?: Record<string, unknown> | null;
   fromError?: unknown;
+  sessionUserId?: string;
+  updateError?: unknown;
+  onUpdate?: (payload: unknown, id: string) => void;
 };
 
 function fakeClient(overrides: Overrides = {}) {
   return {
     auth: {
-      getSession: async () => ({ data: { session: null } }),
+      getSession: async () => ({
+        data: {
+          session: overrides.sessionUserId ? { user: { id: overrides.sessionUserId } } : null,
+        },
+      }),
       onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
       signOut: async () => ({ error: null }),
       signUp: overrides.signUp,
@@ -36,6 +43,12 @@ function fakeClient(overrides: Overrides = {}) {
               ? { data: null, error: overrides.fromError }
               : { data: overrides.profileRow ?? null, error: null },
         }),
+      }),
+      update: (payload: unknown) => ({
+        eq: async (_col: string, id: string) => {
+          overrides.onUpdate?.(payload, id);
+          return { error: overrides.updateError ?? null };
+        },
       }),
     }),
     rpc: overrides.rpc,
@@ -198,6 +211,59 @@ describe('createSupabaseAuthRepository', () => {
     it('throws the raw error when the query fails', async () => {
       const repo = createSupabaseAuthRepository(fakeClient({ fromError: new Error('boom') }));
       await expect(repo.getOwnProfile('user-1')).rejects.toThrow('boom');
+    });
+  });
+
+  describe('updateReceiveSettings', () => {
+    it('updates exactly the DEC-038-granted columns for the current session user', async () => {
+      let captured: { payload: unknown; id: string } | null = null;
+      const repo = createSupabaseAuthRepository(
+        fakeClient({
+          sessionUserId: 'user-1',
+          onUpdate: (payload, id) => {
+            captured = { payload, id };
+          },
+        }),
+      );
+      await expect(
+        repo.updateReceiveSettings({
+          receiveMode: 'everyone',
+          discoverableByUsername: false,
+          discoverableByEmail: true,
+        }),
+      ).resolves.toBeUndefined();
+      expect(captured).toEqual({
+        payload: {
+          receive_mode: 'everyone',
+          discoverable_by_username: false,
+          discoverable_by_email: true,
+        },
+        id: 'user-1',
+      });
+    });
+
+    it('throws not_authenticated with no session', async () => {
+      const repo = createSupabaseAuthRepository(fakeClient());
+      await expect(
+        repo.updateReceiveSettings({
+          receiveMode: 'everyone',
+          discoverableByUsername: true,
+          discoverableByEmail: false,
+        }),
+      ).rejects.toEqual(new AuthActionError('not_authenticated'));
+    });
+
+    it('throws unknown when the update fails', async () => {
+      const repo = createSupabaseAuthRepository(
+        fakeClient({ sessionUserId: 'user-1', updateError: new Error('db down') }),
+      );
+      await expect(
+        repo.updateReceiveSettings({
+          receiveMode: 'everyone',
+          discoverableByUsername: true,
+          discoverableByEmail: false,
+        }),
+      ).rejects.toEqual(new AuthActionError('unknown'));
     });
   });
 });

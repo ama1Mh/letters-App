@@ -103,6 +103,16 @@ export function createFakeAuthRepository(initial?: {
         onboardedAt: new Date().toISOString(),
       };
     },
+
+    async updateReceiveSettings({ receiveMode, discoverableByUsername, discoverableByEmail }) {
+      if (!session) throw new AuthActionError('not_authenticated');
+      profile = {
+        ...(profile ?? fakeProfile(session.userId)),
+        receiveMode,
+        discoverableByUsername,
+        discoverableByEmail,
+      };
+    },
   };
 
   return {
