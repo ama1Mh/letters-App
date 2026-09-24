@@ -28,7 +28,9 @@
     "deleteConfirmMessage": "لا يمكن التراجع عن هذا الإجراء.",
     "deleteConfirmCancel": "إلغاء",
     "deleteConfirmConfirm": "حذف",
-    "changeDesign": "تغيير التصميم"
+    "changeDesign": "تغيير التصميم",
+    "recipientLabel": "إلى",
+    "noRecipient": "اختر المستلم"
   },
   "design": {
     "paperLabel": "الورق",
@@ -73,7 +75,70 @@
     "emptyBody": "ستظهر هنا الرسائل المرسلة والمجدولة."
   },
   "profile": {
-    "language": "اللغة"
+    "language": "اللغة",
+    "connections": "طلبات الاتصال",
+    "myInvite": "رابط دعوتي",
+    "privacy": "الخصوصية"
+  },
+  "discovery": {
+    "title": "البحث عن أشخاص",
+    "searchPlaceholder": "ابحث باسم المستخدم",
+    "searchByEmailPlaceholder": "أو ابحث بالبريد الإلكتروني",
+    "searchByEmailButton": "بحث",
+    "noResults": "لا توجد نتائج",
+    "writeLetter": "كتابة رسالة",
+    "sendRequest": "إرسال طلب اتصال",
+    "requested": "تم الإرسال",
+    "respondToRequest": "الرد على الطلب",
+    "connected": "متصل",
+    "error": {
+      "query_too_short": "اكتب 3 أحرف على الأقل.",
+      "rate_limited": "محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق.",
+      "invalid_input": "أدخل بريدًا إلكترونيًا صحيحًا.",
+      "unknown": "حدث خطأ ما. حاول مرة أخرى."
+    }
+  },
+  "connections": {
+    "title": "طلبات الاتصال",
+    "incomingTitle": "الواردة",
+    "outgoingTitle": "المرسلة",
+    "emptyTitle": "لا توجد طلبات اتصال",
+    "emptyBody": "ستظهر هنا الطلبات التي ترسلها أو تستلمها.",
+    "accept": "قبول",
+    "decline": "رفض",
+    "cancel": "إلغاء الطلب",
+    "remove": "إزالة الاتصال",
+    "error": {
+      "not_found": "هذا الطلب لم يعد موجودًا.",
+      "not_pending": "تمت معالجة هذا الطلب بالفعل.",
+      "unknown": "حدث خطأ ما. حاول مرة أخرى."
+    }
+  },
+  "invite": {
+    "title": "دعوتي",
+    "shareButton": "مشاركة رابط الدعوة",
+    "enterCodeLabel": "هل لديك رمز؟",
+    "enterCodePlaceholder": "أدخل الرمز",
+    "enterCodeButton": "استخدام الرمز",
+    "redeeming": "جارٍ استخدام دعوتك…",
+    "redeemedTitle": "تم الاتصال بنجاح!",
+    "redeemedBody": "يمكنكما الآن تبادل الرسائل.",
+    "errorTitle": "لم يعمل رابط الدعوة هذا",
+    "backToInbox": "الذهاب إلى الوارد",
+    "error": {
+      "invite_not_found": "رمز الدعوة غير صالح أو منتهي الصلاحية.",
+      "invalid_input": "لا يمكنك استخدام دعوتك الخاصة.",
+      "rate_limited": "محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق.",
+      "unknown": "حدث خطأ ما. حاول مرة أخرى."
+    }
+  },
+  "privacy": {
+    "title": "الخصوصية",
+    "receiveModeLabel": "من يمكنه إرسال رسائل إليّ",
+    "receiveModeEveryone": "الجميع",
+    "receiveModeInviteOnly": "المتصلون بي فقط",
+    "discoverableByUsernameLabel": "السماح للآخرين بالعثور عليّ باسم المستخدم",
+    "discoverableByEmailLabel": "السماح للآخرين بالعثور عليّ عبر البريد الإلكتروني"
   },
   "language": {
     "title": "اللغة",

@@ -141,3 +141,54 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `auth.onboarding.error.already_onboarded` | Your profile is already set up. | تم إعداد ملفك الشخصي بالفعل. | draft | |
 | `auth.onboarding.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | |
 | `auth.signOut` | Sign out | تسجيل الخروج | draft | |
+| `compose.recipientLabel` | To | إلى | draft | |
+| `compose.noRecipient` | Choose a recipient | اختر المستلم | draft | |
+| `profile.connections` | Connection requests | طلبات الاتصال | draft | |
+| `profile.myInvite` | My invite link | رابط دعوتي | draft | |
+| `profile.privacy` | Privacy | الخصوصية | draft | |
+| `discovery.title` | Find people | البحث عن أشخاص | draft | |
+| `discovery.searchPlaceholder` | Search by username | ابحث باسم المستخدم | draft | |
+| `discovery.searchByEmailPlaceholder` | Or search by email | أو ابحث بالبريد الإلكتروني | draft | |
+| `discovery.searchByEmailButton` | Search | بحث | draft | |
+| `discovery.noResults` | No results | لا توجد نتائج | draft | |
+| `discovery.writeLetter` | Write letter | كتابة رسالة | draft | |
+| `discovery.sendRequest` | Send connection request | إرسال طلب اتصال | draft | |
+| `discovery.requested` | Requested | تم الإرسال | draft | |
+| `discovery.respondToRequest` | Respond to request | الرد على الطلب | draft | |
+| `discovery.connected` | Connected | متصل | draft | |
+| `discovery.error.query_too_short` | Type at least 3 characters. | اكتب 3 أحرف على الأقل. | draft | |
+| `discovery.error.rate_limited` | Too many attempts. Try again in a few minutes. | محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق. | draft | |
+| `discovery.error.invalid_input` | Enter a valid email address. | أدخل بريدًا إلكترونيًا صحيحًا. | draft | |
+| `discovery.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | |
+| `connections.title` | Connection requests | طلبات الاتصال | draft | |
+| `connections.incomingTitle` | Incoming | الواردة | draft | |
+| `connections.outgoingTitle` | Sent | المرسلة | draft | |
+| `connections.emptyTitle` | No connection requests | لا توجد طلبات اتصال | draft | |
+| `connections.emptyBody` | Requests you send or receive will appear here. | ستظهر هنا الطلبات التي ترسلها أو تستلمها. | draft | |
+| `connections.accept` | Accept | قبول | draft | |
+| `connections.decline` | Decline | رفض | draft | |
+| `connections.cancel` | Cancel request | إلغاء الطلب | draft | |
+| `connections.remove` | Remove connection | إزالة الاتصال | draft | |
+| `connections.error.not_found` | That request no longer exists. | هذا الطلب لم يعد موجودًا. | draft | |
+| `connections.error.not_pending` | That request was already handled. | تمت معالجة هذا الطلب بالفعل. | draft | |
+| `connections.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | |
+| `invite.title` | My invite | دعوتي | draft | |
+| `invite.shareButton` | Share invite link | مشاركة رابط الدعوة | draft | |
+| `invite.enterCodeLabel` | Have a code? | هل لديك رمز؟ | draft | |
+| `invite.enterCodePlaceholder` | Enter code | أدخل الرمز | draft | |
+| `invite.enterCodeButton` | Redeem | استخدام الرمز | draft | |
+| `invite.redeeming` | Redeeming your invite… | جارٍ استخدام دعوتك… | draft | |
+| `invite.redeemedTitle` | You're connected! | تم الاتصال بنجاح! | draft | |
+| `invite.redeemedBody` | You can now write letters to each other. | يمكنكما الآن تبادل الرسائل. | draft | |
+| `invite.errorTitle` | This invite link didn't work | لم يعمل رابط الدعوة هذا | draft | |
+| `invite.backToInbox` | Go to inbox | الذهاب إلى الوارد | draft | |
+| `invite.error.invite_not_found` | This invite code is invalid or has expired. | رمز الدعوة غير صالح أو منتهي الصلاحية. | draft | |
+| `invite.error.invalid_input` | You can't redeem your own invite. | لا يمكنك استخدام دعوتك الخاصة. | draft | |
+| `invite.error.rate_limited` | Too many attempts. Try again in a few minutes. | محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق. | draft | |
+| `invite.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | |
+| `privacy.title` | Privacy | الخصوصية | draft | |
+| `privacy.receiveModeLabel` | Who can send me letters | من يمكنه إرسال رسائل إليّ | draft | |
+| `privacy.receiveModeEveryone` | Everyone | الجميع | draft | |
+| `privacy.receiveModeInviteOnly` | Only people I'm connected with | المتصلون بي فقط | draft | |
+| `privacy.discoverableByUsernameLabel` | Let people find me by username | السماح للآخرين بالعثور عليّ باسم المستخدم | draft | |
+| `privacy.discoverableByEmailLabel` | Let people find me by email | السماح للآخرين بالعثور عليّ عبر البريد الإلكتروني | draft | |

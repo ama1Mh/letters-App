@@ -28,7 +28,9 @@
     "deleteConfirmMessage": "This cannot be undone.",
     "deleteConfirmCancel": "Cancel",
     "deleteConfirmConfirm": "Delete",
-    "changeDesign": "Change design"
+    "changeDesign": "Change design",
+    "recipientLabel": "To",
+    "noRecipient": "Choose a recipient"
   },
   "design": {
     "paperLabel": "Paper",
@@ -73,7 +75,70 @@
     "emptyBody": "Sent and scheduled letters will appear here."
   },
   "profile": {
-    "language": "Language"
+    "language": "Language",
+    "connections": "Connection requests",
+    "myInvite": "My invite link",
+    "privacy": "Privacy"
+  },
+  "discovery": {
+    "title": "Find people",
+    "searchPlaceholder": "Search by username",
+    "searchByEmailPlaceholder": "Or search by email",
+    "searchByEmailButton": "Search",
+    "noResults": "No results",
+    "writeLetter": "Write letter",
+    "sendRequest": "Send connection request",
+    "requested": "Requested",
+    "respondToRequest": "Respond to request",
+    "connected": "Connected",
+    "error": {
+      "query_too_short": "Type at least 3 characters.",
+      "rate_limited": "Too many attempts. Try again in a few minutes.",
+      "invalid_input": "Enter a valid email address.",
+      "unknown": "Something went wrong. Try again."
+    }
+  },
+  "connections": {
+    "title": "Connection requests",
+    "incomingTitle": "Incoming",
+    "outgoingTitle": "Sent",
+    "emptyTitle": "No connection requests",
+    "emptyBody": "Requests you send or receive will appear here.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "cancel": "Cancel request",
+    "remove": "Remove connection",
+    "error": {
+      "not_found": "That request no longer exists.",
+      "not_pending": "That request was already handled.",
+      "unknown": "Something went wrong. Try again."
+    }
+  },
+  "invite": {
+    "title": "My invite",
+    "shareButton": "Share invite link",
+    "enterCodeLabel": "Have a code?",
+    "enterCodePlaceholder": "Enter code",
+    "enterCodeButton": "Redeem",
+    "redeeming": "Redeeming your invite…",
+    "redeemedTitle": "You're connected!",
+    "redeemedBody": "You can now write letters to each other.",
+    "errorTitle": "This invite link didn't work",
+    "backToInbox": "Go to inbox",
+    "error": {
+      "invite_not_found": "This invite code is invalid or has expired.",
+      "invalid_input": "You can't redeem your own invite.",
+      "rate_limited": "Too many attempts. Try again in a few minutes.",
+      "unknown": "Something went wrong. Try again."
+    }
+  },
+  "privacy": {
+    "title": "Privacy",
+    "receiveModeLabel": "Who can send me letters",
+    "receiveModeEveryone": "Everyone",
+    "receiveModeInviteOnly": "Only people I'm connected with",
+    "discoverableByUsernameLabel": "Let people find me by username",
+    "discoverableByEmailLabel": "Let people find me by email"
   },
   "language": {
     "title": "Language",
