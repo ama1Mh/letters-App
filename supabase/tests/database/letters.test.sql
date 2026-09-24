@@ -74,6 +74,88 @@ select throws_ok(
 );
 
 -- ---------------------------------------------------------------------------------------------
+-- Design validation (Phase 4, PLAN §3.4: "server validates keys/version only"). Mirrors
+-- mobile/__tests__/design.test.ts's normalizeDesign() cases, but at the constraint layer: a bad
+-- design is rejected outright here, not silently replaced with a default (that fallback is the
+-- app's job, per DEC-042).
+-- ---------------------------------------------------------------------------------------------
+select ok(
+  public.is_valid_design(
+    '{"v":1,"paper":"cream","font":"caveat","ink":"classic_black","layout":"standard","stamp":null,"stickers":[]}'::jsonb
+  ),
+  'a fully valid design (no stamp) passes'
+);
+select ok(
+  public.is_valid_design(
+    '{"v":1,"paper":"sky","font":"amiri","ink":"navy","layout":"standard","stamp":"heart","stickers":[]}'::jsonb
+  ),
+  'a fully valid design (with a stamp) passes'
+);
+select ok(not public.is_valid_design(null), 'null is invalid');
+select ok(not public.is_valid_design('[]'::jsonb), 'a JSON array is invalid (not an object)');
+select ok(
+  not public.is_valid_design(
+    '{"v":2,"paper":"cream","font":"caveat","ink":"classic_black","layout":"standard","stamp":null,"stickers":[]}'::jsonb
+  ),
+  'an unrecognized version is invalid'
+);
+select ok(
+  not public.is_valid_design(
+    '{"v":1,"paper":"gold-foil","font":"caveat","ink":"classic_black","layout":"standard","stamp":null,"stickers":[]}'::jsonb
+  ),
+  'an unrecognized paper key is invalid'
+);
+select ok(
+  not public.is_valid_design(
+    '{"v":1,"paper":"cream","font":"comic-sans","ink":"classic_black","layout":"standard","stamp":null,"stickers":[]}'::jsonb
+  ),
+  'an unrecognized font key is invalid'
+);
+select ok(
+  not public.is_valid_design(
+    '{"v":1,"paper":"cream","font":"caveat","ink":"invisible","layout":"standard","stamp":null,"stickers":[]}'::jsonb
+  ),
+  'an unrecognized ink key is invalid'
+);
+select ok(
+  not public.is_valid_design(
+    '{"v":1,"paper":"cream","font":"caveat","ink":"classic_black","layout":"fancy","stamp":null,"stickers":[]}'::jsonb
+  ),
+  'a non-standard layout is invalid (reserved for a later phase)'
+);
+select ok(
+  not public.is_valid_design(
+    '{"v":1,"paper":"cream","font":"caveat","ink":"classic_black","layout":"standard","stamp":"unicorn","stickers":[]}'::jsonb
+  ),
+  'an unrecognized stamp key is invalid'
+);
+select ok(
+  not public.is_valid_design(
+    '{"v":1,"paper":"cream","font":"caveat","ink":"classic_black","layout":"standard","stamp":null,"stickers":["one"]}'::jsonb
+  ),
+  'a non-empty stickers array is invalid (reserved for a later phase)'
+);
+select ok(
+  not public.is_valid_design(
+    '{"v":1,"paper":"cream","font":"caveat","ink":"classic_black","layout":"standard","stamp":null}'::jsonb
+  ),
+  'a missing stickers key is invalid'
+);
+
+select throws_ok(
+  $$ insert into public.letters (sender_id, status, design)
+     values (
+       '00000000-0000-0000-0000-000000000101', 'draft',
+       '{"v":1,"paper":"gold-foil","font":"caveat","ink":"classic_black","layout":"standard","stamp":null,"stickers":[]}'::jsonb
+     ) $$,
+  '23514', null, 'a design with an unrecognized paper key is rejected on insert'
+);
+select lives_ok(
+  $$ insert into public.letters (sender_id, status) values ('00000000-0000-0000-0000-000000000101', 'draft') $$,
+  'the default design (no design column given) is itself valid'
+);
+
+-- ---------------------------------------------------------------------------------------------
 -- Triggers: thread_id and updated_at, run as the table owner (bypasses RLS, tests the trigger in
 -- isolation from the policy layer below)
 -- ---------------------------------------------------------------------------------------------
@@ -124,8 +206,11 @@ set local role authenticated;
 
 select lives_ok(
   $$ insert into public.letters (sender_id, subject, body, body_dir, design)
-     values ('00000000-0000-0000-0000-000000000101', 'Hello', 'Hi there', 'ltr', '{"v":1}'::jsonb) $$,
-  'a user can create their own draft'
+     values (
+       '00000000-0000-0000-0000-000000000101', 'Hello', 'Hi there', 'ltr',
+       '{"v":1,"paper":"sky","font":"amiri","ink":"navy","layout":"standard","stamp":"star","stickers":[]}'::jsonb
+     ) $$,
+  'a user can create their own draft, with a fully-specified valid design'
 );
 select lives_ok(
   $$ insert into public.letters (id, sender_id, subject, body)
