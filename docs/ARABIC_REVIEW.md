@@ -143,6 +143,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `auth.signOut` | Sign out | تسجيل الخروج | draft | |
 | `compose.recipientLabel` | To | إلى | draft | |
 | `compose.noRecipient` | Choose a recipient | اختر المستلم | draft | |
+| `compose.recipientChosen` | Recipient selected | تم اختيار المستلم | draft | |
 | `profile.connections` | Connection requests | طلبات الاتصال | draft | |
 | `profile.myInvite` | My invite link | رابط دعوتي | draft | |
 | `profile.privacy` | Privacy | الخصوصية | draft | |
@@ -174,6 +175,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `connections.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | |
 | `invite.title` | My invite | دعوتي | draft | |
 | `invite.shareButton` | Share invite link | مشاركة رابط الدعوة | draft | |
+| `invite.regenerateButton` | Generate a new link | إنشاء رابط جديد | draft | |
 | `invite.enterCodeLabel` | Have a code? | هل لديك رمز؟ | draft | |
 | `invite.enterCodePlaceholder` | Enter code | أدخل الرمز | draft | |
 | `invite.enterCodeButton` | Redeem | استخدام الرمز | draft | |
