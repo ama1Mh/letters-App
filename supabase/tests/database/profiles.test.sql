@@ -43,7 +43,10 @@ select is((select locale::text from public.profiles where id = '00000000-0000-00
 -- ---------------------------------------------------------------------------------------------
 select ok((select relrowsecurity from pg_class where oid = 'public.profiles'::regclass), 'RLS is enabled on profiles');
 select ok((select relrowsecurity from pg_class where oid = 'public.reserved_words'::regclass), 'RLS is enabled on reserved_words');
-select policies_are('public', 'profiles', array['profiles_select_own', 'profiles_update_own']::name[], 'profiles has exactly the expected policies');
+-- profiles_select_connection_related is added by 20260925130000_profile_connection_visibility.sql
+-- (Phase 5): exercised in profile_connection_visibility.test.sql, listed here only so this file's
+-- exact-policy-set assertion stays in sync with the schema.
+select policies_are('public', 'profiles', array['profiles_select_own', 'profiles_update_own', 'profiles_select_connection_related']::name[], 'profiles has exactly the expected policies');
 select col_is_unique('public', 'profiles', 'username', 'username is unique');
 select col_is_unique('public', 'profiles', 'username_skeleton', 'username skeleton is unique (look-alike protection)');
 
