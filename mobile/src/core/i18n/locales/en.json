@@ -33,5 +33,97 @@
     "restartMessage": "The app needs to restart to change the layout direction.",
     "restartNow": "Restart now",
     "restartLater": "Later"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up",
+      "forgotPasswordLink": "Forgot password?",
+      "error": {
+        "invalid_credentials": "Incorrect email or password.",
+        "email_not_confirmed": "Confirm your email first — check your inbox.",
+        "over_request_rate_limit": "Too many attempts. Try again in a few minutes.",
+        "unknown": "Something went wrong. Try again."
+      }
+    },
+    "signUp": {
+      "title": "Create account",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "confirmationTitle": "Check your email",
+      "confirmationBody": "We sent a confirmation link to {{email}}. Open it, then sign in.",
+      "error": {
+        "user_already_exists": "An account with this email already exists.",
+        "weak_password": "Choose a stronger password.",
+        "email_address_invalid": "Enter a valid email address.",
+        "over_email_send_rate_limit": "Too many attempts. Try again in a few minutes.",
+        "over_request_rate_limit": "Too many attempts. Try again in a few minutes.",
+        "signup_disabled": "Sign-up is currently unavailable.",
+        "email_provider_disabled": "Sign-up is currently unavailable.",
+        "unknown": "Something went wrong. Try again."
+      }
+    },
+    "forgotPassword": {
+      "title": "Reset password",
+      "body": "Enter your email and we'll send you a link to reset your password.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "confirmationTitle": "Check your email",
+      "confirmationBody": "If an account exists for {{email}}, we sent a reset link.",
+      "backToSignIn": "Back to sign in",
+      "error": {
+        "over_email_send_rate_limit": "Too many attempts. Try again in a few minutes.",
+        "over_request_rate_limit": "Too many attempts. Try again in a few minutes.",
+        "unknown": "Something went wrong. Try again."
+      }
+    },
+    "onboarding": {
+      "title": "Set up your profile",
+      "usernameLabel": "Username",
+      "usernameHint": "3–20 characters: lowercase letters, numbers, underscore. Shown as @username.",
+      "usernameChecking": "Checking…",
+      "usernameAvailable": "Available",
+      "usernameUnavailable": "Not available",
+      "displayNameLabel": "Display name",
+      "displayNameHint": "Any language. Shown next to @username.",
+      "discoverableByEmailLabel": "Let people find me by email",
+      "submit": "Continue",
+      "usernameError": {
+        "invalid_characters": "Only lowercase letters, numbers and underscore.",
+        "must_start_with_letter": "Must start with a letter.",
+        "trailing_underscore": "Can't end with an underscore.",
+        "consecutive_underscores": "No repeated underscores.",
+        "too_short": "At least 3 characters.",
+        "too_long": "At most 20 characters.",
+        "reserved": "That username isn't available."
+      },
+      "displayNameError": {
+        "empty": "Enter a display name.",
+        "too_long": "At most 50 characters.",
+        "no_letter_or_digit": "Must include a letter or digit.",
+        "contains_at": "Can't contain '@'.",
+        "contains_url": "Can't contain a link.",
+        "reserved": "That display name isn't available."
+      },
+      "error": {
+        "not_authenticated": "Your session expired. Sign in again.",
+        "invalid_input": "Something's missing. Check the form and try again.",
+        "username_invalid": "That username isn't valid.",
+        "display_name_invalid": "That display name isn't valid.",
+        "username_unavailable": "That username isn't available.",
+        "display_name_reserved": "That display name isn't available.",
+        "profile_not_found": "Your profile could not be found. Sign in again.",
+        "already_onboarded": "Your profile is already set up.",
+        "unknown": "Something went wrong. Try again."
+      }
+    },
+    "signOut": "Sign out"
   }
 }

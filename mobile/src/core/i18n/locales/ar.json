@@ -33,5 +33,97 @@
     "restartMessage": "يلزم إعادة تشغيل التطبيق لتغيير اتجاه الواجهة.",
     "restartNow": "إعادة التشغيل الآن",
     "restartLater": "لاحقًا"
+  },
+  "auth": {
+    "signIn": {
+      "title": "تسجيل الدخول",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟",
+      "signUpLink": "إنشاء حساب",
+      "forgotPasswordLink": "نسيت كلمة المرور؟",
+      "error": {
+        "invalid_credentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+        "email_not_confirmed": "يرجى تأكيد بريدك الإلكتروني أولاً — تحقق من بريدك الوارد.",
+        "over_request_rate_limit": "محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق.",
+        "unknown": "حدث خطأ ما. حاول مرة أخرى."
+      }
+    },
+    "signUp": {
+      "title": "إنشاء حساب",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "إنشاء حساب",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "signInLink": "تسجيل الدخول",
+      "confirmationTitle": "تحقق من بريدك الإلكتروني",
+      "confirmationBody": "أرسلنا رابط تأكيد إلى {{email}}. افتحه ثم سجّل الدخول.",
+      "error": {
+        "user_already_exists": "يوجد حساب بهذا البريد الإلكتروني بالفعل.",
+        "weak_password": "اختر كلمة مرور أقوى.",
+        "email_address_invalid": "أدخل بريدًا إلكترونيًا صحيحًا.",
+        "over_email_send_rate_limit": "محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق.",
+        "over_request_rate_limit": "محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق.",
+        "signup_disabled": "إنشاء الحسابات غير متاح حاليًا.",
+        "email_provider_disabled": "إنشاء الحسابات غير متاح حاليًا.",
+        "unknown": "حدث خطأ ما. حاول مرة أخرى."
+      }
+    },
+    "forgotPassword": {
+      "title": "إعادة تعيين كلمة المرور",
+      "body": "أدخل بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور.",
+      "email": "البريد الإلكتروني",
+      "submit": "إرسال رابط إعادة التعيين",
+      "confirmationTitle": "تحقق من بريدك الإلكتروني",
+      "confirmationBody": "إذا كان هناك حساب مرتبط بـ {{email}}، فقد أرسلنا رابط إعادة تعيين.",
+      "backToSignIn": "العودة إلى تسجيل الدخول",
+      "error": {
+        "over_email_send_rate_limit": "محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق.",
+        "over_request_rate_limit": "محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق.",
+        "unknown": "حدث خطأ ما. حاول مرة أخرى."
+      }
+    },
+    "onboarding": {
+      "title": "إعداد ملفك الشخصي",
+      "usernameLabel": "اسم المستخدم",
+      "usernameHint": "من 3 إلى 20 حرفًا: أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. يظهر باسم @username.",
+      "usernameChecking": "جارٍ التحقق…",
+      "usernameAvailable": "متاح",
+      "usernameUnavailable": "غير متاح",
+      "displayNameLabel": "الاسم المعروض",
+      "displayNameHint": "بأي لغة. يظهر بجانب @username.",
+      "discoverableByEmailLabel": "السماح للآخرين بالعثور عليّ عبر البريد الإلكتروني",
+      "submit": "متابعة",
+      "usernameError": {
+        "invalid_characters": "أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط.",
+        "must_start_with_letter": "يجب أن يبدأ بحرف.",
+        "trailing_underscore": "لا يمكن أن ينتهي بشرطة سفلية.",
+        "consecutive_underscores": "لا يمكن تكرار الشرطة السفلية.",
+        "too_short": "3 أحرف على الأقل.",
+        "too_long": "20 حرفًا كحد أقصى.",
+        "reserved": "اسم المستخدم هذا غير متاح."
+      },
+      "displayNameError": {
+        "empty": "أدخل اسمًا معروضًا.",
+        "too_long": "50 حرفًا كحد أقصى.",
+        "no_letter_or_digit": "يجب أن يحتوي على حرف أو رقم.",
+        "contains_at": "لا يمكن أن يحتوي على '@'.",
+        "contains_url": "لا يمكن أن يحتوي على رابط.",
+        "reserved": "هذا الاسم المعروض غير متاح."
+      },
+      "error": {
+        "not_authenticated": "انتهت صلاحية جلستك. سجّل الدخول مرة أخرى.",
+        "invalid_input": "هناك بيانات ناقصة. تحقق من النموذج وحاول مرة أخرى.",
+        "username_invalid": "اسم المستخدم هذا غير صالح.",
+        "display_name_invalid": "الاسم المعروض هذا غير صالح.",
+        "username_unavailable": "اسم المستخدم هذا غير متاح.",
+        "display_name_reserved": "هذا الاسم المعروض غير متاح.",
+        "profile_not_found": "تعذر العثور على ملفك الشخصي. سجّل الدخول مرة أخرى.",
+        "already_onboarded": "تم إعداد ملفك الشخصي بالفعل.",
+        "unknown": "حدث خطأ ما. حاول مرة أخرى."
+      }
+    },
+    "signOut": "تسجيل الخروج"
   }
 }
