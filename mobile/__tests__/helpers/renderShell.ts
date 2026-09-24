@@ -2,7 +2,10 @@ import Storage from 'expo-sqlite/kv-store';
 import { renderRouter } from 'expo-router/testing-library';
 import { I18nManager } from 'react-native';
 
-import { getDiscoveryRepository, type DiscoveryRepository } from '@/data/discovery/discoveryRepository';
+import {
+  getDiscoveryRepository,
+  type DiscoveryRepository,
+} from '@/data/discovery/discoveryRepository';
 import type { DraftsRepository } from '@/data/letters/draftsRepository';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import type { LocalDraft } from '@/data/local/draftsStore';

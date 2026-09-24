@@ -30,6 +30,7 @@ export default function ComposeScreen() {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [design, setDesign] = useState<Design>(defaultDesign());
+  const [recipientId, setRecipientId] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -43,6 +44,7 @@ export default function ComposeScreen() {
           setSubject(draft.subject ?? '');
           setBody(draft.body);
           setDesign(normalizeDesign(draft.design));
+          setRecipientId(draft.recipientId);
         }
         setLoaded(true);
       });
@@ -51,14 +53,17 @@ export default function ComposeScreen() {
     };
   }, [id]);
 
-  // The design picker (a separate screen) writes to the same draft id; re-read just the design on
+  // The design and recipient pickers (separate screens) write to the same draft id; re-read on
   // return, so a change made there shows up here without waiting for this screen's own autosave.
   useFocusEffect(
     useCallback(() => {
       void getDraftsRepository()
         .get(id)
         .then((draft) => {
-          if (draft) setDesign(normalizeDesign(draft.design));
+          if (draft) {
+            setDesign(normalizeDesign(draft.design));
+            setRecipientId(draft.recipientId);
+          }
         });
     }, [id]),
   );
@@ -73,15 +78,15 @@ export default function ComposeScreen() {
           subject: subject.trim() ? subject : null,
           body,
           design,
-          recipientId: null,
+          recipientId,
         })
         .finally(() => setSaving(false));
     }, AUTOSAVE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-    // Autosave fires only when subject/body/design actually change; `loaded` just gates the first
-    // run.
+    // Autosave fires only when subject/body/design/recipientId actually change; `loaded` just
+    // gates the first run.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subject, body, design, loaded]);
+  }, [subject, body, design, recipientId, loaded]);
 
   function onDelete() {
     Alert.alert(t('compose.deleteConfirmTitle'), t('compose.deleteConfirmMessage'), [
@@ -112,6 +117,18 @@ export default function ComposeScreen() {
       >
         <DirectionalIcon name="chevron-back" size={18} color={colors.primary} />
         <AppText style={{ color: colors.primary }}>{t('tabs.drafts')}</AppText>
+      </Pressable>
+      <Pressable
+        testID="compose-recipient-row"
+        accessibilityRole="button"
+        onPress={() => router.push({ pathname: '/compose/pick-recipient', params: { id } })}
+        style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}
+      >
+        <AppText variant="muted">{t('compose.recipientLabel')}: </AppText>
+        <AppText style={{ color: recipientId ? colors.text : colors.primary, flex: 1 }}>
+          {recipientId ? t('compose.recipientChosen') : t('compose.noRecipient')}
+        </AppText>
+        <DirectionalIcon name="chevron-forward" size={16} color={colors.textMuted} />
       </Pressable>
       <TextInput
         testID="compose-subject"

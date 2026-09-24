@@ -30,7 +30,8 @@
     "deleteConfirmConfirm": "Delete",
     "changeDesign": "Change design",
     "recipientLabel": "To",
-    "noRecipient": "Choose a recipient"
+    "noRecipient": "Choose a recipient",
+    "recipientChosen": "Recipient selected"
   },
   "design": {
     "paperLabel": "Paper",
@@ -117,6 +118,7 @@
   "invite": {
     "title": "My invite",
     "shareButton": "Share invite link",
+    "regenerateButton": "Generate a new link",
     "enterCodeLabel": "Have a code?",
     "enterCodePlaceholder": "Enter code",
     "enterCodeButton": "Redeem",

@@ -30,7 +30,8 @@
     "deleteConfirmConfirm": "حذف",
     "changeDesign": "تغيير التصميم",
     "recipientLabel": "إلى",
-    "noRecipient": "اختر المستلم"
+    "noRecipient": "اختر المستلم",
+    "recipientChosen": "تم اختيار المستلم"
   },
   "design": {
     "paperLabel": "الورق",
@@ -117,6 +118,7 @@
   "invite": {
     "title": "دعوتي",
     "shareButton": "مشاركة رابط الدعوة",
+    "regenerateButton": "إنشاء رابط جديد",
     "enterCodeLabel": "هل لديك رمز؟",
     "enterCodePlaceholder": "أدخل الرمز",
     "enterCodeButton": "استخدام الرمز",

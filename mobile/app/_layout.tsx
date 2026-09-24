@@ -29,8 +29,13 @@ export default function RootLayout() {
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="settings/language" options={{ title: t('language.title') }} />
+        <Stack.Screen name="settings/privacy" options={{ title: t('privacy.title') }} />
         <Stack.Screen name="compose/[id]" options={{ title: t('compose.title') }} />
         <Stack.Screen name="compose/pick-design" options={{ headerShown: false }} />
+        <Stack.Screen name="compose/pick-recipient" options={{ headerShown: false }} />
+        <Stack.Screen name="connections" options={{ title: t('connections.title') }} />
+        <Stack.Screen name="invite/index" options={{ title: t('invite.title') }} />
+        <Stack.Screen name="invite/[code]" options={{ headerShown: false }} />
       </Stack>
     </AuthProvider>
   );

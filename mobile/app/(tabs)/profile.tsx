@@ -40,6 +40,57 @@ export default function ProfileScreen() {
         <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
       </Pressable>
       <Pressable
+        testID="profile-connections-row"
+        accessibilityRole="button"
+        onPress={() => router.push('/connections')}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.lg,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
+      >
+        <AppText style={{ flex: 1 }}>{t('profile.connections')}</AppText>
+        <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
+      </Pressable>
+      <Pressable
+        testID="profile-my-invite-row"
+        accessibilityRole="button"
+        onPress={() => router.push('/invite')}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.lg,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
+      >
+        <AppText style={{ flex: 1 }}>{t('profile.myInvite')}</AppText>
+        <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
+      </Pressable>
+      <Pressable
+        testID="profile-privacy-row"
+        accessibilityRole="button"
+        onPress={() => router.push('/settings/privacy')}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.lg,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
+      >
+        <AppText style={{ flex: 1 }}>{t('profile.privacy')}</AppText>
+        <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
+      </Pressable>
+      <Pressable
         testID="profile-sign-out-row"
         accessibilityRole="button"
         onPress={() => void onSignOut()}
