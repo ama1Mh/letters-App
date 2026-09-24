@@ -8,6 +8,7 @@ export interface ColorTokens {
   border: string;
   primary: string;
   onPrimary: string;
+  danger: string;
 }
 
 export const lightColors: ColorTokens = {
@@ -18,6 +19,7 @@ export const lightColors: ColorTokens = {
   border: '#D9DCE1',
   primary: '#1D4ED8',
   onPrimary: '#FFFFFF',
+  danger: '#DC2626',
 };
 
 export const darkColors: ColorTokens = {
@@ -28,6 +30,7 @@ export const darkColors: ColorTokens = {
   border: '#2A3140',
   primary: '#7AA2FF',
   onPrimary: '#0B0F17',
+  danger: '#F87171',
 };
 
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 } as const;
