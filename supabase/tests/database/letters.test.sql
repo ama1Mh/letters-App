@@ -307,11 +307,18 @@ select lives_ok(
      where sender_id = '00000000-0000-0000-0000-000000000101' and subject = 'Hello' $$,
   'updating a draft user 2 cannot see is not an error...'
 );
+-- Checked as the table owner, not as user 2: user 2 has no SELECT visibility into user 1's draft
+-- either (confirmed above), so `select body ... where subject = 'Hello'` as user 2 would return
+-- NULL regardless of whether the update actually changed anything - not a real check. request.jwt
+-- .claims (set_config(..., true)) persists for the rest of the transaction, so re-entering
+-- `authenticated` below resumes the same session (user 2) the statements after this still need.
+reset role;
 select is(
   (select body from public.letters where subject = 'Hello'),
   'Updated body',
   '...and it silently changed nothing'
 );
+set local role authenticated;
 select is(
   (select count(*)::int from public.letters where id = '10000000-0000-0000-0000-000000000003'),
   1,

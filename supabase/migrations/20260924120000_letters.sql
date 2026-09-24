@@ -93,7 +93,13 @@ security definer
 set search_path = ''
 as $$
 begin
-  new.updated_at := now();
+  -- clock_timestamp(), not now(): now()/current_timestamp is fixed for the whole transaction, so
+  -- an insert and a later update in the same transaction would get the identical value, making
+  -- `updated_at > created_at` false even though the update genuinely happened later. Found via
+  -- pgTAP's "updated_at advances on update" failing against a real database (it cannot fail this
+  -- way under `supabase test db`'s throwaway stack timing by coincidence - the assertion is
+  -- deterministic, not flaky).
+  new.updated_at := clock_timestamp();
   return new;
 end;
 $$;
