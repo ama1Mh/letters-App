@@ -3,7 +3,7 @@
 Digital letter-writing app: create letters, save drafts, send now or schedule, receive/reply, customize letter design, get notified on delivery. Android first, iOS later. **Arabic + English (RTL/LTR) from day one.**
 
 ## Project status
-**Phase 1 (Foundation + i18n/RTL spike) is done; Phase 2 (Auth & profiles) is in progress.** `mobile/` exists (Expo SDK 57, i18n en/ar, RTL manager, tabs shell, username/display-name domain rules); `supabase/` has the first migration (`profiles`) and pgTAP tests, run in CI only (no local Docker); `shared/` does not exist yet. Do not start the next phase until the owner says "go" for it. This directory is a git repository (working branch `dev`, remote `origin`).
+**Phase 1 is done. Phase 2 (Auth & profiles) implementation is complete except two deliberately deferred items (Google Sign-In; password-reset completion — see DECISIONS.md DEC-040/OPEN-10). Phase 3 (Letters core: drafts) is in progress.** `mobile/` has the auth flow (sign-up/in, onboarding, router gate), the local offline drafts store, the drafts repository (local/remote sync), and a minimal drafts list + compose screen; `supabase/` has two migrations (`profiles`, `letters`) and pgTAP tests, run in CI only (no local Docker — neither migration has been applied anywhere yet, including the owner's machine); `shared/` does not exist yet. **Nothing has been verified on a device or emulator yet** — every screen and store above has RNTL test coverage only. Do not start Phase 4 until the owner says "go" for it. This directory is a git repository (working branch `dev`, remote `origin`).
 
 ## Read first
 1. `docs/DECISIONS.md` — **authoritative** decisions. If it conflicts with `docs/PLAN.md`, DECISIONS.md wins.
