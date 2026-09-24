@@ -99,7 +99,16 @@ select ok(
   (select invite_id is not null from public.connections where id = (select value from test_ids where key = 'redeemed')),
   'invite_id is recorded on the resulting connection'
 );
+-- can_send() is internal only (revoked from authenticated, DEC-007/blocks_connections.sql) - a
+-- bare `select ok(public.can_send(...))` while still `set local role authenticated` from above
+-- would itself raise a permission error (not a graceful "not ok" line) and abort the rest of this
+-- transaction. Briefly reset to the table-owner role for this one check, same as every other
+-- can_send() call in blocks_connections.test.sql, then restore the role: request.jwt.claims
+-- (set_config(..., true)) persists for the rest of the transaction, so re-entering `authenticated`
+-- keeps the same session (user 402) the statements below still need.
+reset role;
 select ok(public.can_send('00000000-0000-0000-0000-000000000402', '00000000-0000-0000-0000-000000000401', null), 'the redeemer can now send to the invite owner (invite_only, accepted connection)');
+set local role authenticated;
 
 insert into test_ids (key, value) select 'redeemed_again', public.redeem_invite((select value from test_codes where key = 'regenerated'));
 select is(
