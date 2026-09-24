@@ -19,6 +19,17 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `inbox.emptyBody` | Letters you receive will appear here. | ستظهر هنا الرسائل الواردة. | draft | |
 | `drafts.emptyTitle` | No drafts | لا توجد مسودات | draft | |
 | `drafts.emptyBody` | Letters you have not sent yet will appear here. | ستظهر هنا الرسائل التي لم تُرسل بعد. | draft | |
+| `drafts.newButton` | New draft | مسودة جديدة | draft | |
+| `drafts.untitled` | Untitled draft | مسودة بلا عنوان | draft | |
+| `compose.title` | Draft | المسودة | draft | |
+| `compose.subjectLabel` | Subject | الموضوع | draft | |
+| `compose.bodyLabel` | Write your letter… | اكتب رسالتك… | draft | |
+| `compose.saving` | Saving… | جارٍ الحفظ… | draft | |
+| `compose.delete` | Delete draft | حذف المسودة | draft | |
+| `compose.deleteConfirmTitle` | Delete this draft? | هل تريد حذف هذه المسودة؟ | draft | |
+| `compose.deleteConfirmMessage` | This cannot be undone. | لا يمكن التراجع عن هذا الإجراء. | draft | |
+| `compose.deleteConfirmCancel` | Cancel | إلغاء | draft | |
+| `compose.deleteConfirmConfirm` | Delete | حذف | draft | |
 | `sent.emptyTitle` | No sent letters | لا توجد رسائل مرسلة | draft | |
 | `sent.emptyBody` | Sent and scheduled letters will appear here. | ستظهر هنا الرسائل المرسلة والمجدولة. | draft | |
 | `profile.language` | Language | اللغة | draft | |

@@ -14,7 +14,20 @@
   },
   "drafts": {
     "emptyTitle": "لا توجد مسودات",
-    "emptyBody": "ستظهر هنا الرسائل التي لم تُرسل بعد."
+    "emptyBody": "ستظهر هنا الرسائل التي لم تُرسل بعد.",
+    "newButton": "مسودة جديدة",
+    "untitled": "مسودة بلا عنوان"
+  },
+  "compose": {
+    "title": "المسودة",
+    "subjectLabel": "الموضوع",
+    "bodyLabel": "اكتب رسالتك…",
+    "saving": "جارٍ الحفظ…",
+    "delete": "حذف المسودة",
+    "deleteConfirmTitle": "هل تريد حذف هذه المسودة؟",
+    "deleteConfirmMessage": "لا يمكن التراجع عن هذا الإجراء.",
+    "deleteConfirmCancel": "إلغاء",
+    "deleteConfirmConfirm": "حذف"
   },
   "sent": {
     "emptyTitle": "لا توجد رسائل مرسلة",

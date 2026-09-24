@@ -14,7 +14,20 @@
   },
   "drafts": {
     "emptyTitle": "No drafts",
-    "emptyBody": "Letters you have not sent yet will appear here."
+    "emptyBody": "Letters you have not sent yet will appear here.",
+    "newButton": "New draft",
+    "untitled": "Untitled draft"
+  },
+  "compose": {
+    "title": "Draft",
+    "subjectLabel": "Subject",
+    "bodyLabel": "Write your letter…",
+    "saving": "Saving…",
+    "delete": "Delete draft",
+    "deleteConfirmTitle": "Delete this draft?",
+    "deleteConfirmMessage": "This cannot be undone.",
+    "deleteConfirmCancel": "Cancel",
+    "deleteConfirmConfirm": "Delete"
   },
   "sent": {
     "emptyTitle": "No sent letters",
