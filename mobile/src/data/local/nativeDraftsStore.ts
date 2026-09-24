@@ -23,6 +23,7 @@ function ensureSchema(): void {
       id text primary key,
       subject text,
       body text not null default '',
+      body_dir text not null default 'ltr',
       design text not null default '{}',
       recipient_id text,
       dirty integer not null default 1,
@@ -36,6 +37,7 @@ interface DraftRow {
   id: string;
   subject: string | null;
   body: string;
+  body_dir: string;
   design: string;
   recipient_id: string | null;
   dirty: number;
@@ -47,6 +49,7 @@ function fromRow(row: DraftRow): LocalDraft {
     id: row.id,
     subject: row.subject,
     body: row.body,
+    bodyDir: row.body_dir === 'rtl' ? 'rtl' : 'ltr',
     design: JSON.parse(row.design) as unknown,
     recipientId: row.recipient_id,
     dirty: row.dirty !== 0,
@@ -72,11 +75,12 @@ export const nativeDraftsStore: LocalDraftsStore = {
   async upsert(draft) {
     ensureSchema();
     database().runSync(
-      `insert into local_drafts (id, subject, body, design, recipient_id, dirty, updated_at)
-       values (?, ?, ?, ?, ?, ?, ?)
+      `insert into local_drafts (id, subject, body, body_dir, design, recipient_id, dirty, updated_at)
+       values (?, ?, ?, ?, ?, ?, ?, ?)
        on conflict(id) do update set
          subject = excluded.subject,
          body = excluded.body,
+         body_dir = excluded.body_dir,
          design = excluded.design,
          recipient_id = excluded.recipient_id,
          dirty = excluded.dirty,
@@ -84,6 +88,7 @@ export const nativeDraftsStore: LocalDraftsStore = {
       draft.id,
       draft.subject,
       draft.body,
+      draft.bodyDir,
       JSON.stringify(draft.design),
       draft.recipientId,
       draft.dirty ? 1 : 0,

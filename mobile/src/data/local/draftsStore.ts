@@ -10,6 +10,9 @@ export interface LocalDraft {
   id: string;
   subject: string | null;
   body: string;
+  /** Computed on save (mobile/src/domain/bodyDirection.ts), not re-derived here (DEC-014, PLAN
+   *  §3.5): a letter's direction is independent of either side's UI language. */
+  bodyDir: 'ltr' | 'rtl';
   /** Versioned design JSON (PLAN §3.4). Opaque here; validated once Phase 4's design-catalog.json
    *  and its zod schema exist. */
   design: unknown;
