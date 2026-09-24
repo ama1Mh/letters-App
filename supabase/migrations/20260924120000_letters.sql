@@ -145,7 +145,10 @@ alter table public.letters enable row level security;
 
 revoke all on public.letters from public, anon, authenticated;
 grant select on public.letters to authenticated;
-grant insert (sender_id, recipient_id, subject, body, body_dir, design) on public.letters to authenticated;
+-- `id` is client-generatable (not server-only like status/sender_id): the offline drafts store
+-- (PLAN §4.3, mobile/src/data/local/) generates one id and uses it both locally and remotely, so a
+-- draft created offline and later synced never needs a separate "remote id" mapping.
+grant insert (id, sender_id, recipient_id, subject, body, body_dir, design) on public.letters to authenticated;
 grant update (recipient_id, subject, body, body_dir, design) on public.letters to authenticated;
 grant delete on public.letters to authenticated;
 

@@ -42,7 +42,7 @@ select ok(not has_column_privilege('authenticated', 'public.letters', 'status', 
 select ok(not has_column_privilege('authenticated', 'public.letters', 'delivered_at', 'update'), 'delivered_at cannot be written directly');
 select ok(not has_column_privilege('authenticated', 'public.letters', 'sender_id', 'update'), 'sender_id cannot be changed after creation');
 select ok(has_column_privilege('authenticated', 'public.letters', 'sender_id', 'insert'), 'sender_id is insertable (the client must state it; WITH CHECK verifies it matches auth.uid())');
-select ok(not has_column_privilege('authenticated', 'public.letters', 'id', 'insert'), 'id cannot be chosen by the client');
+select ok(has_column_privilege('authenticated', 'public.letters', 'id', 'insert'), 'id can be chosen by the client (offline drafts store, PLAN §4.3: local and synced-remote id are the same value)');
 select ok(not has_column_privilege('authenticated', 'public.letters', 'thread_id', 'insert'), 'thread_id cannot be chosen by the client (the trigger sets it)');
 select ok(not has_column_privilege('authenticated', 'public.letters', 'scheduled_at', 'update'), 'scheduled_at cannot be written directly (send_letter() RPC, Phase 6)');
 select ok(not has_column_privilege('authenticated', 'public.letters', 'read_at', 'update'), 'read_at cannot be written directly (mark_read() RPC, Phase 6)');
@@ -126,6 +126,16 @@ select lives_ok(
   $$ insert into public.letters (sender_id, subject, body, body_dir, design)
      values ('00000000-0000-0000-0000-000000000101', 'Hello', 'Hi there', 'ltr', '{"v":1}'::jsonb) $$,
   'a user can create their own draft'
+);
+select lives_ok(
+  $$ insert into public.letters (id, sender_id, subject, body)
+     values ('10000000-0000-0000-0000-000000000099', '00000000-0000-0000-0000-000000000101', 'Client id', 'x') $$,
+  'a client-chosen id is accepted on insert (offline drafts store)'
+);
+select is(
+  (select id from public.letters where subject = 'Client id'),
+  '10000000-0000-0000-0000-000000000099'::uuid,
+  'the client-chosen id is what was stored, not a server-generated one'
 );
 select throws_ok(
   $$ insert into public.letters (sender_id, subject, body) values ('00000000-0000-0000-0000-000000000102', 'x', 'y') $$,
