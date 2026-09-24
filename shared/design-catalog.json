@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "papers": [
+    { "key": "cream", "color": "#FBF7EE" },
+    { "key": "blush", "color": "#FCEEF0" },
+    { "key": "sky", "color": "#EAF4FC" },
+    { "key": "mint", "color": "#EAF8F1" },
+    { "key": "sand", "color": "#F7F0E4" },
+    { "key": "lavender", "color": "#F2EEFB" }
+  ],
+  "fonts": [
+    { "key": "caveat", "family": "Caveat_400Regular", "scripts": ["latin"] },
+    {
+      "key": "playfair_display",
+      "family": "PlayfairDisplay_400Regular",
+      "scripts": ["latin"]
+    },
+    {
+      "key": "cairo",
+      "family": "Cairo_400Regular",
+      "scripts": ["latin", "arabic"]
+    },
+    {
+      "key": "tajawal",
+      "family": "Tajawal_400Regular",
+      "scripts": ["latin", "arabic"]
+    },
+    {
+      "key": "amiri",
+      "family": "Amiri_400Regular",
+      "scripts": ["latin", "arabic"]
+    }
+  ],
+  "inks": [
+    { "key": "classic_black", "color": "#1F2937" },
+    { "key": "navy", "color": "#1E3A8A" },
+    { "key": "forest", "color": "#14532D" },
+    { "key": "burgundy", "color": "#7F1D1D" },
+    { "key": "charcoal", "color": "#374151" },
+    { "key": "royal_purple", "color": "#5B21B6" },
+    { "key": "warm_brown", "color": "#78350F" },
+    { "key": "teal", "color": "#115E59" }
+  ],
+  "stamps": [
+    { "key": "heart", "icon": "heart" },
+    { "key": "star", "icon": "star" },
+    { "key": "ribbon", "icon": "ribbon" },
+    { "key": "rocket", "icon": "rocket" }
+  ],
+  "fallbackFonts": { "latin": "caveat", "arabic": "cairo" },
+  "defaults": {
+    "paper": "cream",
+    "font": "caveat",
+    "ink": "classic_black",
+    "stamp": null
+  }
+}
