@@ -6,7 +6,11 @@
 create table public.invites (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null references public.profiles (id),
-  code text not null,
+  -- A real named UNIQUE constraint (not a bare `create unique index`), matching profiles.sql's
+  -- `username text unique` - pgTAP's col_is_unique() checks pg_constraint, which only a formal
+  -- constraint populates; a standalone unique index does not, even though it enforces the same
+  -- uniqueness at the data level.
+  code text not null unique,
   created_at timestamptz not null default now(),
   revoked_at timestamptz,
   expires_at timestamptz,
@@ -14,10 +18,11 @@ create table public.invites (
   constraint invites_code_format check (code ~ '^[A-Z2-7]{10}$') -- base32 (RFC 4648, no padding)
 );
 
-create unique index invites_code_unique_idx on public.invites (code);
 -- At most one *active* (non-revoked) invite per owner; regenerating revokes the old one first
 -- (get_or_create_invite()/regenerate_invite() below), so this only ever excludes already-revoked
--- rows, never blocks a legitimate regenerate.
+-- rows, never blocks a legitimate regenerate. A bare partial index (not a table-wide constraint,
+-- which CHECK/UNIQUE cannot express with a WHERE clause) - nothing asserts col_is_unique() on this
+-- one, so the same pg_constraint-vs-index distinction does not apply here.
 create unique index invites_one_active_per_owner_idx on public.invites (owner_id) where revoked_at is null;
 
 alter table public.invites enable row level security;
