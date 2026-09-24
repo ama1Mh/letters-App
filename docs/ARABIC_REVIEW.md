@@ -30,6 +30,35 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `compose.deleteConfirmMessage` | This cannot be undone. | لا يمكن التراجع عن هذا الإجراء. | draft | |
 | `compose.deleteConfirmCancel` | Cancel | إلغاء | draft | |
 | `compose.deleteConfirmConfirm` | Delete | حذف | draft | |
+| `compose.changeDesign` | Change design | تغيير التصميم | draft | |
+| `design.paperLabel` | Paper | الورق | draft | |
+| `design.fontLabel` | Font | الخط | draft | |
+| `design.inkLabel` | Ink | الحبر | draft | |
+| `design.stampLabel` | Stamp | الطابع | draft | |
+| `design.noStamp` | No stamp | بلا طابع | draft | |
+| `design.paperNames.cream` | Cream | كريمي | draft | |
+| `design.paperNames.blush` | Blush | وردي فاتح | draft | |
+| `design.paperNames.sky` | Sky | سماوي | draft | |
+| `design.paperNames.mint` | Mint | نعناعي | draft | |
+| `design.paperNames.sand` | Sand | رملي | draft | |
+| `design.paperNames.lavender` | Lavender | خزامي | draft | |
+| `design.fontNames.caveat` | Caveat | Caveat | draft | Font name, a proper noun: intentionally the same in both files (like the language endonyms) |
+| `design.fontNames.playfair_display` | Playfair Display | Playfair Display | draft | Font name, not translated |
+| `design.fontNames.cairo` | Cairo | Cairo | draft | Font name, not translated |
+| `design.fontNames.tajawal` | Tajawal | Tajawal | draft | Font name, not translated |
+| `design.fontNames.amiri` | Amiri | Amiri | draft | Font name, not translated |
+| `design.inkNames.classic_black` | Classic black | أسود كلاسيكي | draft | |
+| `design.inkNames.navy` | Navy | كحلي | draft | |
+| `design.inkNames.forest` | Forest | أخضر غابي | draft | |
+| `design.inkNames.burgundy` | Burgundy | عنّابي | draft | |
+| `design.inkNames.charcoal` | Charcoal | رمادي فحمي | draft | |
+| `design.inkNames.royal_purple` | Royal purple | بنفسجي ملكي | draft | |
+| `design.inkNames.warm_brown` | Warm brown | بني دافئ | draft | |
+| `design.inkNames.teal` | Teal | أزرق مخضر | draft | |
+| `design.stampNames.heart` | Heart | قلب | draft | |
+| `design.stampNames.star` | Star | نجمة | draft | |
+| `design.stampNames.ribbon` | Ribbon | شريط | draft | |
+| `design.stampNames.rocket` | Rocket | صاروخ | draft | |
 | `sent.emptyTitle` | No sent letters | لا توجد رسائل مرسلة | draft | |
 | `sent.emptyBody` | Sent and scheduled letters will appear here. | ستظهر هنا الرسائل المرسلة والمجدولة. | draft | |
 | `profile.language` | Language | اللغة | draft | |

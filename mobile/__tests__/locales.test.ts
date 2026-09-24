@@ -17,7 +17,17 @@ const flatEn = flatten(en);
 const flatAr = flatten(ar);
 
 // Values that are intentionally identical in both languages.
-const SAME_IN_BOTH = new Set(['app.name', 'language.english', 'language.arabic']);
+const SAME_IN_BOTH = new Set([
+  'app.name',
+  'language.english',
+  'language.arabic',
+  // Font names are proper nouns (PLAN §3.8); not translated, same as the language endonyms above.
+  'design.fontNames.caveat',
+  'design.fontNames.playfair_display',
+  'design.fontNames.cairo',
+  'design.fontNames.tajawal',
+  'design.fontNames.amiri',
+]);
 
 describe('locale files', () => {
   it('have exactly the same keys', () => {

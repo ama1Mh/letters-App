@@ -27,7 +27,46 @@
     "deleteConfirmTitle": "هل تريد حذف هذه المسودة؟",
     "deleteConfirmMessage": "لا يمكن التراجع عن هذا الإجراء.",
     "deleteConfirmCancel": "إلغاء",
-    "deleteConfirmConfirm": "حذف"
+    "deleteConfirmConfirm": "حذف",
+    "changeDesign": "تغيير التصميم"
+  },
+  "design": {
+    "paperLabel": "الورق",
+    "fontLabel": "الخط",
+    "inkLabel": "الحبر",
+    "stampLabel": "الطابع",
+    "noStamp": "بلا طابع",
+    "paperNames": {
+      "cream": "كريمي",
+      "blush": "وردي فاتح",
+      "sky": "سماوي",
+      "mint": "نعناعي",
+      "sand": "رملي",
+      "lavender": "خزامي"
+    },
+    "fontNames": {
+      "caveat": "Caveat",
+      "playfair_display": "Playfair Display",
+      "cairo": "Cairo",
+      "tajawal": "Tajawal",
+      "amiri": "Amiri"
+    },
+    "inkNames": {
+      "classic_black": "أسود كلاسيكي",
+      "navy": "كحلي",
+      "forest": "أخضر غابي",
+      "burgundy": "عنّابي",
+      "charcoal": "رمادي فحمي",
+      "royal_purple": "بنفسجي ملكي",
+      "warm_brown": "بني دافئ",
+      "teal": "أزرق مخضر"
+    },
+    "stampNames": {
+      "heart": "قلب",
+      "star": "نجمة",
+      "ribbon": "شريط",
+      "rocket": "صاروخ"
+    }
   },
   "sent": {
     "emptyTitle": "لا توجد رسائل مرسلة",

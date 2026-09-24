@@ -30,6 +30,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="settings/language" options={{ title: t('language.title') }} />
         <Stack.Screen name="compose/[id]" options={{ title: t('compose.title') }} />
+        <Stack.Screen name="compose/pick-design" options={{ headerShown: false }} />
       </Stack>
     </AuthProvider>
   );

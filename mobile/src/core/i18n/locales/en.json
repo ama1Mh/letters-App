@@ -27,7 +27,46 @@
     "deleteConfirmTitle": "Delete this draft?",
     "deleteConfirmMessage": "This cannot be undone.",
     "deleteConfirmCancel": "Cancel",
-    "deleteConfirmConfirm": "Delete"
+    "deleteConfirmConfirm": "Delete",
+    "changeDesign": "Change design"
+  },
+  "design": {
+    "paperLabel": "Paper",
+    "fontLabel": "Font",
+    "inkLabel": "Ink",
+    "stampLabel": "Stamp",
+    "noStamp": "No stamp",
+    "paperNames": {
+      "cream": "Cream",
+      "blush": "Blush",
+      "sky": "Sky",
+      "mint": "Mint",
+      "sand": "Sand",
+      "lavender": "Lavender"
+    },
+    "fontNames": {
+      "caveat": "Caveat",
+      "playfair_display": "Playfair Display",
+      "cairo": "Cairo",
+      "tajawal": "Tajawal",
+      "amiri": "Amiri"
+    },
+    "inkNames": {
+      "classic_black": "Classic black",
+      "navy": "Navy",
+      "forest": "Forest",
+      "burgundy": "Burgundy",
+      "charcoal": "Charcoal",
+      "royal_purple": "Royal purple",
+      "warm_brown": "Warm brown",
+      "teal": "Teal"
+    },
+    "stampNames": {
+      "heart": "Heart",
+      "star": "Star",
+      "ribbon": "Ribbon",
+      "rocket": "Rocket"
+    }
   },
   "sent": {
     "emptyTitle": "No sent letters",
