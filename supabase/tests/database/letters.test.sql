@@ -30,9 +30,13 @@ select policies_are(
 select ok(not has_table_privilege('anon', 'public.letters', 'select'), 'anon cannot select letters');
 select ok(not has_table_privilege('anon', 'public.letters', 'insert'), 'anon cannot insert letters');
 select ok(has_table_privilege('authenticated', 'public.letters', 'select'), 'authenticated can select letters (rows limited by RLS)');
-select ok(has_table_privilege('authenticated', 'public.letters', 'insert'), 'authenticated can insert letters (columns limited)');
-select ok(has_table_privilege('authenticated', 'public.letters', 'update'), 'authenticated can update letters (columns and rows limited)');
 select ok(has_table_privilege('authenticated', 'public.letters', 'delete'), 'authenticated can delete letters (rows limited by RLS)');
+-- INSERT/UPDATE are granted on letters only at the column level (never a bare `grant insert on
+-- letters`), and profiles.test.sql - the one file in this repo already proven green in CI -
+-- conspicuously never asserts has_table_privilege(..., 'update') for profiles either, whose UPDATE
+-- grant is column-only in exactly the same way; it uses has_column_privilege throughout instead.
+-- Not worth trusting has_table_privilege's column-grant behavior here when the column-level checks
+-- immediately below already cover the same ground precisely.
 
 select ok(has_column_privilege('authenticated', 'public.letters', 'body', 'insert'), 'body is insertable');
 select ok(has_column_privilege('authenticated', 'public.letters', 'body', 'update'), 'body is updatable');
