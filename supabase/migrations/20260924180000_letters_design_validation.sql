@@ -39,8 +39,13 @@ as $$
   );
 $$;
 
-revoke all on function public.is_valid_design(jsonb) from public, anon, authenticated;
-
+-- No revoke here, unlike most functions in this repo: a CHECK constraint's function call is
+-- evaluated with the privileges of whoever is performing the INSERT/UPDATE (there is no
+-- "security definer check constraint"), not the table owner - so is_valid_design() needs to stay
+-- executable by every role that can write to letters, the same as is_valid_username() and
+-- is_valid_display_name() in the profiles migration (also CHECK-constraint helpers, also never
+-- revoked). is_reserved_word() there is revoked instead, correctly: it is only ever called from
+-- inside a SECURITY DEFINER trigger function, not directly from a constraint.
 alter table public.letters
   add constraint letters_design_is_valid check (public.is_valid_design(design));
 
