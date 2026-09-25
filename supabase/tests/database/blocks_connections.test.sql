@@ -45,7 +45,7 @@ select ok(not has_table_privilege('authenticated', 'public.connections', 'update
 select ok(not has_table_privilege('authenticated', 'public.connections', 'delete'), 'authenticated cannot delete connections directly');
 
 select ok(not has_function_privilege('authenticated', 'public.is_blocked(uuid, uuid)', 'execute'), 'is_blocked is internal only');
-select ok(not has_function_privilege('authenticated', 'public.can_send(uuid, uuid, uuid)', 'execute'), 'can_send is internal only (nothing calls it until Phase 6)');
+select ok(not has_function_privilege('authenticated', 'public.can_send(uuid, uuid, uuid)', 'execute'), 'can_send is internal only (called from send_letter() and delivery, Phase 6)');
 select ok(has_function_privilege('authenticated', 'public.block_user(uuid)', 'execute'), 'authenticated can call block_user');
 select ok(has_function_privilege('authenticated', 'public.unblock_user(uuid)', 'execute'), 'authenticated can call unblock_user');
 select ok(has_function_privilege('authenticated', 'public.request_connection(uuid)', 'execute'), 'authenticated can call request_connection');

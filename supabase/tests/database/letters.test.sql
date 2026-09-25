@@ -29,7 +29,12 @@ select policies_are(
 
 select ok(not has_table_privilege('anon', 'public.letters', 'select'), 'anon cannot select letters');
 select ok(not has_table_privilege('anon', 'public.letters', 'insert'), 'anon cannot insert letters');
-select ok(has_table_privilege('authenticated', 'public.letters', 'select'), 'authenticated can select letters (rows limited by RLS)');
+-- SELECT is granted per column since Phase 6 (20260925150000_letters_sending.sql): every column
+-- except read_at, which is only exposed through the read-receipt-masking functions (DEC-025).
+select ok(has_any_column_privilege('authenticated', 'public.letters', 'select'), 'authenticated can select letters (rows limited by RLS)');
+select ok(has_column_privilege('authenticated', 'public.letters', 'body', 'select'), 'body is selectable');
+select ok(has_column_privilege('authenticated', 'public.letters', 'status', 'select'), 'status is selectable');
+select ok(not has_column_privilege('authenticated', 'public.letters', 'read_at', 'select'), 'read_at is not selectable directly (masked read receipts, DEC-025)');
 select ok(has_table_privilege('authenticated', 'public.letters', 'delete'), 'authenticated can delete letters (rows limited by RLS)');
 -- INSERT/UPDATE are granted on letters only at the column level (never a bare `grant insert on
 -- letters`), and profiles.test.sql - the one file in this repo already proven green in CI -
