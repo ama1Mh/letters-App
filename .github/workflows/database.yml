@@ -32,6 +32,13 @@ jobs:
         run: |
           set -o pipefail
           supabase test db 2>&1 | tee pgtap.log
+      - name: Upload pgTAP log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pgtap-log
+          path: pgtap.log
+          if-no-files-found: warn
       - name: Check that the tests really ran
         # A green run with zero or few tests would be a silent failure. The summary is also
         # published as an annotation so it can be read without downloading the logs.
