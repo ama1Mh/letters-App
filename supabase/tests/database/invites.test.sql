@@ -8,6 +8,10 @@ select no_plan();
 
 create temporary table test_ids (key text primary key, value uuid);
 create temporary table test_codes (key text primary key, value text);
+-- The owner (this session's initial role) creates and therefore owns these tables; later `set
+-- local role authenticated` blocks below still need to select/insert them directly, which the
+-- table owner's default privileges do not extend to another role.
+grant select, insert on test_ids, test_codes to authenticated;
 
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-000000000401', 'i1@example.test', '{}'),

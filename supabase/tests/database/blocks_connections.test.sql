@@ -13,6 +13,10 @@ create extension if not exists pgtap with schema extensions;
 select no_plan();
 
 create temporary table test_ids (key text primary key, value uuid);
+-- The owner (this session's initial role) creates and therefore owns this table; later `set local
+-- role authenticated` blocks below still need to select/insert/update it directly, which the
+-- table owner's default privileges do not extend to another role.
+grant select, insert, update on test_ids to authenticated;
 
 -- ---------------------------------------------------------------------------------------------
 -- Fixtures: four users (profiles created by the sign-up trigger)
