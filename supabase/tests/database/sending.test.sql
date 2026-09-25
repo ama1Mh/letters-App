@@ -1,4 +1,5 @@
--- pgTAP tests for Phase 6 step 1 (20260925150000_letters_sending.sql): send_letter(),
+-- pgTAP tests for Phase 6 step 1 (20260925150000_letters_sending.sql, with send-now delivering
+-- in the same transaction since 20260925160000_delivery.sql - see delivery.test.sql): send_letter(),
 -- unschedule_letter(), mark_read(), get_letter_read_at(), read-receipt masking, the narrowed
 -- delivered/undeliverable immutability trigger, the status-transition guard, and can_send()'s
 -- deleted-account check. Threats from PLAN §6.6 in scope: sending to an invite-only user
@@ -153,8 +154,8 @@ set local role authenticated;
 
 select is(
   (select row(s.status, s.scheduled_at, s.delivered_at)::text from public.send_letter('60000000-0000-0000-0000-000000000001') s),
-  row('scheduled'::public.letter_status, now(), null::timestamptz)::text,
-  'send-now to yourself: scheduled for now() (delivery is the next migration)'
+  row('delivered'::public.letter_status, now(), now())::text,
+  'send-now to yourself: delivered in the same transaction (DEC-044 (1))'
 );
 select is(
   (select s.scheduled_at from public.send_letter('60000000-0000-0000-0000-000000000002', now() + interval '1 day') s),
@@ -163,8 +164,8 @@ select is(
 );
 select is(
   (select s.status from public.send_letter('60000000-0000-0000-0000-000000000003') s),
-  'scheduled'::public.letter_status,
-  'invite_only recipient with an accepted connection: allowed'
+  'delivered'::public.letter_status,
+  'invite_only recipient with an accepted connection: allowed (send-now delivers)'
 );
 select is(
   (select status from public.letters where id = '60000000-0000-0000-0000-000000000002'),
@@ -180,8 +181,8 @@ select is(
 );
 select is(
   (select s.status from public.send_letter('60000000-0000-0000-0000-000000000001') s),
-  'scheduled'::public.letter_status,
-  'replaying send-now is not an error'
+  'delivered'::public.letter_status,
+  'replaying send-now is not an error and returns the delivered state'
 );
 reset role;
 select is(
@@ -460,11 +461,11 @@ select throws_ok(
   'P0001', 'invalid_status_transition', 'draft cannot jump straight to undeliverable'
 );
 select throws_ok(
-  $$ update public.letters set status = 'delivered' where id = '60000000-0000-0000-0000-000000000003' $$,
+  $$ update public.letters set status = 'delivered' where id = '60000000-0000-0000-0000-000000000002' $$,
   'P0001', 'invalid_status_transition', 'delivered requires delivered_at'
 );
 select lives_ok(
-  $$ update public.letters set status = 'delivered', delivered_at = now() where id = '60000000-0000-0000-0000-000000000003' $$,
+  $$ update public.letters set status = 'delivered', delivered_at = now() where id = '60000000-0000-0000-0000-000000000002' $$,
   'scheduled -> delivered with delivered_at is a valid transition'
 );
 
@@ -480,9 +481,9 @@ select lives_ok(
 );
 select is(
   (select count(*)::int from public.letters
-   where sender_id = '00000000-0000-0000-0000-000000000611' and subject = 'batch' and status = 'scheduled'),
+   where sender_id = '00000000-0000-0000-0000-000000000611' and subject = 'batch' and status = 'delivered'),
   30,
-  'all 30 are scheduled'
+  'all 30 are sent (send-now delivers)'
 );
 select throws_ok(
   $$ select public.send_letter('60000000-0000-0000-0000-000000000021') $$,

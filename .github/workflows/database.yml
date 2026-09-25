@@ -32,6 +32,8 @@ jobs:
         run: |
           set -o pipefail
           supabase test db 2>&1 | tee pgtap.log
+      - name: Delivery concurrency test (two real sessions; pgTAP cannot do this)
+        run: bash supabase/tests/concurrency/deliver_twice.sh
       - name: Upload pgTAP log
         if: always()
         uses: actions/upload-artifact@v4
@@ -47,8 +49,8 @@ jobs:
           summary=$(grep -E '^(Files=|Result:)' pgtap.log | tr '\n' ' ')
           echo "::notice title=pgTAP summary::${summary:-no summary line found}"
           tests=$(grep -oE 'Tests=[0-9]+' pgtap.log | head -1 | cut -d= -f2)
-          # 396 assertions before Phase 6, ~515 with sending.test.sql. Raise this floor when tests are added.
-          min=500
+          # 514 after Phase 6 step 1, ~580 with delivery.test.sql. Raise this floor when tests are added.
+          min=575
           if [ -z "$tests" ] || [ "$tests" -lt "$min" ]; then
             echo "::error title=pgTAP::expected at least $min tests, saw ${tests:-none}"
             exit 1
