@@ -31,6 +31,17 @@ fi
 fail() { echo "::error title=delivery concurrency::$*"; exit 1; }
 work=$(mktemp -d)
 
+# The pg_cron 'deliver-due-letters' job (20260926090000_delivery_cron_realtime.sql) would otherwise
+# deliver these fixtures on its own at the next minute boundary and skew the counts below. Pause it
+# for this script and resume it on exit; the live cron test (tests/live/cron_delivery.sh) runs after.
+set_job_active() {
+  q -c "select cron.alter_job(jobid, active := $1) from cron.job where jobname = 'deliver-due-letters'" >/dev/null
+}
+set_job_active false
+trap 'set_job_active true' EXIT
+# A run that started just before the pause finishes within milliseconds; give it time to.
+sleep 2
+
 SENDER=00000000-0000-0000-0000-000000000c01
 RECIPIENT=00000000-0000-0000-0000-000000000c02
 TARGET=c0000000-0000-0000-0000-000000000001
