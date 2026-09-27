@@ -76,8 +76,9 @@ jobs:
           echo "::notice title=pgTAP summary::${summary:-no summary line found}"
           tests=$(grep -oE 'Tests=[0-9]+' pgtap.log | head -1 | cut -d= -f2)
           # 514 after Phase 6 step 1, ~580 with delivery.test.sql, +59 with delivery_cron_realtime.test.sql
-          # (Phase 6 step 3A). Raise this floor when tests are added.
-          min=634
+          # (Phase 6 step 3A; 640 in run #22), +76 with letter_lists.test.sql (Phase 6 M0). Raise this
+          # floor when tests are added.
+          min=716
           if [ -z "$tests" ] || [ "$tests" -lt "$min" ]; then
             echo "::error title=pgTAP::expected at least $min tests, saw ${tests:-none}"
             exit 1
