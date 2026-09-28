@@ -35,7 +35,12 @@
     "send": "إرسال",
     "scheduleOpen": "جدولة…",
     "scheduleConfirm": "جدولة الإرسال",
-    "scheduleCancel": "إلغاء"
+    "scheduleCancel": "إلغاء",
+    "sendConfirmTitle": "هل تريد إرسال هذه الرسالة؟",
+    "sendConfirmMessage": "سيتم تسليمها الآن، ولا يمكن تعديلها بعد التسليم.",
+    "scheduleConfirmTitle": "هل تريد جدولة هذه الرسالة؟",
+    "scheduleConfirmMessage": "سيتم تسليمها في {{when}}. ويمكن إلغاء جدولتها حتى ذلك الحين.",
+    "sendConfirmCancel": "إلغاء"
   },
   "schedule": {
     "timeZone": "المنطقة الزمنية: {{zone}}",

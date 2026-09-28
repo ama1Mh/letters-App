@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import type { LocalDraft } from '@/data/local/draftsStore';
 
 import ar from '../src/core/i18n/locales/ar.json';
+import { mockAlerts } from './helpers/alerts';
 import { renderShellIn } from './helpers/renderShell';
 
 const DRAFT: LocalDraft = {
@@ -29,6 +30,7 @@ const PAST_MESSAGE = ar.letters.error.schedule_in_past;
 
 describe('compose: invalid schedule times (ar/RTL)', () => {
   it('flags a past time in Arabic, blocks it, and never sends a time that has passed while picking', async () => {
+    const alerts = mockAlerts('confirm');
     const view = await renderShellIn('ar', undefined, [DRAFT]);
     const send = jest.spyOn(view.letters, 'sendLetter');
     const push = jest.spyOn(view.drafts, 'push');
@@ -73,6 +75,7 @@ describe('compose: invalid schedule times (ar/RTL)', () => {
     );
     expect(send).not.toHaveBeenCalled();
     expect(push).not.toHaveBeenCalled(); // rejected before any upload
+    expect(alerts.shown).toHaveLength(0); // and before the confirmation dialog
     expect(screen.getByTestId('compose-screen')).toBeTruthy();
   });
 });

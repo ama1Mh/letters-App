@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import type { LocalDraft } from '@/data/local/draftsStore';
 
 import en from '../src/core/i18n/locales/en.json';
+import { mockAlerts } from './helpers/alerts';
 import { renderShellIn } from './helpers/renderShell';
 
 const DRAFT: LocalDraft = {
@@ -27,6 +28,7 @@ const DRAFT: LocalDraft = {
 
 describe('compose: send while the upload fails', () => {
   it('never calls send_letter, shows the generic error and keeps the draft', async () => {
+    mockAlerts('confirm');
     const view = await renderShellIn('en', undefined, [DRAFT]);
     jest.spyOn(view.drafts, 'push').mockRejectedValue(new Error('Network request failed'));
     const send = jest.spyOn(view.letters, 'sendLetter');

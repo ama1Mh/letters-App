@@ -148,6 +148,11 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `compose.scheduleOpen` | Schedule… | جدولة… | draft | Phase 6 M3 scheduled send |
 | `compose.scheduleConfirm` | Schedule send | جدولة الإرسال | draft | Phase 6 M3 scheduled send |
 | `compose.scheduleCancel` | Cancel | إلغاء | draft | Phase 6 M3 scheduled send |
+| `compose.sendConfirmTitle` | Send this letter? | هل تريد إرسال هذه الرسالة؟ | draft | Send/schedule confirmation (owner request 2026-09-29) |
+| `compose.sendConfirmMessage` | It will be delivered now and can't be changed after delivery. | سيتم تسليمها الآن، ولا يمكن تعديلها بعد التسليم. | draft | Send/schedule confirmation (owner request 2026-09-29) |
+| `compose.scheduleConfirmTitle` | Schedule this letter? | هل تريد جدولة هذه الرسالة؟ | draft | Send/schedule confirmation (owner request 2026-09-29) |
+| `compose.scheduleConfirmMessage` | It will be delivered on {{when}}. It can be unscheduled until then. | سيتم تسليمها في {{when}}. ويمكن إلغاء جدولتها حتى ذلك الحين. | draft | Send/schedule confirmation (owner request 2026-09-29); `{{when}}` is the full date and time, formatted with Western digits |
+| `compose.sendConfirmCancel` | Cancel | إلغاء | draft | Send/schedule confirmation (owner request 2026-09-29) |
 | `schedule.timeZone` | Time zone: {{zone}} | المنطقة الزمنية: {{zone}} | draft | Phase 6 M3 schedule picker; zone is an LTR-isolated IANA name + UTC offset |
 | `schedule.dayLabel` | Day | اليوم | draft | Phase 6 M3 schedule picker |
 | `schedule.dayEarlier` | Move 1 day earlier | تقديم يوم واحد | draft | Phase 6 M3 schedule picker |

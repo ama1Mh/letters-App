@@ -35,7 +35,12 @@
     "send": "Send",
     "scheduleOpen": "Schedule…",
     "scheduleConfirm": "Schedule send",
-    "scheduleCancel": "Cancel"
+    "scheduleCancel": "Cancel",
+    "sendConfirmTitle": "Send this letter?",
+    "sendConfirmMessage": "It will be delivered now and can't be changed after delivery.",
+    "scheduleConfirmTitle": "Schedule this letter?",
+    "scheduleConfirmMessage": "It will be delivered on {{when}}. It can be unscheduled until then.",
+    "sendConfirmCancel": "Cancel"
   },
   "schedule": {
     "timeZone": "Time zone: {{zone}}",

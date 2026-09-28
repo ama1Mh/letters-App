@@ -4,6 +4,8 @@ import { router } from 'expo-router';
 import type { LocalDraft } from '@/data/local/draftsStore';
 import { addDays, defaultScheduleTime } from '@/domain/schedule';
 
+import en from '../src/core/i18n/locales/en.json';
+import { mockAlerts } from './helpers/alerts';
 import { renderShellIn } from './helpers/renderShell';
 
 const DRAFT: LocalDraft = {
@@ -27,6 +29,7 @@ const DRAFT: LocalDraft = {
 
 describe('compose: schedule send', () => {
   it('opens the picker at the default time, moves it a day later and schedules that exact time', async () => {
+    const alerts = mockAlerts('confirm');
     const view = await renderShellIn('en', undefined, [DRAFT]);
     const send = jest.spyOn(view.letters, 'sendLetter');
 
@@ -49,6 +52,13 @@ describe('compose: schedule send', () => {
     await fireEvent.press(screen.getByTestId('schedule-day-plus'));
     await fireEvent.press(screen.getByTestId('compose-schedule-confirm'));
     await waitFor(() => expect(screen.getByTestId('sent-screen')).toBeTruthy());
+
+    // The confirmation named the exact day being scheduled.
+    const scheduled = addDays(expectedDefault, 1);
+    expect(alerts.shown).toHaveLength(1);
+    expect(alerts.shown[0].title).toBe(en.compose.scheduleConfirmTitle);
+    expect(alerts.shown[0].message).toContain(String(scheduled.getFullYear()));
+    expect(alerts.shown[0].message).toContain(String(scheduled.getDate()));
 
     expect(send).toHaveBeenCalledTimes(1);
     expect(send).toHaveBeenCalledWith(DRAFT.id, addDays(expectedDefault, 1));

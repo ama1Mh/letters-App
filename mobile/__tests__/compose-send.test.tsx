@@ -3,6 +3,8 @@ import { router } from 'expo-router';
 
 import type { LocalDraft } from '@/data/local/draftsStore';
 
+import en from '../src/core/i18n/locales/en.json';
+import { mockAlerts } from './helpers/alerts';
 import { renderShellIn } from './helpers/renderShell';
 
 const DRAFT: LocalDraft = {
@@ -25,7 +27,8 @@ const DRAFT: LocalDraft = {
 };
 
 describe('compose: send now', () => {
-  it('pushes the draft, sends it once, drops only the local copy and lands on Sent', async () => {
+  it('asks first; Cancel sends nothing, Send pushes, sends once, drops only the local copy and lands on Sent', async () => {
+    const alerts = mockAlerts('cancel');
     const view = await renderShellIn('en', undefined, [DRAFT]);
     const push = jest.spyOn(view.drafts, 'push');
     const forgetLocal = jest.spyOn(view.drafts, 'forgetLocal');
@@ -40,6 +43,16 @@ describe('compose: send now', () => {
       }),
     );
 
+    // Cancel in the confirmation: nothing is uploaded or sent, and we stay on compose.
+    await fireEvent.press(screen.getByTestId('compose-send'));
+    expect(alerts.shown).toHaveLength(1);
+    expect(alerts.shown[0].title).toBe(en.compose.sendConfirmTitle);
+    expect(alerts.shown[0].message).toBe(en.compose.sendConfirmMessage);
+    expect(push).not.toHaveBeenCalled();
+    expect(send).not.toHaveBeenCalled();
+    expect(screen.getByTestId('compose-screen')).toBeTruthy();
+
+    alerts.choose('confirm');
     await fireEvent.press(screen.getByTestId('compose-send'));
     await waitFor(() => expect(screen.getByTestId('sent-screen')).toBeTruthy());
 

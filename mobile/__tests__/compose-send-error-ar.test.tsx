@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import type { LocalDraft } from '@/data/local/draftsStore';
 
 import ar from '../src/core/i18n/locales/ar.json';
+import { mockAlerts } from './helpers/alerts';
 import { renderShellIn } from './helpers/renderShell';
 
 const DRAFT: LocalDraft = {
@@ -27,6 +28,7 @@ const DRAFT: LocalDraft = {
 
 describe('compose: send failure (ar/RTL)', () => {
   it('disables Send without a body, then shows the neutral Arabic error and keeps the draft', async () => {
+    const alerts = mockAlerts('confirm');
     const view = await renderShellIn(
       'ar',
       undefined,
@@ -52,6 +54,7 @@ describe('compose: send failure (ar/RTL)', () => {
     );
 
     await fireEvent.press(screen.getByTestId('compose-send'));
+    expect(alerts.shown[0].title).toBe(ar.compose.sendConfirmTitle);
     await waitFor(() =>
       expect(screen.getByTestId('compose-send-error')).toHaveTextContent(
         ar.letters.error.cannot_send,
