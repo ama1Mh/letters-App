@@ -2,8 +2,12 @@ import type { DraftsRepository, DraftInput } from '@/data/letters/draftsReposito
 import type { LocalDraft } from '@/data/local/draftsStore';
 
 /** In-memory `DraftsRepository` for component tests. sync() is a no-op (component tests exercise
- *  save/list/remove only); draftsRepository.test.ts covers sync() itself against the real logic. */
-export function createFakeDraftsRepository(initial: LocalDraft[] = []): DraftsRepository {
+ *  save/list/remove/push only); draftsRepository.test.ts covers sync() itself against the real
+ *  logic. `failPush` makes push() reject, like an offline upload. */
+export function createFakeDraftsRepository(
+  initial: LocalDraft[] = [],
+  options: { failPush?: boolean } = {},
+): DraftsRepository {
   const rows = new Map(initial.map((d) => [d.id, d]));
   let nextId = 0;
 
@@ -30,6 +34,15 @@ export function createFakeDraftsRepository(initial: LocalDraft[] = []): DraftsRe
       return draft;
     },
     async remove(id) {
+      rows.delete(id);
+    },
+    async push(id) {
+      if (options.failPush) throw new Error('push failed (fake)');
+      const draft = rows.get(id);
+      if (!draft) throw new Error('push: draft not found locally');
+      rows.set(id, { ...draft, dirty: false });
+    },
+    async forgetLocal(id) {
       rows.delete(id);
     },
     async sync() {

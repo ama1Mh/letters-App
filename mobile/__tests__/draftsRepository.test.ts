@@ -141,6 +141,73 @@ describe('createDraftsRepository', () => {
     });
   });
 
+  describe('push and forgetLocal', () => {
+    const DRAFT: LocalDraft = {
+      id: 'd1',
+      subject: 'Hi',
+      body: 'Hello',
+      bodyDir: 'ltr',
+      design: { v: 1 },
+      recipientId: 'u2',
+      dirty: true,
+      updatedAt: 't',
+    };
+
+    function setup(clientOpts: FakeClientOptions = { session: { user: { id: 'me' } } }) {
+      const store = createFakeDraftsStore([DRAFT]);
+      const fake = fakeClient(clientOpts);
+      const repo = createDraftsRepository({
+        localStore: store,
+        client: fake.client,
+        generateId: () => 'unused',
+        now: nextNow,
+        fallbackDirection: FALLBACK,
+      });
+      return { store, repo, ...fake };
+    }
+
+    it('push uploads that one draft and marks it clean', async () => {
+      const { repo, store, upserts } = setup();
+      await repo.push('d1');
+      expect(upserts).toEqual([
+        {
+          id: 'd1',
+          sender_id: 'me',
+          recipient_id: 'u2',
+          subject: 'Hi',
+          body: 'Hello',
+          body_dir: 'ltr',
+          design: { v: 1 },
+        },
+      ]);
+      await expect(store.get('d1')).resolves.toEqual({ ...DRAFT, dirty: false });
+    });
+
+    it('push rejects when signed out, for an unknown id, and on an upload error, keeping the draft', async () => {
+      const signedOut = setup({ session: null });
+      await expect(signedOut.repo.push('d1')).rejects.toThrow();
+      expect(signedOut.upserts).toEqual([]);
+
+      const unknown = setup();
+      await expect(unknown.repo.push('nope')).rejects.toThrow();
+      expect(unknown.upserts).toEqual([]);
+
+      const failing = setup({
+        session: { user: { id: 'me' } },
+        upsertError: { message: 'offline' },
+      });
+      await expect(failing.repo.push('d1')).rejects.toThrow();
+      await expect(failing.store.get('d1')).resolves.toEqual(DRAFT); // still dirty, still there
+    });
+
+    it('forgetLocal removes only the local copy, never the server row', async () => {
+      const { repo, store, deletedIds } = setup();
+      await repo.forgetLocal('d1');
+      await expect(store.get('d1')).resolves.toBeNull();
+      expect(deletedIds).toEqual([]);
+    });
+  });
+
   describe('sync', () => {
     function localDraft(overrides: Partial<LocalDraft>): LocalDraft {
       return {

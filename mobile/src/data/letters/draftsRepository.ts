@@ -46,6 +46,14 @@ export interface DraftsRepository {
   save(input: DraftInput): Promise<LocalDraft>;
   remove(id: string): Promise<void>;
   sync(): Promise<SyncResult>;
+  /** Uploads one local draft now (not waiting for sync()), so the server copy matches before
+   *  `send_letter`. Rejects if signed out, if the draft is not stored locally, or if the upload
+   *  fails (e.g. offline); the local draft is kept either way. */
+  push(id: string): Promise<void>;
+  /** Removes the local copy only, never the server row: used after a successful send, when the
+   *  server row is no longer a draft (so sync()'s pull, which only reads drafts, won't bring it
+   *  back). Unlike remove(), which also deletes the remote draft. */
+  forgetLocal(id: string): Promise<void>;
 }
 
 interface LetterDraftRow {
@@ -123,6 +131,22 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
         // Best effort; see the file header comment for the known resurrection edge case.
       }
     },
+
+    async push(id) {
+      const {
+        data: { session },
+      } = await client.auth.getSession();
+      if (!session) throw new Error('push: not signed in');
+      const draft = await localStore.get(id);
+      if (!draft) throw new Error('push: draft not found locally');
+      const { error } = await client
+        .from('letters')
+        .upsert(toRemoteRow(draft, session.user.id), { onConflict: 'id' });
+      if (error) throw new Error(`push failed: ${error.message}`);
+      await localStore.upsert({ ...draft, dirty: false });
+    },
+
+    forgetLocal: (id) => localStore.remove(id),
 
     async sync() {
       const {
