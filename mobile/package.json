@@ -10,7 +10,8 @@
     "lint": "expo lint -- --max-warnings=0",
     "test": "jest",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "gen:types": "cd .. && npx supabase@2.118.0 gen types typescript --linked --schema public > mobile/src/data/supabase/database.types.ts"
   },
   "dependencies": {
     "@expo-google-fonts/amiri": "^0.4.1",
