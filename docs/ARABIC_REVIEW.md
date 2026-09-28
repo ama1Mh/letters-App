@@ -144,6 +144,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `compose.recipientLabel` | To | إلى | draft | |
 | `compose.noRecipient` | Choose a recipient | اختر المستلم | draft | |
 | `compose.recipientChosen` | Recipient selected | تم اختيار المستلم | draft | |
+| `compose.send` | Send | إرسال | draft | Phase 6 M2 send button |
 | `profile.connections` | Connection requests | طلبات الاتصال | draft | |
 | `profile.myInvite` | My invite link | رابط دعوتي | draft | |
 | `profile.privacy` | Privacy | الخصوصية | draft | |

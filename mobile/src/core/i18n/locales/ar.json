@@ -31,7 +31,8 @@
     "changeDesign": "تغيير التصميم",
     "recipientLabel": "إلى",
     "noRecipient": "اختر المستلم",
-    "recipientChosen": "تم اختيار المستلم"
+    "recipientChosen": "تم اختيار المستلم",
+    "send": "إرسال"
   },
   "design": {
     "paperLabel": "الورق",

@@ -31,7 +31,8 @@
     "changeDesign": "Change design",
     "recipientLabel": "To",
     "noRecipient": "Choose a recipient",
-    "recipientChosen": "Recipient selected"
+    "recipientChosen": "Recipient selected",
+    "send": "Send"
   },
   "design": {
     "paperLabel": "Paper",
