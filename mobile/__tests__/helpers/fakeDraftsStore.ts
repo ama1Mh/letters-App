@@ -16,5 +16,8 @@ export function createFakeDraftsStore(initial: LocalDraft[] = []): LocalDraftsSt
     async remove(id) {
       rows.delete(id);
     },
+    async clear() {
+      rows.clear();
+    },
   };
 }

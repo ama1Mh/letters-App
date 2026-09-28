@@ -16,6 +16,7 @@
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'expo-crypto';
+import Storage from 'expo-sqlite/kv-store';
 
 import { isLayoutRtl } from '../../core/i18n/direction';
 import { detectBodyDirection, type TextDirection } from '../../domain/bodyDirection';
@@ -54,7 +55,31 @@ export interface DraftsRepository {
    *  server row is no longer a draft (so sync()'s pull, which only reads drafts, won't bring it
    *  back). Unlike remove(), which also deletes the remote draft. */
   forgetLocal(id: string): Promise<void>;
+  /**
+   * Local drafts are one device-wide store, not per account. Called once an account is signed in:
+   * if the drafts on this device belong to a different account (recorded owner), they are deleted
+   * before anything can list or sync them, so one account's private drafts never reach another.
+   */
+  claimForUser(userId: string): Promise<void>;
+  /** Called on sign-out: best-effort sync (so unsent edits reach the server), then clears every
+   *  local draft and forgets the owner. */
+  releaseForSignOut(): Promise<void>;
 }
+
+/** Where the owner of the device's local drafts is recorded (a user id, or absent). */
+export interface DraftsOwnerStore {
+  get(): string | null;
+  set(userId: string | null): void;
+}
+
+const OWNER_KEY = 'drafts.ownerId';
+const kvOwnerStore: DraftsOwnerStore = {
+  get: () => Storage.getItemSync(OWNER_KEY),
+  set: (userId) => {
+    if (userId) Storage.setItemSync(OWNER_KEY, userId);
+    else Storage.removeItemSync(OWNER_KEY);
+  },
+};
 
 interface LetterDraftRow {
   id: string;
@@ -142,13 +167,16 @@ export interface DraftsRepositoryOptions {
   now: () => string;
   /** detectBodyDirection()'s fallback: the sender's current UI direction (PLAN §3.5). */
   fallbackDirection: () => TextDirection;
+  /** Defaults to the kv-store. */
+  ownerStore?: DraftsOwnerStore;
 }
 
 /** Pure of native modules: every dependency is injected. */
 export function createDraftsRepository(options: DraftsRepositoryOptions): DraftsRepository {
   const { localStore, client, generateId, now, fallbackDirection } = options;
+  const ownerStore = options.ownerStore ?? kvOwnerStore;
 
-  return {
+  const repository: DraftsRepository = {
     list: () => localStore.list(),
     get: (id) => localStore.get(id),
 
@@ -188,6 +216,24 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
     },
 
     forgetLocal: (id) => localStore.remove(id),
+
+    async claimForUser(userId) {
+      const owner = ownerStore.get();
+      // No recorded owner: drafts written before this marker existed (or on a fresh install) are
+      // the current account's. A different owner: not ours, delete them unread.
+      if (owner !== null && owner !== userId) await localStore.clear();
+      ownerStore.set(userId);
+    },
+
+    async releaseForSignOut() {
+      try {
+        await repository.sync();
+      } catch {
+        // Offline: unsynced edits are lost with the sign-out; privacy wins over keeping them.
+      }
+      await localStore.clear();
+      ownerStore.set(null);
+    },
 
     async sync() {
       const {
@@ -238,6 +284,7 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
       return { pushed, pulled, failed };
     },
   };
+  return repository;
 }
 
 let shared: DraftsRepository | null = null;

@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { LocalDraft } from '@/data/local/draftsStore';
-import { createDraftsRepository } from '@/data/letters/draftsRepository';
+import { createDraftsRepository, type DraftsOwnerStore } from '@/data/letters/draftsRepository';
 
 import { createFakeDraftsStore } from './helpers/fakeDraftsStore';
 
@@ -282,6 +282,78 @@ describe('createDraftsRepository', () => {
       await repo.forgetLocal('d1');
       await expect(store.get('d1')).resolves.toBeNull();
       expect(deletedIds).toEqual([]);
+    });
+  });
+
+  describe('device ownership (privacy across accounts)', () => {
+    const MINE: LocalDraft = {
+      id: 'mine',
+      subject: 'Private',
+      body: 'Only for my eyes',
+      bodyDir: 'ltr',
+      design: {},
+      recipientId: null,
+      dirty: true,
+      updatedAt: 't',
+    };
+
+    function memoryOwner(
+      initial: string | null,
+    ): DraftsOwnerStore & { value: () => string | null } {
+      let owner = initial;
+      return { get: () => owner, set: (v) => (owner = v), value: () => owner };
+    }
+
+    function setup(owner: string | null, clientOpts: FakeClientOptions = {}) {
+      const store = createFakeDraftsStore([MINE]);
+      const ownerStore = memoryOwner(owner);
+      const fake = fakeClient(clientOpts);
+      const repo = createDraftsRepository({
+        localStore: store,
+        client: fake.client,
+        generateId: () => 'unused',
+        now: nextNow,
+        fallbackDirection: FALLBACK,
+        ownerStore,
+      });
+      return { store, ownerStore, repo, ...fake };
+    }
+
+    it("deletes another account's drafts, unread, when a different account signs in", async () => {
+      const { repo, store, ownerStore } = setup('alice');
+      await repo.claimForUser('bob');
+      await expect(store.list()).resolves.toEqual([]);
+      expect(ownerStore.value()).toBe('bob');
+    });
+
+    it('keeps the drafts for the same account, and adopts them when no owner was recorded', async () => {
+      const same = setup('alice');
+      await same.repo.claimForUser('alice');
+      await expect(same.store.list()).resolves.toEqual([MINE]);
+
+      const unrecorded = setup(null);
+      await unrecorded.repo.claimForUser('alice');
+      await expect(unrecorded.store.list()).resolves.toEqual([MINE]);
+      expect(unrecorded.ownerStore.value()).toBe('alice');
+    });
+
+    it('on sign-out: syncs unsent edits first, then clears the drafts and the owner', async () => {
+      const { repo, store, ownerStore, inserts } = setup('alice', {
+        session: { user: { id: 'alice' } },
+      });
+      await repo.releaseForSignOut();
+      expect(inserts.map((row) => row.id)).toEqual(['mine']); // pushed before clearing
+      await expect(store.list()).resolves.toEqual([]);
+      expect(ownerStore.value()).toBeNull();
+    });
+
+    it('still clears on sign-out when the sync fails (offline)', async () => {
+      const { repo, store } = setup('alice', {
+        session: { user: { id: 'alice' } },
+        writeError: { message: 'offline' },
+      });
+      await repo.releaseForSignOut();
+      await expect(store.list()).resolves.toEqual([]);
     });
   });
 

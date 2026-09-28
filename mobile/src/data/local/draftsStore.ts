@@ -28,4 +28,6 @@ export interface LocalDraftsStore {
   get(id: string): Promise<LocalDraft | null>;
   upsert(draft: LocalDraft): Promise<void>;
   remove(id: string): Promise<void>;
+  /** Deletes every local draft (sign-out / a different account on this device). */
+  clear(): Promise<void>;
 }

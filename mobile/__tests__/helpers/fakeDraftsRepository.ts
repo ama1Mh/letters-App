@@ -41,6 +41,10 @@ export function createFakeDraftsRepository(initial: LocalDraft[] = []): DraftsRe
     async forgetLocal(id) {
       rows.delete(id);
     },
+    async claimForUser() {},
+    async releaseForSignOut() {
+      rows.clear();
+    },
     async sync() {
       return { pushed: 0, pulled: 0, failed: 0 };
     },

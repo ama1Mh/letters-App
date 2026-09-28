@@ -100,4 +100,9 @@ export const nativeDraftsStore: LocalDraftsStore = {
     ensureSchema();
     database().runSync('delete from local_drafts where id = ?', id);
   },
+
+  async clear() {
+    ensureSchema();
+    database().runSync('delete from local_drafts');
+  },
 };

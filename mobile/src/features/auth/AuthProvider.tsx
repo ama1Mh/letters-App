@@ -26,6 +26,7 @@ import {
   type AuthSession,
   type OwnProfile,
 } from '@/data/supabase/auth';
+import { getDraftsRepository } from '@/data/letters/draftsRepository';
 
 export type AuthStatus = 'loading' | 'signedOut' | 'needsOnboarding' | 'ready';
 
@@ -61,6 +62,12 @@ export function AuthProvider({ children, repository }: AuthProviderProps) {
         return;
       }
       const p = await repo.getOwnProfile(session.userId);
+      // Before any screen can list or sync local drafts: drop another account's (privacy).
+      try {
+        await getDraftsRepository().claimForUser(session.userId);
+      } catch {
+        // Local storage unavailable: nothing to protect or to show.
+      }
       setProfile(p);
       setStatus(p?.onboardedAt ? 'ready' : 'needsOnboarding');
     },
@@ -87,6 +94,8 @@ export function AuthProvider({ children, repository }: AuthProviderProps) {
   }, [repo, applySession]);
 
   const signOut = useCallback(async () => {
+    // Sync unsent edits while still signed in, then clear this account's local drafts.
+    await getDraftsRepository().releaseForSignOut();
     await repo.signOut();
   }, [repo]);
 
