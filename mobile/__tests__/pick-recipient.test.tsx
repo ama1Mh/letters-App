@@ -50,6 +50,7 @@ describe('pick-recipient', () => {
     const view = await renderShellIn('en', undefined, [DRAFT], {
       searchResults: [EVERYONE_USER, INVITE_ONLY_USER],
     });
+    const save = jest.spyOn(view.drafts, 'save');
 
     // eslint-disable-next-line @typescript-eslint/require-await
     await act(async () => router.push(`/compose/${DRAFT.id}`));
@@ -72,10 +73,12 @@ describe('pick-recipient', () => {
 
     await fireEvent.press(screen.getByTestId('pick-recipient-write-user-everyone'));
     await waitFor(() => expect(screen.getByTestId('compose-screen')).toBeTruthy());
-    await waitFor(async () => {
-      const saved = await view.drafts.get(DRAFT.id);
-      expect(saved?.recipientId).toBe('user-everyone');
-    });
+    await waitFor(() =>
+      expect(save).toHaveBeenLastCalledWith(
+        expect.objectContaining({ id: DRAFT.id, recipientId: 'user-everyone' }),
+      ),
+    );
+    expect((await view.drafts.get(DRAFT.id))?.recipientId).toBe('user-everyone');
     expect(screen.getByText('Recipient selected')).toBeTruthy();
   });
 });

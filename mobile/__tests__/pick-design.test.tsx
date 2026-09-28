@@ -27,6 +27,7 @@ const DRAFT: LocalDraft = {
 describe('pick-design', () => {
   it('shows only Arabic-capable fonts for an rtl draft, applies choices immediately, and persists them', async () => {
     const view = await renderShellIn('en', undefined, [DRAFT]);
+    const save = jest.spyOn(view.drafts, 'save');
 
     // Push through compose first, so "back" from the picker has somewhere real to return to.
     // eslint-disable-next-line @typescript-eslint/require-await -- act's async form flushes
@@ -50,15 +51,13 @@ describe('pick-design', () => {
     await fireEvent.press(screen.getByTestId('pick-design-ink-navy'));
     await fireEvent.press(screen.getByTestId('pick-design-stamp-heart'));
 
-    await waitFor(async () => {
-      const saved = await view.drafts.get(DRAFT.id);
-      expect(saved?.design).toMatchObject({
-        paper: 'sky',
-        font: 'cairo',
-        ink: 'navy',
-        stamp: 'heart',
-      });
-    });
+    const chosen = { paper: 'sky', font: 'cairo', ink: 'navy', stamp: 'heart' };
+    await waitFor(() =>
+      expect(save).toHaveBeenLastCalledWith(
+        expect.objectContaining({ id: DRAFT.id, design: expect.objectContaining(chosen) }),
+      ),
+    );
+    expect((await view.drafts.get(DRAFT.id))?.design).toMatchObject(chosen);
 
     await fireEvent.press(screen.getByTestId('pick-design-back'));
     await waitFor(() => expect(screen.getByTestId('compose-screen')).toBeTruthy());

@@ -46,6 +46,12 @@ export interface AuthOverride {
  *
  * Expo Router keeps a global router store and RNTL unmounts after every test, so use ONE test per
  * file that calls this: a second render would start from the previous test's navigation state.
+ *
+ * `renderRouter()` switches the test to fake timers, so never pass an async callback to `waitFor`:
+ * its fake-timer loop keeps an `act()` open after it resolves, which pushes RNTL's cleanup unmount
+ * past environment teardown. RN's `StatusBar` then hands a fake-timer handle to Node's real
+ * `clearImmediate`, which strands Node's immediate queue and hangs the Jest worker (seen only in
+ * full, parallel runs). Wait on something synchronous (a spy, the screen), then `await` reads.
  */
 export async function renderShellIn(
   language: 'en' | 'ar',

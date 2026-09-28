@@ -28,6 +28,7 @@ const DRAFT: LocalDraft = {
 describe('compose <-> design picker integration', () => {
   it('shows a live preview, and a design chosen in the picker shows up back on compose', async () => {
     const view = await renderShellIn('en', undefined, [DRAFT]);
+    const save = jest.spyOn(view.drafts, 'save');
 
     // eslint-disable-next-line @typescript-eslint/require-await
     await act(async () => router.push(`/compose/${DRAFT.id}`));
@@ -44,10 +45,15 @@ describe('compose <-> design picker integration', () => {
     await fireEvent.press(screen.getByTestId('compose-change-design'));
     await waitFor(() => expect(screen.getByTestId('pick-design-screen')).toBeTruthy());
     await fireEvent.press(screen.getByTestId('pick-design-paper-mint'));
-    await waitFor(async () => {
-      const saved = await view.drafts.get(DRAFT.id);
-      expect(saved?.design).toMatchObject({ paper: 'mint' });
-    });
+    await waitFor(() =>
+      expect(save).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          id: DRAFT.id,
+          design: expect.objectContaining({ paper: 'mint' }),
+        }),
+      ),
+    );
+    expect((await view.drafts.get(DRAFT.id))?.design).toMatchObject({ paper: 'mint' });
 
     await fireEvent.press(screen.getByTestId('pick-design-back'));
     await waitFor(() => expect(screen.getByTestId('compose-screen')).toBeTruthy());
