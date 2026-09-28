@@ -194,3 +194,14 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `privacy.receiveModeInviteOnly` | Only people I'm connected with | المتصلون بي فقط | draft | |
 | `privacy.discoverableByUsernameLabel` | Let people find me by username | السماح للآخرين بالعثور عليّ باسم المستخدم | draft | |
 | `privacy.discoverableByEmailLabel` | Let people find me by email | السماح للآخرين بالعثور عليّ عبر البريد الإلكتروني | draft | |
+| `letters.error.recipient_required` | Choose a recipient first. | اختر المستلم أولًا. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.error.body_empty` | Write your letter before sending it. | اكتب رسالتك قبل إرسالها. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.error.cannot_send` | This letter can't be sent to this person. | لا يمكن إرسال هذه الرسالة إلى هذا الشخص. | draft | Phase 6 send/schedule error (DEC-048 M1); neutral: must not reveal a block or the receive setting |
+| `letters.error.schedule_in_past` | That time has passed. Choose a later time. | هذا الوقت قد مضى. اختر وقتًا لاحقًا. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.error.schedule_too_soon` | Choose a time at least 1 minute from now. | اختر وقتًا بعد دقيقة واحدة على الأقل من الآن. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.error.schedule_too_far` | Choose a time within the next 5 years. | اختر وقتًا خلال 5 سنوات من الآن. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.error.rate_limited` | Too many letters sent. Try again later. | تم إرسال عدد كبير من الرسائل. حاول مرة أخرى لاحقًا. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.error.already_delivered` | This letter has already been delivered. | تم تسليم هذه الرسالة بالفعل. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.error.not_scheduled` | This letter is no longer scheduled. | لم تعد هذه الرسالة مجدولة. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.error.not_found` | This letter is no longer available. | لم تعد هذه الرسالة متاحة. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | Phase 6 send/schedule error (DEC-048 M1) |

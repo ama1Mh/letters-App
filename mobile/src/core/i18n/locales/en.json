@@ -244,5 +244,20 @@
       }
     },
     "signOut": "Sign out"
+  },
+  "letters": {
+    "error": {
+      "recipient_required": "Choose a recipient first.",
+      "body_empty": "Write your letter before sending it.",
+      "cannot_send": "This letter can't be sent to this person.",
+      "schedule_in_past": "That time has passed. Choose a later time.",
+      "schedule_too_soon": "Choose a time at least 1 minute from now.",
+      "schedule_too_far": "Choose a time within the next 5 years.",
+      "rate_limited": "Too many letters sent. Try again later.",
+      "already_delivered": "This letter has already been delivered.",
+      "not_scheduled": "This letter is no longer scheduled.",
+      "not_found": "This letter is no longer available.",
+      "unknown": "Something went wrong. Try again."
+    }
   }
 }
