@@ -7,6 +7,7 @@ import { FlatList, Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { EmptyState } from '@/components/EmptyState';
+import { contentTextAlign } from '@/core/i18n/direction';
 import { useTheme } from '@/core/theme/useTheme';
 import type { LocalDraft } from '@/data/local/draftsStore';
 import { useDrafts } from '@/features/drafts/useDrafts';
@@ -49,7 +50,7 @@ export default function DraftsScreen() {
             // A letter's own direction (body_dir), independent of the UI's: Text does not
             // auto-detect content direction the way TextInput does (OPEN-4 spike finding).
             style={{
-              textAlign: item.bodyDir === 'rtl' ? 'right' : 'left',
+              textAlign: contentTextAlign(item.bodyDir),
               writingDirection: item.bodyDir,
             }}
           >

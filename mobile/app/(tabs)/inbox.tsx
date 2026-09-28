@@ -8,6 +8,7 @@ import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
 import { currentLanguage } from '@/core/i18n';
 import { formatDate } from '@/core/i18n/format';
+import { contentTextAlign } from '@/core/i18n/direction';
 import { useTheme } from '@/core/theme/useTheme';
 import {
   getLettersRepository,
@@ -90,7 +91,7 @@ export default function InboxScreen() {
               numberOfLines={2}
               // The letter's own direction (body_dir), independent of the UI's (see drafts list).
               style={{
-                textAlign: item.bodyDir === 'rtl' ? 'right' : 'left',
+                textAlign: contentTextAlign(item.bodyDir),
                 writingDirection: item.bodyDir,
               }}
             >

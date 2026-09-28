@@ -1,6 +1,6 @@
 import { DevSettings, I18nManager } from 'react-native';
 
-import { applyLayoutDirection, reloadApp } from '../src/core/i18n/direction';
+import { applyLayoutDirection, contentTextAlign, reloadApp } from '../src/core/i18n/direction';
 
 function layoutIs(isRTL: boolean) {
   jest
@@ -60,5 +60,33 @@ describe('reloadApp', () => {
     } finally {
       (globalThis as { __DEV__?: boolean }).__DEV__ = original;
     }
+  });
+});
+
+describe('contentTextAlign', () => {
+  function layout(isRTL: boolean, doLeftAndRightSwapInRTL = true) {
+    jest
+      .spyOn(I18nManager, 'getConstants')
+      .mockReturnValue({ isRTL, doLeftAndRightSwapInRTL, localeIdentifier: isRTL ? 'ar' : 'en' });
+  }
+
+  afterEach(() => jest.restoreAllMocks());
+
+  it('passes the physical side through in an LTR layout', () => {
+    layout(false);
+    expect(contentTextAlign('ltr')).toBe('left');
+    expect(contentTextAlign('rtl')).toBe('right');
+  });
+
+  it('pre-swaps in an RTL layout, where Android swaps left/right back (English letter in Arabic UI)', () => {
+    layout(true);
+    expect(contentTextAlign('ltr')).toBe('right'); // rendered on the physical left
+    expect(contentTextAlign('rtl')).toBe('left'); // rendered on the physical right
+  });
+
+  it('does not swap when the platform does not swap', () => {
+    layout(true, false);
+    expect(contentTextAlign('ltr')).toBe('left');
+    expect(contentTextAlign('rtl')).toBe('right');
   });
 });

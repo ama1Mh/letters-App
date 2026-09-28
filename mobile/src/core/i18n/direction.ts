@@ -8,6 +8,21 @@ export function isLayoutRtl(): boolean {
 }
 
 /**
+ * The `textAlign` that puts text of direction `dir` on its own start side (physical left for ltr,
+ * right for rtl) whatever the UI direction. Needed because `<Text>` does not align by its content's
+ * direction, and on Android React Native swaps 'left'/'right' in an RTL layout
+ * (`doLeftAndRightSwapInRTL`, on by default): a plain `'left'` for an English letter would render on
+ * the right inside the Arabic UI (found on the device, Phase 6 M8). Use together with
+ * `writingDirection: dir`.
+ */
+export function contentTextAlign(dir: 'ltr' | 'rtl'): 'left' | 'right' {
+  const physical = dir === 'rtl' ? 'right' : 'left';
+  const { isRTL, doLeftAndRightSwapInRTL } = I18nManager.getConstants();
+  if (!isRTL || !doLeftAndRightSwapInRTL) return physical;
+  return physical === 'left' ? 'right' : 'left';
+}
+
+/**
  * Tells React Native which direction the next app start must use. RN fixes layout direction at
  * startup, so a mismatch with the current layout means a reload is needed (en <-> ar only).
  */

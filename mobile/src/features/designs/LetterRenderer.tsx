@@ -3,6 +3,7 @@ import type { ComponentProps } from 'react';
 import { View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { contentTextAlign } from '@/core/i18n/direction';
 import { useTheme } from '@/core/theme/useTheme';
 import type { TextDirection } from '@/domain/bodyDirection';
 import { inkOf, paperOf, resolveFont, stampOf, type Design } from '@/domain/design';
@@ -36,7 +37,7 @@ export function LetterRenderer({ design, subject, body, bodyDir, testID }: Lette
   const ink = inkOf(design);
   const font = resolveFont(design, bodyDir);
   const stamp = stampOf(design);
-  const textAlign = bodyDir === 'rtl' ? 'right' : 'left';
+  const textAlign = contentTextAlign(bodyDir);
 
   return (
     <View
