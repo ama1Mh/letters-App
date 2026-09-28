@@ -176,12 +176,17 @@ select is(
   'a fresh letter is the root of its own thread'
 );
 
+-- A reply needs a delivered parent addressed to its sender (20260929120000_replies.sql; the rule
+-- itself is covered in replies.test.sql): 102 -> 101, delivered, then 101 replies.
+insert into public.letters (id, sender_id, recipient_id, status, body, scheduled_at, delivered_at)
+  values ('10000000-0000-0000-0000-00000000000f', '00000000-0000-0000-0000-000000000102',
+          '00000000-0000-0000-0000-000000000101', 'delivered', 'parent', now(), now());
 insert into public.letters (id, sender_id, parent_letter_id, status, recipient_id, body)
   values ('10000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000101',
-          '10000000-0000-0000-0000-000000000001', 'draft', '00000000-0000-0000-0000-000000000102', 'reply');
+          '10000000-0000-0000-0000-00000000000f', 'draft', '00000000-0000-0000-0000-000000000102', 'reply');
 select is(
   (select thread_id from public.letters where id = '10000000-0000-0000-0000-000000000002'),
-  '10000000-0000-0000-0000-000000000001'::uuid,
+  '10000000-0000-0000-0000-00000000000f'::uuid,
   'a reply inherits its parent''s thread_id'
 );
 
