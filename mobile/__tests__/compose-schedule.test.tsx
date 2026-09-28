@@ -52,6 +52,10 @@ describe('compose: schedule send', () => {
     await fireEvent.press(screen.getByTestId('schedule-day-plus'));
     await fireEvent.press(screen.getByTestId('compose-schedule-confirm'));
     await waitFor(() => expect(screen.getByTestId('sent-screen')).toBeTruthy());
+    // Lands on the Scheduled view, where the new letter is.
+    expect(screen.getByTestId('sent-switch-scheduled').props.accessibilityState).toMatchObject({
+      selected: true,
+    });
 
     // The confirmation named the exact day being scheduled.
     const scheduled = addDays(expectedDefault, 1);

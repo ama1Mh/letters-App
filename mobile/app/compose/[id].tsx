@@ -137,7 +137,7 @@ export default function ComposeScreen() {
       await drafts.push(id);
       await getLettersRepository().sendLetter(id, scheduledAt);
       await drafts.forgetLocal(id);
-      router.replace('/sent');
+      router.replace({ pathname: '/sent', params: { view: scheduledAt ? 'scheduled' : 'sent' } });
     } catch (error) {
       sendingRef.current = false;
       setSending(false);

@@ -94,7 +94,22 @@
   },
   "sent": {
     "emptyTitle": "لا توجد رسائل مرسلة",
-    "emptyBody": "ستظهر هنا الرسائل المرسلة والمجدولة."
+    "emptyBody": "ستظهر هنا الرسائل المرسلة.",
+    "tabScheduled": "المجدولة",
+    "tabSent": "المرسلة",
+    "scheduledEmptyTitle": "لا توجد رسائل مجدولة",
+    "scheduledEmptyBody": "تنتظر هنا الرسائل المجدولة حتى يتم تسليمها.",
+    "to": "إلى",
+    "scheduledFor": "موعد التسليم: {{when}}",
+    "deliveredAt": "تم التسليم: {{when}}",
+    "undeliverable": "تعذّر التسليم",
+    "read": "تمت القراءة",
+    "unschedule": "إلغاء الجدولة",
+    "unscheduleConfirmTitle": "هل تريد إلغاء جدولة هذه الرسالة؟",
+    "unscheduleConfirmMessage": "ستعود إلى المسودات.",
+    "unscheduleConfirmCancel": "إبقاء الجدولة",
+    "unscheduled": "أُعيدت الرسالة إلى المسودات.",
+    "retry": "إعادة المحاولة"
   },
   "profile": {
     "language": "اللغة",
@@ -279,6 +294,7 @@
       "not_scheduled": "لم تعد هذه الرسالة مجدولة.",
       "not_found": "لم تعد هذه الرسالة متاحة.",
       "unknown": "حدث خطأ ما. حاول مرة أخرى."
-    }
+    },
+    "deletedAccount": "حساب محذوف"
   }
 }

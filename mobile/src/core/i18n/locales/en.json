@@ -94,7 +94,22 @@
   },
   "sent": {
     "emptyTitle": "No sent letters",
-    "emptyBody": "Sent and scheduled letters will appear here."
+    "emptyBody": "Letters you send will appear here.",
+    "tabScheduled": "Scheduled",
+    "tabSent": "Sent",
+    "scheduledEmptyTitle": "Nothing scheduled",
+    "scheduledEmptyBody": "Letters you schedule wait here until they're delivered.",
+    "to": "To",
+    "scheduledFor": "Delivers {{when}}",
+    "deliveredAt": "Delivered {{when}}",
+    "undeliverable": "Couldn't be delivered",
+    "read": "Read",
+    "unschedule": "Unschedule",
+    "unscheduleConfirmTitle": "Unschedule this letter?",
+    "unscheduleConfirmMessage": "It will go back to your drafts.",
+    "unscheduleConfirmCancel": "Keep scheduled",
+    "unscheduled": "Moved back to drafts.",
+    "retry": "Try again"
   },
   "profile": {
     "language": "Language",
@@ -279,6 +294,7 @@
       "not_scheduled": "This letter is no longer scheduled.",
       "not_found": "This letter is no longer available.",
       "unknown": "Something went wrong. Try again."
-    }
+    },
+    "deletedAccount": "Deleted account"
   }
 }

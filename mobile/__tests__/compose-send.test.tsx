@@ -55,6 +55,9 @@ describe('compose: send now', () => {
     alerts.choose('confirm');
     await fireEvent.press(screen.getByTestId('compose-send'));
     await waitFor(() => expect(screen.getByTestId('sent-screen')).toBeTruthy());
+    expect(screen.getByTestId('sent-switch-sent').props.accessibilityState).toMatchObject({
+      selected: true,
+    });
 
     expect(push).toHaveBeenCalledWith(DRAFT.id);
     expect(send).toHaveBeenCalledTimes(1);

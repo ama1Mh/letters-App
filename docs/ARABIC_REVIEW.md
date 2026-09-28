@@ -60,7 +60,22 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `design.stampNames.ribbon` | Ribbon | شريط | draft | |
 | `design.stampNames.rocket` | Rocket | صاروخ | draft | |
 | `sent.emptyTitle` | No sent letters | لا توجد رسائل مرسلة | draft | |
-| `sent.emptyBody` | Sent and scheduled letters will appear here. | ستظهر هنا الرسائل المرسلة والمجدولة. | draft | |
+| `sent.emptyBody` | Letters you send will appear here. | ستظهر هنا الرسائل المرسلة. | draft | Reworded in Phase 6 M4: the Sent kind only (Scheduled has its own empty state) |
+| `sent.tabScheduled` | Scheduled | المجدولة | draft | Phase 6 M4 Sent tab |
+| `sent.tabSent` | Sent | المرسلة | draft | Phase 6 M4 Sent tab |
+| `sent.scheduledEmptyTitle` | Nothing scheduled | لا توجد رسائل مجدولة | draft | Phase 6 M4 Sent tab |
+| `sent.scheduledEmptyBody` | Letters you schedule wait here until they're delivered. | تنتظر هنا الرسائل المجدولة حتى يتم تسليمها. | draft | Phase 6 M4 Sent tab |
+| `sent.to` | To | إلى | draft | Phase 6 M4 Sent tab |
+| `sent.scheduledFor` | Delivers {{when}} | موعد التسليم: {{when}} | draft | Phase 6 M4 Sent tab; `{{when}}` is a date and time with Western digits |
+| `sent.deliveredAt` | Delivered {{when}} | تم التسليم: {{when}} | draft | Phase 6 M4 Sent tab; `{{when}}` is a date and time with Western digits |
+| `sent.undeliverable` | Couldn't be delivered | تعذّر التسليم | draft | Phase 6 M4 Sent tab |
+| `sent.read` | Read | تمت القراءة | draft | Phase 6 M4 Sent tab |
+| `sent.unschedule` | Unschedule | إلغاء الجدولة | draft | Phase 6 M4 Sent tab |
+| `sent.unscheduleConfirmTitle` | Unschedule this letter? | هل تريد إلغاء جدولة هذه الرسالة؟ | draft | Phase 6 M4 Sent tab |
+| `sent.unscheduleConfirmMessage` | It will go back to your drafts. | ستعود إلى المسودات. | draft | Phase 6 M4 Sent tab |
+| `sent.unscheduleConfirmCancel` | Keep scheduled | إبقاء الجدولة | draft | Phase 6 M4 Sent tab |
+| `sent.unscheduled` | Moved back to drafts. | أُعيدت الرسالة إلى المسودات. | draft | Phase 6 M4 Sent tab |
+| `sent.retry` | Try again | إعادة المحاولة | draft | Phase 6 M4 Sent tab |
 | `profile.language` | Language | اللغة | draft | |
 | `language.title` | Language | اللغة | draft | |
 | `language.system` | Device language | لغة الجهاز | draft | |
@@ -224,3 +239,4 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `letters.error.not_scheduled` | This letter is no longer scheduled. | لم تعد هذه الرسالة مجدولة. | draft | Phase 6 send/schedule error (DEC-048 M1) |
 | `letters.error.not_found` | This letter is no longer available. | لم تعد هذه الرسالة متاحة. | draft | Phase 6 send/schedule error (DEC-048 M1) |
 | `letters.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | Phase 6 send/schedule error (DEC-048 M1) |
+| `letters.deletedAccount` | Deleted account | حساب محذوف | draft | Phase 6 M4: shown instead of a deleted account's name |
