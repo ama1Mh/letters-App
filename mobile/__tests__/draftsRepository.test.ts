@@ -7,13 +7,28 @@ import { createFakeDraftsStore } from './helpers/fakeDraftsStore';
 
 interface FakeClientOptions {
   session?: { user: { id: string } } | null;
-  upsertError?: { message: string } | null;
+  /** Makes every update/insert fail with this error (e.g. offline). */
+  writeError?: { message: string; code?: string } | null;
   remoteRows?: Record<string, unknown>[];
+  /** Ids of existing server rows that are editable drafts of this user. */
+  remoteDraftIds?: string[];
+  /** Ids of existing server rows that are no longer drafts (RLS hides them from UPDATE). */
+  remoteNonDraftIds?: string[];
+  /** An id another session creates between our update and our insert (duplicate-key race). */
+  createdConcurrently?: string;
 }
 
+/**
+ * A fake Supabase client whose `letters` table behaves like the real one for draft pushes: UPDATE
+ * only matches the user's draft rows (RLS), INSERT of an existing id fails with 23505. It records
+ * the patches and rows written, so tests can check that id/sender_id are never updated.
+ */
 function fakeClient(opts: FakeClientOptions = {}) {
-  const upserts: unknown[] = [];
+  const inserts: Record<string, unknown>[] = [];
+  const updates: { id: string; patch: Record<string, unknown> }[] = [];
   const deletedIds: string[] = [];
+  const drafts = new Set(opts.remoteDraftIds ?? []);
+  const nonDrafts = new Set(opts.remoteNonDraftIds ?? []);
   const client = {
     auth: {
       getSession: async () => ({ data: { session: opts.session ?? null } }),
@@ -21,9 +36,25 @@ function fakeClient(opts: FakeClientOptions = {}) {
     from: (table: string) => {
       if (table !== 'letters') throw new Error(`unexpected table ${table}`);
       return {
-        upsert: (row: unknown) => {
-          upserts.push(row);
-          return Promise.resolve({ error: opts.upsertError ?? null });
+        update: (patch: Record<string, unknown>) => ({
+          eq: (_col: string, id: string) => ({
+            select: () => {
+              if (opts.writeError) return Promise.resolve({ data: null, error: opts.writeError });
+              updates.push({ id, patch });
+              return Promise.resolve({ data: drafts.has(id) ? [{ id }] : [], error: null });
+            },
+          }),
+        }),
+        insert: (row: Record<string, unknown>) => {
+          if (opts.writeError) return Promise.resolve({ error: opts.writeError });
+          const id = row.id as string;
+          if (id === opts.createdConcurrently) drafts.add(id);
+          if (drafts.has(id) || nonDrafts.has(id)) {
+            return Promise.resolve({ error: { code: '23505', message: 'duplicate key' } });
+          }
+          inserts.push(row);
+          drafts.add(id);
+          return Promise.resolve({ error: null });
         },
         delete: () => ({
           eq: (_col: string, value: string) => {
@@ -39,7 +70,7 @@ function fakeClient(opts: FakeClientOptions = {}) {
       };
     },
   };
-  return { client: client as unknown as SupabaseClient, upserts, deletedIds };
+  return { client: client as unknown as SupabaseClient, inserts, updates, deletedIds };
 }
 
 const FALLBACK = () => 'ltr' as const;
@@ -167,9 +198,9 @@ describe('createDraftsRepository', () => {
     }
 
     it('push uploads that one draft and marks it clean', async () => {
-      const { repo, store, upserts } = setup();
+      const { repo, store, inserts } = setup();
       await repo.push('d1');
-      expect(upserts).toEqual([
+      expect(inserts).toEqual([
         {
           id: 'd1',
           sender_id: 'me',
@@ -186,18 +217,64 @@ describe('createDraftsRepository', () => {
     it('push rejects when signed out, for an unknown id, and on an upload error, keeping the draft', async () => {
       const signedOut = setup({ session: null });
       await expect(signedOut.repo.push('d1')).rejects.toThrow();
-      expect(signedOut.upserts).toEqual([]);
+      expect(signedOut.inserts).toEqual([]);
 
       const unknown = setup();
       await expect(unknown.repo.push('nope')).rejects.toThrow();
-      expect(unknown.upserts).toEqual([]);
+      expect(unknown.inserts).toEqual([]);
 
       const failing = setup({
         session: { user: { id: 'me' } },
-        upsertError: { message: 'offline' },
+        writeError: { message: 'offline' },
       });
       await expect(failing.repo.push('d1')).rejects.toThrow();
       await expect(failing.store.get('d1')).resolves.toEqual(DRAFT); // still dirty, still there
+    });
+
+    it('push edits an existing server draft with an update of the editable columns only', async () => {
+      const { repo, inserts, updates } = setup({
+        session: { user: { id: 'me' } },
+        remoteDraftIds: ['d1'],
+      });
+      await repo.push('d1');
+      expect(inserts).toEqual([]);
+      expect(updates).toEqual([
+        {
+          id: 'd1',
+          patch: {
+            recipient_id: 'u2',
+            subject: 'Hi',
+            body: 'Hello',
+            body_dir: 'ltr',
+            design: { v: 1 },
+          },
+        },
+      ]);
+      // The column grants: id and sender_id are never part of an UPDATE.
+      for (const { patch } of updates) {
+        expect(patch).not.toHaveProperty('id');
+        expect(patch).not.toHaveProperty('sender_id');
+      }
+    });
+
+    it('push rejects for a letter that is no longer a draft, and never rewrites it', async () => {
+      const { repo, store, inserts } = setup({
+        session: { user: { id: 'me' } },
+        remoteNonDraftIds: ['d1'],
+      });
+      await expect(repo.push('d1')).rejects.toThrow();
+      expect(inserts).toEqual([]);
+      await expect(store.get('d1')).resolves.toEqual(DRAFT); // still dirty locally
+    });
+
+    it('push survives the row being created concurrently: insert conflicts, then it updates', async () => {
+      const { repo, store, updates } = setup({
+        session: { user: { id: 'me' } },
+        createdConcurrently: 'd1',
+      });
+      await repo.push('d1');
+      expect(updates.map((u) => u.id)).toEqual(['d1', 'd1']); // before and after the conflict
+      await expect(store.get('d1')).resolves.toEqual({ ...DRAFT, dirty: false });
     });
 
     it('forgetLocal removes only the local copy, never the server row', async () => {
@@ -225,7 +302,7 @@ describe('createDraftsRepository', () => {
 
     it('does nothing and touches no network beyond getSession when there is no session', async () => {
       const store = createFakeDraftsStore([localDraft({ dirty: true })]);
-      const { client, upserts } = fakeClient({ session: null });
+      const { client, inserts, updates } = fakeClient({ session: null });
       const repo = createDraftsRepository({
         localStore: store,
         client,
@@ -235,7 +312,8 @@ describe('createDraftsRepository', () => {
       });
 
       await expect(repo.sync()).resolves.toEqual({ pushed: 0, pulled: 0, failed: 0 });
-      expect(upserts).toEqual([]);
+      expect(inserts).toEqual([]);
+      expect(updates).toEqual([]);
     });
 
     it('pushes every dirty draft and marks it clean on success', async () => {
@@ -243,7 +321,7 @@ describe('createDraftsRepository', () => {
         localDraft({ id: 'd1', dirty: true }),
         localDraft({ id: 'd2', dirty: false }), // not dirty: skipped
       ]);
-      const { client, upserts } = fakeClient({ session: { user: { id: 'user-1' } } });
+      const { client, inserts } = fakeClient({ session: { user: { id: 'user-1' } } });
       const repo = createDraftsRepository({
         localStore: store,
         client,
@@ -254,7 +332,7 @@ describe('createDraftsRepository', () => {
 
       const result = await repo.sync();
       expect(result).toEqual({ pushed: 1, pulled: 0, failed: 0 });
-      expect(upserts).toEqual([
+      expect(inserts).toEqual([
         {
           id: 'd1',
           sender_id: 'user-1',
@@ -272,7 +350,7 @@ describe('createDraftsRepository', () => {
       const store = createFakeDraftsStore([localDraft({ id: 'd1', dirty: true })]);
       const { client } = fakeClient({
         session: { user: { id: 'user-1' } },
-        upsertError: { message: 'network down' },
+        writeError: { message: 'network down' },
       });
       const repo = createDraftsRepository({
         localStore: store,
@@ -355,7 +433,7 @@ describe('createDraftsRepository', () => {
         fallbackDirection: FALLBACK,
       });
 
-      // The push above succeeds (upsertError not set), so this draft is pushed and excluded from
+      // The push above succeeds (writeError not set), so this draft is pushed and excluded from
       // the pull merge outright - not just protected by the dirty check, which by the time pull
       // runs would no longer apply (the push already cleared it).
       const result = await repo.sync();

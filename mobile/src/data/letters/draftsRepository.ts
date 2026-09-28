@@ -78,6 +78,50 @@ function toRemoteRow(draft: LocalDraft, senderId: string) {
   };
 }
 
+/** The columns `authenticated` may UPDATE on a draft (column grants in the letters migration). */
+function editableColumns(draft: LocalDraft) {
+  return {
+    recipient_id: draft.recipientId,
+    subject: draft.subject,
+    body: draft.body,
+    body_dir: draft.bodyDir,
+    design: draft.design,
+  };
+}
+
+/**
+ * Uploads one local draft. Not an upsert: PostgREST's upsert is `INSERT ... ON CONFLICT DO UPDATE`
+ * that SETs every column, including `id` and `sender_id`, which `authenticated` deliberately may
+ * not update (column grants), so the server refuses it with 42501 (found on the device, Phase 6
+ * M8). Instead: update the editable columns of an existing draft; if no draft row matched, insert
+ * the full row; if that insert hits a duplicate key (the row was created meanwhile, e.g. from
+ * another session), update once more. A letter that is no longer a draft is invisible to the
+ * update (RLS: drafts only) and makes the insert conflict, so it rejects rather than being edited.
+ */
+/** PostgREST errors are plain objects; rethrow as an Error (message and code only, no content). */
+function pushFailed(error: { message: string; code?: string }): Error {
+  return new Error(`push failed${error.code ? ` (${error.code})` : ''}: ${error.message}`);
+}
+
+async function pushDraft(client: SupabaseClient, draft: LocalDraft, senderId: string) {
+  const update = () =>
+    client.from('letters').update(editableColumns(draft)).eq('id', draft.id).select('id');
+
+  const first = await update();
+  if (first.error) throw pushFailed(first.error);
+  if ((first.data ?? []).length > 0) return;
+
+  const inserted = await client.from('letters').insert(toRemoteRow(draft, senderId));
+  if (!inserted.error) return;
+  if (inserted.error.code !== '23505') throw pushFailed(inserted.error);
+
+  const retried = await update();
+  if (retried.error) throw pushFailed(retried.error);
+  if ((retried.data ?? []).length === 0) {
+    throw new Error('push: the server row exists but is not an editable draft');
+  }
+}
+
 function fromRemoteRow(row: LetterDraftRow): LocalDraft {
   return {
     id: row.id,
@@ -139,10 +183,7 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
       if (!session) throw new Error('push: not signed in');
       const draft = await localStore.get(id);
       if (!draft) throw new Error('push: draft not found locally');
-      const { error } = await client
-        .from('letters')
-        .upsert(toRemoteRow(draft, session.user.id), { onConflict: 'id' });
-      if (error) throw new Error(`push failed: ${error.message}`);
+      await pushDraft(client, draft, session.user.id);
       await localStore.upsert({ ...draft, dirty: false });
     },
 
@@ -166,10 +207,7 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
       for (const draft of await localStore.list()) {
         if (!draft.dirty) continue;
         try {
-          const { error } = await client
-            .from('letters')
-            .upsert(toRemoteRow(draft, senderId), { onConflict: 'id' });
-          if (error) throw error;
+          await pushDraft(client, draft, senderId);
           await localStore.upsert({ ...draft, dirty: false });
           justPushed.add(draft.id);
           pushed += 1;
