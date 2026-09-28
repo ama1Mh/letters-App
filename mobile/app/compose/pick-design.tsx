@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import type { ComponentProps } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
@@ -32,6 +33,8 @@ export default function PickDesignScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const { colors, spacing, radius } = useTheme();
+  // No native header on this screen: keep the back link below the status bar, where it is tappable.
+  const insets = useSafeAreaInsets();
   const router = useRouter();
 
   // No early `return null` while loading: the screen renders immediately with defaults (same
@@ -71,7 +74,11 @@ export default function PickDesignScreen() {
   return (
     <ScrollView
       testID="pick-design-screen"
-      contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}
+      contentContainerStyle={{
+        padding: spacing.lg,
+        paddingTop: insets.top + spacing.lg,
+        gap: spacing.lg,
+      }}
       style={{ backgroundColor: colors.background }}
     >
       <Pressable

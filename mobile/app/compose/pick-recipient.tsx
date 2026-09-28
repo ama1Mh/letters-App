@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
@@ -38,6 +39,8 @@ export default function PickRecipientScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const { colors, spacing } = useTheme();
+  // No native header on this screen: keep the back link below the status bar, where it is tappable.
+  const insets = useSafeAreaInsets();
   const router = useRouter();
 
   const [query, setQuery] = useState('');
@@ -151,7 +154,7 @@ export default function PickRecipientScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={{ padding: spacing.lg, gap: spacing.md }}>
+      <View style={{ padding: spacing.lg, paddingTop: insets.top + spacing.lg, gap: spacing.md }}>
         <Pressable
           testID="pick-recipient-back"
           accessibilityRole="button"
