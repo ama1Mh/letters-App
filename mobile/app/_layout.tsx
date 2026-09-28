@@ -6,6 +6,7 @@ import { initI18n } from '@/core/i18n';
 import { useTheme } from '@/core/theme/useTheme';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { useDesignFonts } from '@/features/designs/useDesignFonts';
+import { LetterEventsProvider } from '@/features/letters/LetterEventsProvider';
 
 // Must run before the first render: sets language and aligns layout direction (may reload once).
 initI18n();
@@ -17,27 +18,29 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <StatusBar style="auto" />
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: colors.background },
-          headerTintColor: colors.text,
-          contentStyle: { backgroundColor: colors.background },
-        }}
-      >
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="settings/language" options={{ title: t('language.title') }} />
-        <Stack.Screen name="settings/privacy" options={{ title: t('privacy.title') }} />
-        <Stack.Screen name="compose/[id]" options={{ title: t('compose.title') }} />
-        <Stack.Screen name="compose/pick-design" options={{ headerShown: false }} />
-        <Stack.Screen name="compose/pick-recipient" options={{ headerShown: false }} />
-        <Stack.Screen name="letter/[id]" options={{ title: t('letter.title') }} />
-        <Stack.Screen name="connections" options={{ title: t('connections.title') }} />
-        <Stack.Screen name="invite/index" options={{ title: t('invite.title') }} />
-        <Stack.Screen name="invite/[code]" options={{ headerShown: false }} />
-      </Stack>
+      <LetterEventsProvider>
+        <StatusBar style="auto" />
+        <Stack
+          screenOptions={{
+            headerStyle: { backgroundColor: colors.background },
+            headerTintColor: colors.text,
+            contentStyle: { backgroundColor: colors.background },
+          }}
+        >
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="settings/language" options={{ title: t('language.title') }} />
+          <Stack.Screen name="settings/privacy" options={{ title: t('privacy.title') }} />
+          <Stack.Screen name="compose/[id]" options={{ title: t('compose.title') }} />
+          <Stack.Screen name="compose/pick-design" options={{ headerShown: false }} />
+          <Stack.Screen name="compose/pick-recipient" options={{ headerShown: false }} />
+          <Stack.Screen name="letter/[id]" options={{ title: t('letter.title') }} />
+          <Stack.Screen name="connections" options={{ title: t('connections.title') }} />
+          <Stack.Screen name="invite/index" options={{ title: t('invite.title') }} />
+          <Stack.Screen name="invite/[code]" options={{ headerShown: false }} />
+        </Stack>
+      </LetterEventsProvider>
     </AuthProvider>
   );
 }

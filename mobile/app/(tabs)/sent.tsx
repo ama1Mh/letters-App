@@ -17,6 +17,7 @@ import {
   type SentKind,
 } from '@/data/letters/lettersRepository';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
+import { useLetterEvents } from '@/features/letters/LetterEventsProvider';
 import { letterErrorKey, type TranslatedLetterError } from '@/features/letters/letterErrors';
 import { usePagedList } from '@/features/letters/usePagedList';
 
@@ -111,6 +112,8 @@ function SentList({ kind }: { kind: SentKind }) {
       void reload();
     }, [reload]),
   );
+  // Live: a status change (delivered / undeliverable), a read receipt, or a reconnect.
+  useLetterEvents(() => void reload());
 
   function confirmUnschedule(item: SentItem) {
     Alert.alert(t('sent.unscheduleConfirmTitle'), t('sent.unscheduleConfirmMessage'), [

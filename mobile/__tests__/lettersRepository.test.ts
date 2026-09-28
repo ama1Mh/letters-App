@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import {
   LetterActionError,
   createLettersRepository,
+  parseLetterEvent,
   type LetterErrorCode,
 } from '@/data/letters/lettersRepository';
 import { defaultDesign } from '@/domain/design';
@@ -320,5 +321,106 @@ describe('createLettersRepository', () => {
       const empty = fakeClient({ get_letter: { data: [] } });
       await expect(createLettersRepository(empty.client).getLetter('x')).rejects.toEqual(notFound);
     });
+  });
+});
+
+describe('parseLetterEvent', () => {
+  it('parses each event type, with status and Realtime message id when present', () => {
+    expect(
+      parseLetterEvent({
+        type: 'broadcast',
+        event: 'letter_status',
+        payload: { letter_id: 'l1', status: 'undeliverable', id: 'm1' },
+      }),
+    ).toEqual({ type: 'letter_status', letterId: 'l1', status: 'undeliverable', messageId: 'm1' });
+    for (const event of ['letter_delivered', 'letter_read', 'letter_deleted_for_me']) {
+      expect(parseLetterEvent({ event, payload: { letter_id: 'l2' } })).toEqual({
+        type: event,
+        letterId: 'l2',
+        status: null,
+        messageId: null,
+      });
+    }
+  });
+
+  it('ignores anything malformed or unknown instead of trusting it', () => {
+    for (const message of [
+      null,
+      'letter_read',
+      { event: 'something_else', payload: { letter_id: 'l1' } },
+      { event: 'letter_read' },
+      { event: 'letter_read', payload: null },
+      { event: 'letter_read', payload: { letter_id: 42 } },
+      { event: 'letter_read', payload: {} },
+    ]) {
+      expect(parseLetterEvent(message)).toBeNull();
+    }
+    // An unknown status is dropped, not passed through.
+    expect(
+      parseLetterEvent({ event: 'letter_status', payload: { letter_id: 'l1', status: 'hacked' } })
+        ?.status,
+    ).toBeNull();
+  });
+});
+
+describe('subscribeToLetterEvents', () => {
+  function channelClient() {
+    let broadcastHandler: ((message: unknown) => void) | null = null;
+    let statusHandler: ((status: string) => void) | null = null;
+    interface FakeChannel {
+      on: jest.Mock<FakeChannel, [string, unknown, (message: unknown) => void]>;
+      subscribe: jest.Mock<FakeChannel, [(status: string) => void]>;
+    }
+    const channel: FakeChannel = {
+      on: jest.fn((_type: string, _filter: unknown, handler: (message: unknown) => void) => {
+        broadcastHandler = handler;
+        return channel;
+      }),
+      subscribe: jest.fn((handler: (status: string) => void) => {
+        statusHandler = handler;
+        return channel;
+      }),
+    };
+    const client = {
+      channel: jest.fn(() => channel),
+      removeChannel: jest.fn(async () => 'ok'),
+    } as unknown as SupabaseClient;
+    return {
+      client,
+      channel,
+      broadcast: (message: unknown) => broadcastHandler?.(message),
+      status: (value: string) => statusHandler?.(value),
+    };
+  }
+
+  it('joins the private letters:<user id> topic, forwards parsed events and reports (re)subscribes', () => {
+    const fake = channelClient();
+    const onEvent = jest.fn();
+    const onSubscribed = jest.fn();
+    const unsubscribe = createLettersRepository(fake.client).subscribeToLetterEvents('me', {
+      onEvent,
+      onSubscribed,
+    });
+
+    expect(fake.client.channel).toHaveBeenCalledWith('letters:me', { config: { private: true } });
+    expect(fake.channel.on).toHaveBeenCalledWith('broadcast', { event: '*' }, expect.any(Function));
+
+    fake.broadcast({ event: 'letter_delivered', payload: { letter_id: 'l1', id: 'm1' } });
+    fake.broadcast({ event: 'nonsense', payload: { letter_id: 'l1' } });
+    expect(onEvent).toHaveBeenCalledTimes(1);
+    expect(onEvent).toHaveBeenCalledWith({
+      type: 'letter_delivered',
+      letterId: 'l1',
+      status: null,
+      messageId: 'm1',
+    });
+
+    fake.status('SUBSCRIBED');
+    fake.status('CHANNEL_ERROR');
+    fake.status('SUBSCRIBED'); // rejoined after a reconnect
+    expect(onSubscribed).toHaveBeenCalledTimes(2);
+
+    unsubscribe();
+    expect(fake.client.removeChannel).toHaveBeenCalledWith(fake.channel);
   });
 });

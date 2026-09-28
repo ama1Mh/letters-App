@@ -15,6 +15,7 @@ import {
   type ListCursor,
 } from '@/data/letters/lettersRepository';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
+import { useLetterEvents } from '@/features/letters/LetterEventsProvider';
 import { usePagedList } from '@/features/letters/usePagedList';
 
 const WHEN_FORMAT: Intl.DateTimeFormatOptions = {
@@ -28,7 +29,8 @@ const WHEN_FORMAT: Intl.DateTimeFormatOptions = {
 /**
  * Inbox (DEC-048 M5): delivered letters addressed to me, newest first, via `list_inbox`. Unread
  * letters (read_at null) are marked; opening one (reading view) marks it read, and the list
- * reloads on every focus, so the marker is gone on return.
+ * reloads on every focus, so the marker is gone on return. Realtime events, reconnects and
+ * returning to the foreground also reload it (LetterEventsProvider).
  */
 export default function InboxScreen() {
   const { t } = useTranslation();
@@ -47,6 +49,8 @@ export default function InboxScreen() {
       void reload();
     }, [reload]),
   );
+  // Live: a delivery, a read or a reconnect/foreground refetches (DEC-048 M7).
+  useLetterEvents(() => void reload());
 
   function renderItem({ item }: { item: InboxItem }) {
     const unread = item.readAt === null;

@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 
@@ -10,6 +10,7 @@ import { useTheme } from '@/core/theme/useTheme';
 import { getLettersRepository, type Letter } from '@/data/letters/lettersRepository';
 import { LetterRenderer } from '@/features/designs/LetterRenderer';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
+import { useLetterEvents } from '@/features/letters/LetterEventsProvider';
 import { letterErrorKey, type TranslatedLetterError } from '@/features/letters/letterErrors';
 
 const WHEN_FORMAT: Intl.DateTimeFormatOptions = {
@@ -36,31 +37,47 @@ export default function LetterScreen() {
   const [error, setError] = useState<TranslatedLetterError | 'unknown' | null>(null);
   const markedRead = useRef(false);
 
+  const alive = useRef(true);
   useEffect(() => {
-    let cancelled = false;
-    void (async () => {
-      try {
-        const loaded = await getLettersRepository().getLetter(id);
-        if (cancelled) return;
-        setLetter(loaded);
-        if (loaded.viewerRole === 'recipient' && loaded.readAt === null && !markedRead.current) {
-          markedRead.current = true;
-          try {
-            const readAt = await getLettersRepository().markRead(id);
-            if (!cancelled) setLetter((current) => (current ? { ...current, readAt } : current));
-          } catch {
-            // Best effort: the letter is still readable; it stays unread and is retried next open.
-            markedRead.current = false;
-          }
-        }
-      } catch (e) {
-        if (!cancelled) setError(letterErrorKey(e));
-      }
-    })();
+    alive.current = true;
     return () => {
-      cancelled = true;
+      alive.current = false;
     };
+  }, []);
+
+  const load = useCallback(async () => {
+    try {
+      const loaded = await getLettersRepository().getLetter(id);
+      if (!alive.current) return;
+      setLetter(loaded);
+      setError(null);
+      if (loaded.viewerRole === 'recipient' && loaded.readAt === null && !markedRead.current) {
+        markedRead.current = true;
+        try {
+          const readAt = await getLettersRepository().markRead(id);
+          if (alive.current) setLetter((current) => (current ? { ...current, readAt } : current));
+        } catch {
+          // Best effort: the letter is still readable; it stays unread and is retried next open.
+          markedRead.current = false;
+        }
+      }
+    } catch (e) {
+      if (alive.current) setError(letterErrorKey(e));
+    }
   }, [id]);
+
+  useEffect(() => {
+    // Async IIFE, the same as useDrafts / AuthProvider (react-hooks/set-state-in-effect).
+    void (async () => {
+      await load();
+    })();
+  }, [load]);
+
+  // Live: e.g. the sender sees "Read" appear, or a scheduled letter turn delivered. Other letters'
+  // events are ignored; reconnect/foreground refetches.
+  useLetterEvents((reason, events) => {
+    if (reason !== 'event' || events.some((event) => event.letterId === id)) void load();
+  });
 
   if (error) {
     // not_found for every invisible case; anything else (e.g. offline) gets the generic text.

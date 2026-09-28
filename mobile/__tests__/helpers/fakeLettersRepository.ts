@@ -3,6 +3,8 @@ import {
   type InboxItem,
   type Letter,
   type LetterErrorCode,
+  type LetterEvent,
+  type LetterEventHandlers,
   type LettersRepository,
   type SentItem,
   type SentKind,
@@ -23,7 +25,21 @@ export type FakeLettersCall =
   | { method: 'listInbox' }
   | { method: 'listSent'; kind: SentKind };
 
-export type FakeLettersRepository = LettersRepository & { calls: FakeLettersCall[] };
+export interface FakeRealtime {
+  /** Topics currently subscribed (one entry per live subscription). */
+  topics: () => string[];
+  /** Delivers one broadcast to every live subscription. */
+  emit: (event: Omit<LetterEvent, 'messageId' | 'status'> & Partial<LetterEvent>) => void;
+  /** Simulates a (re)connect: every live subscription's onSubscribed fires again. */
+  resubscribe: () => void;
+  /** Simulates a delivery landing server-side: the next listInbox includes it. */
+  addInboxItem: (item: InboxItem) => void;
+}
+
+export type FakeLettersRepository = LettersRepository & {
+  calls: FakeLettersCall[];
+  realtime: FakeRealtime;
+};
 
 /**
  * In-memory LettersRepository for tests, mirroring fakeDiscoveryRepository.ts's style. Lists return
@@ -38,6 +54,7 @@ export function createFakeLettersRepository(
   const calls: FakeLettersCall[] = [];
   const letters = new Map((options.letters ?? []).map((l) => [l.id, l]));
   let inbox = [...(options.inbox ?? [])];
+  const subscriptions = new Set<{ topic: string; handlers: LetterEventHandlers }>();
 
   function maybeThrow(method: keyof LettersRepository) {
     const code = options.fail?.[method];
@@ -46,6 +63,30 @@ export function createFakeLettersRepository(
 
   return {
     calls,
+    realtime: {
+      topics: () => [...subscriptions].map((s) => s.topic),
+      emit: (event) => {
+        const full: LetterEvent = { status: null, messageId: null, ...event };
+        for (const s of [...subscriptions]) s.handlers.onEvent(full);
+      },
+      resubscribe: () => {
+        for (const s of [...subscriptions]) s.handlers.onSubscribed();
+      },
+      addInboxItem: (item) => {
+        inbox = [item, ...inbox.filter((existing) => existing.id !== item.id)];
+      },
+    },
+    subscribeToLetterEvents(userId, handlers) {
+      const subscription = { topic: `letters:${userId}`, handlers };
+      subscriptions.add(subscription);
+      // Like Realtime: the first SUBSCRIBED status arrives asynchronously after joining.
+      void Promise.resolve().then(() => {
+        if (subscriptions.has(subscription)) handlers.onSubscribed();
+      });
+      return () => {
+        subscriptions.delete(subscription);
+      };
+    },
     async sendLetter(letterId, scheduledAt) {
       const at = scheduledAt ? scheduledAt.toISOString() : null;
       calls.push({ method: 'sendLetter', letterId, scheduledAt: at });

@@ -123,6 +123,54 @@ export interface Letter {
   recipient: Correspondent;
 }
 
+/**
+ * Realtime events on the private topic `letters:<user id>` (DEC-045 (3)). Payloads carry only the
+ * letter id (and a status for `letter_status`), never content: clients refetch through the normal
+ * RLS-checked reads. `messageId` is Realtime's own id, when present, used to drop duplicates.
+ */
+export type LetterEventType =
+  'letter_delivered' | 'letter_status' | 'letter_read' | 'letter_deleted_for_me';
+
+export interface LetterEvent {
+  type: LetterEventType;
+  letterId: string;
+  status: LetterStatus | null;
+  messageId: string | null;
+}
+
+export interface LetterEventHandlers {
+  onEvent: (event: LetterEvent) => void;
+  /** Every (re)subscription, including after a reconnect: events may have been missed, refetch. */
+  onSubscribed: () => void;
+}
+
+const EVENT_TYPES: readonly LetterEventType[] = [
+  'letter_delivered',
+  'letter_status',
+  'letter_read',
+  'letter_deleted_for_me',
+];
+const STATUSES: readonly LetterStatus[] = ['draft', 'scheduled', 'delivered', 'undeliverable'];
+
+/** Parses one broadcast message; anything malformed is ignored (null), never trusted. */
+export function parseLetterEvent(message: unknown): LetterEvent | null {
+  if (message === null || typeof message !== 'object') return null;
+  const event = stringProp(message, 'event');
+  const payload = (message as Record<string, unknown>).payload;
+  if (!event || !(EVENT_TYPES as readonly string[]).includes(event)) return null;
+  if (payload === null || typeof payload !== 'object') return null;
+  const letterId = stringProp(payload, 'letter_id');
+  if (!letterId) return null;
+  const status = stringProp(payload, 'status');
+  return {
+    type: event as LetterEventType,
+    letterId,
+    status:
+      status && (STATUSES as readonly string[]).includes(status) ? (status as LetterStatus) : null,
+    messageId: stringProp(payload, 'id') ?? stringProp(message, 'id') ?? null,
+  };
+}
+
 export const DEFAULT_PAGE_SIZE = 30;
 /** The list RPCs clamp `p_limit` to 1..100; clamping here too keeps `nextCursor` honest. */
 export const MAX_PAGE_SIZE = 100;
@@ -142,6 +190,8 @@ export interface LettersRepository {
   listSent(kind: SentKind, cursor?: ListCursor | null, limit?: number): Promise<Page<SentItem>>;
   /** Rejects with `not_found` for every letter the caller may not see. */
   getLetter(letterId: string): Promise<Letter>;
+  /** Joins the private topic `letters:<userId>`; returns the unsubscribe function. */
+  subscribeToLetterEvents(userId: string, handlers: LetterEventHandlers): () => void;
 }
 
 const KNOWN_CODES: readonly LetterErrorCode[] = [
@@ -360,6 +410,22 @@ export function createLettersRepository(client: SupabaseClient): LettersReposito
       const rows = (data ?? []) as LetterRow[];
       if (rows.length === 0) throw new LetterActionError('not_found');
       return mapLetterRow(rows[0]);
+    },
+
+    subscribeToLetterEvents(userId, handlers) {
+      // private: authorized by the letters_topic_receive_own policy on realtime.messages with the
+      // signed-in user's JWT (supabase-js passes it to Realtime); public access is off (DEC-045 (5)).
+      const channel = client.channel(`letters:${userId}`, { config: { private: true } });
+      channel.on('broadcast', { event: '*' }, (message: unknown) => {
+        const event = parseLetterEvent(message);
+        if (event) handlers.onEvent(event);
+      });
+      channel.subscribe((status) => {
+        if (status === 'SUBSCRIBED') handlers.onSubscribed();
+      });
+      return () => {
+        void client.removeChannel(channel);
+      };
     },
   };
 }
