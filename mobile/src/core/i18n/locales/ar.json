@@ -32,7 +32,22 @@
     "recipientLabel": "إلى",
     "noRecipient": "اختر المستلم",
     "recipientChosen": "تم اختيار المستلم",
-    "send": "إرسال"
+    "send": "إرسال",
+    "scheduleOpen": "جدولة…",
+    "scheduleConfirm": "جدولة الإرسال",
+    "scheduleCancel": "إلغاء"
+  },
+  "schedule": {
+    "timeZone": "المنطقة الزمنية: {{zone}}",
+    "dayLabel": "اليوم",
+    "dayEarlier": "تقديم يوم واحد",
+    "dayLater": "تأخير يوم واحد",
+    "hourLabel": "الساعة",
+    "hourEarlier": "تقديم ساعة واحدة",
+    "hourLater": "تأخير ساعة واحدة",
+    "minuteLabel": "الدقائق (كل {{step}} دقائق)",
+    "minuteEarlier": "تقديم {{step}} دقائق",
+    "minuteLater": "تأخير {{step}} دقائق"
   },
   "design": {
     "paperLabel": "الورق",

@@ -32,7 +32,22 @@
     "recipientLabel": "To",
     "noRecipient": "Choose a recipient",
     "recipientChosen": "Recipient selected",
-    "send": "Send"
+    "send": "Send",
+    "scheduleOpen": "Schedule…",
+    "scheduleConfirm": "Schedule send",
+    "scheduleCancel": "Cancel"
+  },
+  "schedule": {
+    "timeZone": "Time zone: {{zone}}",
+    "dayLabel": "Day",
+    "dayEarlier": "Move 1 day earlier",
+    "dayLater": "Move 1 day later",
+    "hourLabel": "Hour",
+    "hourEarlier": "Move 1 hour earlier",
+    "hourLater": "Move 1 hour later",
+    "minuteLabel": "Minutes (steps of {{step}})",
+    "minuteEarlier": "Move {{step}} minutes earlier",
+    "minuteLater": "Move {{step}} minutes later"
   },
   "design": {
     "paperLabel": "Paper",

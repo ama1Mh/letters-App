@@ -145,6 +145,19 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `compose.noRecipient` | Choose a recipient | اختر المستلم | draft | |
 | `compose.recipientChosen` | Recipient selected | تم اختيار المستلم | draft | |
 | `compose.send` | Send | إرسال | draft | Phase 6 M2 send button |
+| `compose.scheduleOpen` | Schedule… | جدولة… | draft | Phase 6 M3 scheduled send |
+| `compose.scheduleConfirm` | Schedule send | جدولة الإرسال | draft | Phase 6 M3 scheduled send |
+| `compose.scheduleCancel` | Cancel | إلغاء | draft | Phase 6 M3 scheduled send |
+| `schedule.timeZone` | Time zone: {{zone}} | المنطقة الزمنية: {{zone}} | draft | Phase 6 M3 schedule picker; zone is an LTR-isolated IANA name + UTC offset |
+| `schedule.dayLabel` | Day | اليوم | draft | Phase 6 M3 schedule picker |
+| `schedule.dayEarlier` | Move 1 day earlier | تقديم يوم واحد | draft | Phase 6 M3 schedule picker |
+| `schedule.dayLater` | Move 1 day later | تأخير يوم واحد | draft | Phase 6 M3 schedule picker |
+| `schedule.hourLabel` | Hour | الساعة | draft | Phase 6 M3 schedule picker |
+| `schedule.hourEarlier` | Move 1 hour earlier | تقديم ساعة واحدة | draft | Phase 6 M3 schedule picker |
+| `schedule.hourLater` | Move 1 hour later | تأخير ساعة واحدة | draft | Phase 6 M3 schedule picker |
+| `schedule.minuteLabel` | Minutes (steps of {{step}}) | الدقائق (كل {{step}} دقائق) | draft | Phase 6 M3 schedule picker; `{{step}}` is 5 (SCHEDULE_MINUTE_STEP), Arabic plural form assumes 3-10 |
+| `schedule.minuteEarlier` | Move {{step}} minutes earlier | تقديم {{step}} دقائق | draft | Phase 6 M3 schedule picker; `{{step}}` is 5 (SCHEDULE_MINUTE_STEP), Arabic plural form assumes 3-10 |
+| `schedule.minuteLater` | Move {{step}} minutes later | تأخير {{step}} دقائق | draft | Phase 6 M3 schedule picker; `{{step}}` is 5 (SCHEDULE_MINUTE_STEP), Arabic plural form assumes 3-10 |
 | `profile.connections` | Connection requests | طلبات الاتصال | draft | |
 | `profile.myInvite` | My invite link | رابط دعوتي | draft | |
 | `profile.privacy` | Privacy | الخصوصية | draft | |
