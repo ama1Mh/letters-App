@@ -36,6 +36,10 @@ Verified on this machine (Windows, 7 GB RAM) on 2026-09-20. Run from `mobile/` u
 ```
 npm run typecheck | npm run lint | npm run format:check | npm test
 ```
+Regenerate the Supabase types after any migration is applied to the linked project (verified 2026-09-29; needs the linked project, so CI cannot run it). The output `src/data/supabase/database.types.ts` is generated and never edited by hand; function-result columns come out non-null, so callers re-mark nullable ones (DEC-048 (D3)):
+```
+npm run gen:types
+```
 Local Android dev build, one ABI (`APP_VARIANT` is `dev`, `preview` or `production`; production throws until the naming freeze):
 ```
 APP_VARIANT=dev npx expo prebuild --platform android --no-install     # creates git-ignored android/
@@ -56,7 +60,7 @@ Gotchas (details in `docs/DECISIONS.md`, OPEN-4 findings): `CI=1` disables Metro
 
 App configuration: copy `mobile/.env.example` to `mobile/.env` (git-ignored) and fill in the Supabase URL and anon/publishable key from the dashboard, never a `service_role` key; restart Metro after editing. Without it the app still starts, and only the Supabase client (created on first use) reports the missing values.
 
-Not yet valid or not yet verified: `npx supabase …` (Phase 2), `npx expo run:android`, EAS builds. Add them here when they are verified.
+Not yet valid or not yet verified: `npx expo run:android`, EAS builds. (`npx supabase@2.118.0 …` against the linked project is verified: see Project status.) Add them here when they are verified.
 
 ## Hard rules
 

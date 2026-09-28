@@ -8,17 +8,22 @@
  * Drafts are NOT read through here: they stay local-first in draftsRepository.ts, and the list RPCs
  * never return drafts (DEC-046 (4)).
  *
- * Interim: the `*Row` types below are hand-written from the migrations. Replace them with generated
- * Supabase types once M0 is on the linked project (DEC-048 (D3)).
+ * Row types come from the generated `database.types.ts` (`npm run gen:types`), so a renamed column
+ * or enum value fails the build. `supabase gen types` marks every column of a function's result as
+ * non-null (Postgres records no nullability for function results), so each row type re-marks the
+ * columns the SQL can really return as null (DEC-048 (D3)).
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { normalizeDesign, type Design } from '@/domain/design';
 
 import { getSupabase } from '../supabase';
+import type { Database } from '../supabase/database.types';
 
-export type LetterStatus = 'draft' | 'scheduled' | 'delivered' | 'undeliverable';
-export type TextDir = 'ltr' | 'rtl';
+type PublicSchema = Database['public'];
+
+export type LetterStatus = PublicSchema['Enums']['letter_status'];
+export type TextDir = PublicSchema['Enums']['text_dir'];
 
 export type LetterErrorCode =
   | 'not_authenticated'
@@ -170,66 +175,56 @@ function toLetterError(error: unknown): LetterActionError {
   return new LetterActionError(code);
 }
 
-interface SendStateRow {
-  status: LetterStatus;
-  scheduled_at: string | null;
-  delivered_at: string | null;
-}
+/** One row of a set-returning RPC, as generated. */
+type RpcRow<Name extends keyof PublicSchema['Functions']> =
+  PublicSchema['Functions'][Name]['Returns'] extends (infer Row)[] ? Row : never;
 
-interface InboxRow {
-  id: string;
-  thread_id: string;
-  subject: string | null;
-  preview: string;
-  body_dir: TextDir;
-  delivered_at: string;
-  read_at: string | null;
-  sort_at: string;
-  sender_id: string;
-  sender_username: string | null;
-  sender_display_name: string | null;
-  sender_avatar_key: string | null;
-}
+/** Re-marks generated (always non-null) columns that the SQL can return as null. */
+type WithNullable<Row, Keys extends keyof Row> = Omit<Row, Keys> & { [K in Keys]: Row[K] | null };
 
-interface SentRow {
-  id: string;
-  thread_id: string;
-  subject: string | null;
-  preview: string;
-  body_dir: TextDir;
-  status: LetterStatus;
-  scheduled_at: string | null;
-  delivered_at: string | null;
-  read_at: string | null;
-  sort_at: string;
-  recipient_id: string;
-  recipient_username: string | null;
-  recipient_display_name: string | null;
-  recipient_avatar_key: string | null;
-}
+type SendStateComposite = PublicSchema['CompositeTypes']['letter_send_state'];
+/** Composite fields are all generated as nullable; send/unschedule always set `status`. */
+type SendStateRow = Omit<SendStateComposite, 'status'> & {
+  status: NonNullable<SendStateComposite['status']>;
+};
 
-interface LetterRow {
-  id: string;
-  thread_id: string;
-  parent_letter_id: string | null;
-  subject: string | null;
-  body: string;
-  body_dir: TextDir;
-  design: unknown;
-  status: LetterStatus;
-  scheduled_at: string | null;
-  delivered_at: string | null;
-  read_at: string | null;
-  viewer_role: 'sender' | 'recipient';
-  sender_id: string;
-  sender_username: string | null;
-  sender_display_name: string | null;
-  sender_avatar_key: string | null;
-  recipient_id: string;
-  recipient_username: string | null;
-  recipient_display_name: string | null;
-  recipient_avatar_key: string | null;
-}
+/** Nullable: subject; read_at (unread); the sender's profile fields (deleted account). */
+type InboxRow = WithNullable<
+  RpcRow<'list_inbox'>,
+  'subject' | 'read_at' | 'sender_username' | 'sender_display_name' | 'sender_avatar_key'
+>;
+
+/** Nullable: subject; scheduled_at/delivered_at (by status); read_at (masked); the recipient's profile. */
+type SentRow = WithNullable<
+  RpcRow<'list_sent'>,
+  | 'subject'
+  | 'scheduled_at'
+  | 'delivered_at'
+  | 'read_at'
+  | 'recipient_username'
+  | 'recipient_display_name'
+  | 'recipient_avatar_key'
+>;
+
+/** Nullable: parent (not a reply), subject, the status-dependent times and both profiles; the
+ *  generated `viewer_role: string` is narrowed to the two values the SQL returns. */
+type LetterRow = Omit<
+  WithNullable<
+    RpcRow<'get_letter'>,
+    | 'parent_letter_id'
+    | 'subject'
+    | 'scheduled_at'
+    | 'delivered_at'
+    | 'read_at'
+    | 'sender_username'
+    | 'sender_display_name'
+    | 'sender_avatar_key'
+    | 'recipient_username'
+    | 'recipient_display_name'
+    | 'recipient_avatar_key'
+  >,
+  'viewer_role'
+> & { viewer_role: 'sender' | 'recipient' };
 
 function mapSendState(row: SendStateRow): SendState {
   return { status: row.status, scheduledAt: row.scheduled_at, deliveredAt: row.delivered_at };
