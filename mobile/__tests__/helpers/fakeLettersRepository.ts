@@ -27,8 +27,9 @@ export type FakeLettersRepository = LettersRepository & { calls: FakeLettersCall
 
 /**
  * In-memory LettersRepository for tests, mirroring fakeDiscoveryRepository.ts's style. Lists return
- * everything in one page (paging itself is covered by lettersRepository.test.ts); `calls` records
- * every method call in order.
+ * everything in one page (paging itself is covered by lettersRepository.test.ts and
+ * usePagedList.test.ts); markRead() updates both the letter and its inbox row; `calls` records every
+ * method call in order.
  */
 export function createFakeLettersRepository(
   options: FakeLettersOptions = {},
@@ -36,6 +37,7 @@ export function createFakeLettersRepository(
   const now = options.now ?? '2026-09-29T10:00:00.000Z';
   const calls: FakeLettersCall[] = [];
   const letters = new Map((options.letters ?? []).map((l) => [l.id, l]));
+  let inbox = [...(options.inbox ?? [])];
 
   function maybeThrow(method: keyof LettersRepository) {
     const code = options.fail?.[method];
@@ -60,12 +62,17 @@ export function createFakeLettersRepository(
     async markRead(letterId) {
       calls.push({ method: 'markRead', letterId });
       maybeThrow('markRead');
-      return letters.get(letterId)?.readAt ?? now;
+      // Like the server: the first read sticks, and the inbox row reflects it.
+      const readAt = letters.get(letterId)?.readAt ?? now;
+      const letter = letters.get(letterId);
+      if (letter) letters.set(letterId, { ...letter, readAt });
+      inbox = inbox.map((item) => (item.id === letterId ? { ...item, readAt } : item));
+      return readAt;
     },
     async listInbox() {
       calls.push({ method: 'listInbox' });
       maybeThrow('listInbox');
-      return { items: options.inbox ?? [], nextCursor: null };
+      return { items: inbox, nextCursor: null };
     },
     async listSent(kind) {
       calls.push({ method: 'listSent', kind });

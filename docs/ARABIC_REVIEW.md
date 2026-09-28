@@ -17,6 +17,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `tabs.profile` | Profile | الملف الشخصي | draft | |
 | `inbox.emptyTitle` | No letters yet | لا توجد رسائل بعد | draft | |
 | `inbox.emptyBody` | Letters you receive will appear here. | ستظهر هنا الرسائل الواردة. | draft | |
+| `inbox.unread` | Unread | غير مقروءة | draft | Phase 6 M5: accessibility hint on an unread inbox row |
 | `drafts.emptyTitle` | No drafts | لا توجد مسودات | draft | |
 | `drafts.emptyBody` | Letters you have not sent yet will appear here. | ستظهر هنا الرسائل التي لم تُرسل بعد. | draft | |
 | `drafts.newButton` | New draft | مسودة جديدة | draft | |
@@ -240,3 +241,5 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `letters.error.not_found` | This letter is no longer available. | لم تعد هذه الرسالة متاحة. | draft | Phase 6 send/schedule error (DEC-048 M1) |
 | `letters.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | Phase 6 send/schedule error (DEC-048 M1) |
 | `letters.deletedAccount` | Deleted account | حساب محذوف | draft | Phase 6 M4: shown instead of a deleted account's name |
+| `letter.title` | Letter | الرسالة | draft | Phase 6 M6 reading view |
+| `letter.from` | From | من | draft | Phase 6 M6 reading view |

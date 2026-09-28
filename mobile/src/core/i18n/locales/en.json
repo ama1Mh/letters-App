@@ -10,7 +10,8 @@
   },
   "inbox": {
     "emptyTitle": "No letters yet",
-    "emptyBody": "Letters you receive will appear here."
+    "emptyBody": "Letters you receive will appear here.",
+    "unread": "Unread"
   },
   "drafts": {
     "emptyTitle": "No drafts",
@@ -110,6 +111,10 @@
     "unscheduleConfirmCancel": "Keep scheduled",
     "unscheduled": "Moved back to drafts.",
     "retry": "Try again"
+  },
+  "letter": {
+    "title": "Letter",
+    "from": "From"
   },
   "profile": {
     "language": "Language",

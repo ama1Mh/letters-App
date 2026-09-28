@@ -10,7 +10,8 @@
   },
   "inbox": {
     "emptyTitle": "لا توجد رسائل بعد",
-    "emptyBody": "ستظهر هنا الرسائل الواردة."
+    "emptyBody": "ستظهر هنا الرسائل الواردة.",
+    "unread": "غير مقروءة"
   },
   "drafts": {
     "emptyTitle": "لا توجد مسودات",
@@ -110,6 +111,10 @@
     "unscheduleConfirmCancel": "إبقاء الجدولة",
     "unscheduled": "أُعيدت الرسالة إلى المسودات.",
     "retry": "إعادة المحاولة"
+  },
+  "letter": {
+    "title": "الرسالة",
+    "from": "من"
   },
   "profile": {
     "language": "اللغة",

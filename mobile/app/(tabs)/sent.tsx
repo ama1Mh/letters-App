@@ -92,6 +92,7 @@ export default function SentScreen() {
 function SentList({ kind }: { kind: SentKind }) {
   const { t } = useTranslation();
   const { colors, spacing } = useTheme();
+  const router = useRouter();
 
   const loadPage = useCallback(
     (cursor: ListCursor | null) => getLettersRepository().listSent(kind, cursor),
@@ -160,8 +161,10 @@ function SentList({ kind }: { kind: SentKind }) {
     }
 
     return (
-      <View
+      <Pressable
         testID={`sent-row-${item.id}`}
+        accessibilityRole="button"
+        onPress={() => router.push(`/letter/${item.id}`)}
         style={{
           paddingHorizontal: spacing.lg,
           paddingVertical: spacing.md,
@@ -209,7 +212,7 @@ function SentList({ kind }: { kind: SentKind }) {
             onPress={() => confirmUnschedule(item)}
           />
         ) : null}
-      </View>
+      </Pressable>
     );
   }
 
