@@ -7,6 +7,7 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
 import { useTheme } from '@/core/theme/useTheme';
+import { CorrespondentName } from '@/features/letters/CorrespondentName';
 import {
   DiscoveryActionError,
   getDiscoveryRepository,
@@ -94,7 +95,6 @@ export default function ConnectionsScreen() {
         )}
         renderItem={({ item, section }) => {
           const busy = busyIds.has(item.id);
-          const name = item.otherDisplayName ?? item.otherUsername ?? '';
           return (
             <View
               testID={`connections-row-${item.id}`}
@@ -108,7 +108,17 @@ export default function ConnectionsScreen() {
                 borderBottomColor: colors.border,
               }}
             >
-              <AppText style={{ flex: 1 }}>{name}</AppText>
+              {/* Display name with @username beside it, always (CLAUDE.md). */}
+              <View style={{ flex: 1 }}>
+                <CorrespondentName
+                  person={{
+                    id: item.otherUserId,
+                    username: item.otherUsername,
+                    displayName: item.otherDisplayName,
+                    avatarKey: null,
+                  }}
+                />
+              </View>
               {section.key === 'incoming' ? (
                 <>
                   <Button

@@ -17,6 +17,7 @@ import {
   type SearchResult,
 } from '@/data/discovery/discoveryRepository';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
+import { CorrespondentName } from '@/features/letters/CorrespondentName';
 
 const KNOWN_SEARCH_CODES = [
   'query_too_short',
@@ -123,7 +124,10 @@ export default function PickRecipientScreen() {
           borderBottomColor: colors.border,
         }}
       >
-        <AppText style={{ flex: 1 }}>{user.displayName ?? user.username}</AppText>
+        {/* Display name with @username beside it, always (CLAUDE.md: look-alike protection). */}
+        <View style={{ flex: 1 }}>
+          <CorrespondentName person={user} />
+        </View>
         {isWritable ? (
           <Button
             testID={`pick-recipient-write-${user.id}`}

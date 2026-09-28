@@ -65,6 +65,9 @@ describe('pick-recipient', () => {
     await waitFor(() =>
       expect(screen.getByTestId('pick-recipient-write-user-everyone')).toBeTruthy(),
     );
+    // @username always beside the display name, LTR-isolated (CLAUDE.md look-alike protection).
+    expect(screen.getByText('⁦@everyone_guy⁩')).toBeTruthy();
+    expect(screen.getByText('⁦@invite_gal⁩')).toBeTruthy();
     // invite_only, not connected: offered a connection request, not a "Write letter" button.
     expect(screen.getByTestId('pick-recipient-request-user-invite-only')).toBeTruthy();
 

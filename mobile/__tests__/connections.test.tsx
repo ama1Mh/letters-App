@@ -33,6 +33,9 @@ describe('connections', () => {
 
     expect(screen.getByText('Incoming User')).toBeTruthy();
     expect(screen.getByText('Outgoing User')).toBeTruthy();
+    // @username always beside the display name, LTR-isolated (CLAUDE.md look-alike protection).
+    expect(screen.getByText('⁦@incoming_user⁩')).toBeTruthy();
+    expect(screen.getByText('⁦@outgoing_user⁩')).toBeTruthy();
     expect(screen.getByTestId('connections-accept-conn-in-1')).toBeTruthy();
     expect(screen.getByTestId('connections-decline-conn-in-1')).toBeTruthy();
     expect(screen.getByTestId('connections-cancel-conn-out-1')).toBeTruthy();
