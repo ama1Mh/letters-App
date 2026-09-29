@@ -3,8 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { Avatar } from '@/components/Avatar';
 import { DirectionalIcon } from '@/components/DirectionalIcon';
+import { ltrIsolate } from '@/core/i18n/bidi';
 import { useTheme } from '@/core/theme/useTheme';
+import { avatarSourceFromKey } from '@/domain/avatar';
 import { useAuth } from '@/features/auth/AuthProvider';
 
 export default function ProfileScreen() {
@@ -54,6 +57,31 @@ export default function ProfileScreen() {
 
   return (
     <View testID="profile-screen" style={{ flex: 1, backgroundColor: colors.background }}>
+      <Pressable
+        testID="profile-avatar-row"
+        accessibilityRole="button"
+        accessibilityHint={t('avatar.change')}
+        onPress={() => router.push('/settings/avatar')}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.lg,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
+      >
+        <Avatar source={avatarSourceFromKey(auth.profile?.avatarKey)} size={56} />
+        <View style={{ flex: 1, gap: spacing.xs }}>
+          <AppText variant="title">{auth.profile?.displayName ?? ''}</AppText>
+          {auth.profile?.username ? (
+            <AppText variant="muted">{ltrIsolate(`@${auth.profile.username}`)}</AppText>
+          ) : null}
+          <AppText style={{ color: colors.primary }}>{t('avatar.change')}</AppText>
+        </View>
+        <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
+      </Pressable>
       <Pressable
         testID="profile-language-row"
         accessibilityRole="button"

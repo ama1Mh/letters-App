@@ -283,3 +283,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `blocked.emptyBody` | People you block can't write to you or find you. | لا يمكن للمحظورين مراسلتك أو العثور عليك. | draft | Phase 9 (blocked list, account deletion) |
 | `blocked.unblock` | Unblock | إلغاء الحظر | draft | Phase 9 (blocked list, account deletion) |
 | `safety.actionsTitle` | Options | خيارات | draft | Phase 9: the … menu (Report / Block) on a person |
+| `avatar.title` | Avatar | الصورة الرمزية | draft | Preset avatars (DEC-011) |
+| `avatar.change` | Choose avatar | اختيار صورة رمزية | draft | Preset avatars (DEC-011) |
+| `avatar.none` | No avatar | بدون صورة رمزية | draft | Preset avatars (DEC-011) |
+| `avatar.option` | Avatar {{number}} | الصورة الرمزية {{number}} | draft | Preset avatars (DEC-011); `{{number}}` is 1-24, for screen readers |

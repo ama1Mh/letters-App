@@ -118,6 +118,9 @@ export interface AuthRepository {
     discoverableByUsername: boolean;
     discoverableByEmail: boolean;
   }): Promise<void>;
+  /** Sets (or, with null, removes) the preset avatar (DEC-011). The database checks the key
+   *  against the catalog. Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
+  updateAvatar(avatarKey: string | null): Promise<void>;
   /** Deletes the signed-in account through the `delete-account` Edge Function (Phase 9), then ends
    *  the local session. Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
   deleteAccount(): Promise<void>;
@@ -308,6 +311,18 @@ export function createSupabaseAuthRepository(client: SupabaseClient): AuthReposi
           discoverable_by_username: discoverableByUsername,
           discoverable_by_email: discoverableByEmail,
         })
+        .eq('id', session.user.id);
+      if (error) throw new AuthActionError<'not_authenticated' | 'unknown'>('unknown');
+    },
+
+    async updateAvatar(avatarKey) {
+      const {
+        data: { session },
+      } = await client.auth.getSession();
+      if (!session) throw new AuthActionError('not_authenticated');
+      const { error } = await client
+        .from('profiles')
+        .update({ avatar_key: avatarKey })
         .eq('id', session.user.id);
       if (error) throw new AuthActionError<'not_authenticated' | 'unknown'>('unknown');
     },

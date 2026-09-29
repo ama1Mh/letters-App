@@ -298,4 +298,32 @@ describe('createSupabaseAuthRepository', () => {
       await expect(repo.deleteAccount()).rejects.toEqual(new AuthActionError('unknown'));
     });
   });
+
+  describe('updateAvatar (DEC-011)', () => {
+    it('updates avatar_key on the own profile row, and clears it with null', async () => {
+      const updates: { payload: unknown; id: string }[] = [];
+      const repo = createSupabaseAuthRepository(
+        fakeClient({
+          sessionUserId: 'user-1',
+          onUpdate: (payload, id) => updates.push({ payload, id }),
+        }),
+      );
+      await repo.updateAvatar('rocket');
+      await repo.updateAvatar(null);
+      expect(updates).toEqual([
+        { payload: { avatar_key: 'rocket' }, id: 'user-1' },
+        { payload: { avatar_key: null }, id: 'user-1' },
+      ]);
+    });
+
+    it('rejects when signed out, and maps a database error (e.g. an unknown key) to unknown', async () => {
+      await expect(createSupabaseAuthRepository(fakeClient()).updateAvatar('paw')).rejects.toEqual(
+        new AuthActionError('not_authenticated'),
+      );
+      const failing = createSupabaseAuthRepository(
+        fakeClient({ sessionUserId: 'user-1', updateError: { code: '23514' } }),
+      );
+      await expect(failing.updateAvatar('bogus')).rejects.toEqual(new AuthActionError('unknown'));
+    });
+  });
 });

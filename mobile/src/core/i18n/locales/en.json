@@ -351,5 +351,11 @@
   },
   "safety": {
     "actionsTitle": "Options"
+  },
+  "avatar": {
+    "title": "Avatar",
+    "change": "Choose avatar",
+    "none": "No avatar",
+    "option": "Avatar {{number}}"
   }
 }

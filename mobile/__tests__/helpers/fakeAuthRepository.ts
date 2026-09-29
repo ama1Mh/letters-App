@@ -105,6 +105,11 @@ export function createFakeAuthRepository(initial?: {
       };
     },
 
+    async updateAvatar(avatarKey) {
+      if (!session) throw new AuthActionError('not_authenticated');
+      profile = { ...(profile ?? fakeProfile(session.userId)), avatarKey };
+    },
+
     async deleteAccount() {
       if (!session) throw new AuthActionError('not_authenticated');
       session = null;
