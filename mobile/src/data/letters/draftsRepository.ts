@@ -8,11 +8,10 @@
  * `data/`), so it is unit-tested without expo-sqlite, expo-crypto or a live Supabase client;
  * `getDraftsRepository()` at the bottom wires the real ones.
  *
- * Known simplification (documented, not silently skipped): `remove()` deletes locally immediately
- * and best-effort remotely. If the remote delete fails while offline, a later sync()'s pull step
- * could re-download the row - e.g. from another signed-in session that still has it - and
- * "resurrect" a draft the user already deleted. Proper tombstone tracking (a deleted-drafts log) is
- * deferred; see DECISIONS.md.
+ * Deletes are offline-safe (OPEN-11, closed 2026-09-29): `remove()` deletes locally at once and
+ * tries the server; if that fails (offline), the id goes into a small deleted-drafts log. `sync()`
+ * retries the logged deletes first and never pulls a logged id back, so a draft deleted offline
+ * cannot be "resurrected" from the server (or from another session that still has it).
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'expo-crypto';
@@ -67,6 +66,35 @@ export interface DraftsRepository {
    *  local draft and forgets the owner. */
   releaseForSignOut(): Promise<void>;
 }
+
+/** The deleted-drafts log (OPEN-11): ids whose server delete has not succeeded yet. */
+export interface DeletedDraftsLog {
+  list(): string[];
+  add(id: string): void;
+  remove(id: string): void;
+  clear(): void;
+}
+
+const DELETED_KEY = 'drafts.pendingDeletes';
+function readIds(): string[] {
+  try {
+    const raw = Storage.getItemSync(DELETED_KEY);
+    const parsed: unknown = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.filter((id): id is string => typeof id === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+const kvDeletedLog: DeletedDraftsLog = {
+  list: readIds,
+  add: (id) => {
+    const ids = readIds();
+    if (!ids.includes(id)) Storage.setItemSync(DELETED_KEY, JSON.stringify([...ids, id]));
+  },
+  remove: (id) =>
+    Storage.setItemSync(DELETED_KEY, JSON.stringify(readIds().filter((other) => other !== id))),
+  clear: () => Storage.removeItemSync(DELETED_KEY),
+};
 
 /** Where the owner of the device's local drafts is recorded (a user id, or absent). */
 export interface DraftsOwnerStore {
@@ -175,12 +203,25 @@ export interface DraftsRepositoryOptions {
   fallbackDirection: () => TextDirection;
   /** Defaults to the kv-store. */
   ownerStore?: DraftsOwnerStore;
+  /** Defaults to the kv-store. */
+  deletedLog?: DeletedDraftsLog;
 }
 
 /** Pure of native modules: every dependency is injected. */
 export function createDraftsRepository(options: DraftsRepositoryOptions): DraftsRepository {
   const { localStore, client, generateId, now, fallbackDirection } = options;
   const ownerStore = options.ownerStore ?? kvOwnerStore;
+  const deletedLog = options.deletedLog ?? kvDeletedLog;
+
+  /** True when the server confirmed the delete (a returned error counts as a failure too). */
+  async function deleteRemote(id: string): Promise<boolean> {
+    try {
+      const { error } = await client.from('letters').delete().eq('id', id);
+      return !error;
+    } catch {
+      return false;
+    }
+  }
 
   const repository: DraftsRepository = {
     list: () => localStore.list(),
@@ -210,11 +251,8 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
 
     async remove(id) {
       await localStore.remove(id);
-      try {
-        await client.from('letters').delete().eq('id', id);
-      } catch {
-        // Best effort; see the file header comment for the known resurrection edge case.
-      }
+      // Offline (or any failure): log it, so sync() retries and never pulls it back meanwhile.
+      if (!(await deleteRemote(id))) deletedLog.add(id);
     },
 
     async push(id) {
@@ -234,7 +272,10 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
       const owner = ownerStore.get();
       // No recorded owner: drafts written before this marker existed (or on a fresh install) are
       // the current account's. A different owner: not ours, delete them unread.
-      if (owner !== null && owner !== userId) await localStore.clear();
+      if (owner !== null && owner !== userId) {
+        await localStore.clear();
+        deletedLog.clear();
+      }
       ownerStore.set(userId);
     },
 
@@ -245,6 +286,7 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
         // Offline: unsynced edits are lost with the sign-out; privacy wins over keeping them.
       }
       await localStore.clear();
+      deletedLog.clear();
       ownerStore.set(null);
     },
 
@@ -254,6 +296,12 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
       } = await client.auth.getSession();
       if (!session) return { pushed: 0, pulled: 0, failed: 0 };
       const senderId = session.user.id;
+
+      // Deletes made offline go first; whatever still fails stays logged and is never pulled back.
+      for (const id of deletedLog.list()) {
+        if (await deleteRemote(id)) deletedLog.remove(id);
+      }
+      const stillDeleted = new Set(deletedLog.list());
 
       // Ids pushed successfully this round are excluded from the pull merge below entirely, not
       // just protected by the dirty check: we already know local is authoritative for them, having
@@ -284,7 +332,7 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
       if (!error && data) {
         const byId = new Map((await localStore.list()).map((d) => [d.id, d] as const));
         for (const row of data as LetterDraftRow[]) {
-          if (justPushed.has(row.id)) continue;
+          if (justPushed.has(row.id) || stillDeleted.has(row.id)) continue;
           const localMatch = byId.get(row.id);
           if (localMatch?.dirty) continue; // an unpushed local edit wins until it syncs
           if (localMatch && Date.parse(localMatch.updatedAt) >= Date.parse(row.updated_at))

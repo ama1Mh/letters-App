@@ -1,7 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { LocalDraft } from '@/data/local/draftsStore';
-import { createDraftsRepository, type DraftsOwnerStore } from '@/data/letters/draftsRepository';
+import {
+  createDraftsRepository,
+  type DeletedDraftsLog,
+  type DraftsOwnerStore,
+} from '@/data/letters/draftsRepository';
 
 import { createFakeDraftsStore } from './helpers/fakeDraftsStore';
 
@@ -16,6 +20,8 @@ interface FakeClientOptions {
   remoteNonDraftIds?: string[];
   /** An id another session creates between our update and our insert (duplicate-key race). */
   createdConcurrently?: string;
+  /** Makes DELETE fail (e.g. offline); tests may flip it later to simulate coming back online. */
+  deleteError?: { message: string } | null;
 }
 
 /**
@@ -58,6 +64,7 @@ function fakeClient(opts: FakeClientOptions = {}) {
         },
         delete: () => ({
           eq: (_col: string, value: string) => {
+            if (opts.deleteError) return Promise.resolve({ error: opts.deleteError });
             deletedIds.push(value);
             return Promise.resolve({ error: null });
           },
@@ -284,6 +291,100 @@ describe('createDraftsRepository', () => {
       await repo.forgetLocal('d1');
       await expect(store.get('d1')).resolves.toBeNull();
       expect(deletedIds).toEqual([]);
+    });
+  });
+
+  describe('offline deletes (OPEN-11)', () => {
+    function memoryLog(): DeletedDraftsLog & { ids: () => string[] } {
+      let ids: string[] = [];
+      return {
+        list: () => [...ids],
+        add: (id) => {
+          if (!ids.includes(id)) ids = [...ids, id];
+        },
+        remove: (id) => {
+          ids = ids.filter((other) => other !== id);
+        },
+        clear: () => {
+          ids = [];
+        },
+        ids: () => ids,
+      };
+    }
+    const GONE: LocalDraft = {
+      id: 'gone',
+      subject: null,
+      body: 'deleted offline',
+      bodyDir: 'ltr',
+      design: {},
+      recipientId: null,
+      dirty: false,
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    };
+    const REMOTE_COPY = {
+      id: 'gone',
+      subject: null,
+      body: 'deleted offline',
+      body_dir: 'ltr',
+      design: {},
+      recipient_id: null,
+      parent_letter_id: null,
+      updated_at: '2026-01-02T00:00:00.000Z', // newer than the local copy
+    };
+
+    function setup(opts: FakeClientOptions) {
+      const store = createFakeDraftsStore([GONE]);
+      const log = memoryLog();
+      const fake = fakeClient(opts);
+      const repo = createDraftsRepository({
+        localStore: store,
+        client: fake.client,
+        generateId: () => 'unused',
+        now: nextNow,
+        fallbackDirection: FALLBACK,
+        deletedLog: log,
+      });
+      return { store, log, repo, opts, ...fake };
+    }
+
+    it('logs a delete that fails offline, never pulls it back, and retries it once online', async () => {
+      const opts: FakeClientOptions = {
+        session: { user: { id: 'me' } },
+        deleteError: { message: 'offline' },
+        remoteRows: [REMOTE_COPY],
+      };
+      const { repo, store, log, deletedIds } = setup(opts);
+
+      await repo.remove('gone');
+      await expect(store.get('gone')).resolves.toBeNull();
+      expect(log.ids()).toEqual(['gone']);
+
+      // Still offline for deletes: the server still has the row, but it is not resurrected.
+      await repo.sync();
+      await expect(store.get('gone')).resolves.toBeNull();
+      expect(log.ids()).toEqual(['gone']);
+
+      // Back online: the pending delete goes through first and the log is cleared.
+      opts.deleteError = null;
+      opts.remoteRows = [];
+      await repo.sync();
+      expect(deletedIds).toEqual(['gone']);
+      expect(log.ids()).toEqual([]);
+    });
+
+    it('does not log a delete that succeeded right away', async () => {
+      const { repo, log, deletedIds } = setup({ session: { user: { id: 'me' } } });
+      await repo.remove('gone');
+      expect(deletedIds).toEqual(['gone']);
+      expect(log.ids()).toEqual([]);
+    });
+
+    it('clears the log on sign-out with the drafts', async () => {
+      const { repo, log } = setup({ session: null, deleteError: { message: 'offline' } });
+      await repo.remove('gone');
+      expect(log.ids()).toEqual(['gone']);
+      await repo.releaseForSignOut();
+      expect(log.ids()).toEqual([]);
     });
   });
 
