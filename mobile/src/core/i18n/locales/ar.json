@@ -134,6 +134,7 @@
     "myInvite": "رابط دعوتي",
     "privacy": "الخصوصية",
     "blocked": "المحظورون",
+    "notifications": "الإشعارات",
     "deleteAccount": "حذف الحساب",
     "deleteAccountTitle": "هل تريد حذف حسابك؟",
     "deleteAccountMessage": "ستُحذف مسوداتك ورسائلك المجدولة ودعواتك واتصالاتك. أما الرسائل التي سُلِّمت فتبقى لدى مستلميها وتظهر كأنها من حساب محذوف.",
@@ -379,6 +380,10 @@
     "option": "الصورة الرمزية {{number}}"
   },
   "notifications": {
-    "channelName": "الرسائل"
+    "channelName": "الرسائل",
+    "title": "الإشعارات",
+    "pushOnDeliveryLabel": "أعلمني عند وصول رسالة",
+    "pushOnDeliveryHint": "تصل الرسائل إلى صندوق الوارد في كل الأحوال.",
+    "openSystemSettings": "إعدادات الإشعارات في الهاتف"
   }
 }

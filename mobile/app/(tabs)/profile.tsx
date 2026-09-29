@@ -152,6 +152,23 @@ export default function ProfileScreen() {
         <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
       </Pressable>
       <Pressable
+        testID="profile-notifications-row"
+        accessibilityRole="button"
+        onPress={() => router.push('/settings/notifications')}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.lg,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
+      >
+        <AppText style={{ flex: 1 }}>{t('profile.notifications')}</AppText>
+        <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
+      </Pressable>
+      <Pressable
         testID="profile-blocked-row"
         accessibilityRole="button"
         onPress={() => router.push('/settings/blocked')}

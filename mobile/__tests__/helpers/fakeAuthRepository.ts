@@ -30,6 +30,7 @@ export function fakeProfile(userId: string, overrides: Partial<OwnProfile> = {})
     discoverableByUsername: true,
     discoverableByEmail: false,
     readReceiptsEnabled: true,
+    pushOnDelivery: true,
     onboardedAt: null,
     deletedAt: null,
     ...overrides,
@@ -126,6 +127,11 @@ export function createFakeAuthRepository(initial?: {
     async updateAvatar(avatarKey) {
       if (!session) throw new AuthActionError('not_authenticated');
       profile = { ...(profile ?? fakeProfile(session.userId)), avatarKey };
+    },
+
+    async updatePushOnDelivery(enabled) {
+      if (!session) throw new AuthActionError('not_authenticated');
+      profile = { ...(profile ?? fakeProfile(session.userId)), pushOnDelivery: enabled };
     },
 
     async deleteAccount() {

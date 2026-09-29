@@ -271,6 +271,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `report.reason.impersonation` | Pretending to be someone else | انتحال شخصية | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `report.reason.other` | Something else | سبب آخر | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `profile.blocked` | Blocked people | المحظورون | draft | Phase 9 (blocked list, account deletion) |
+| `profile.notifications` | Notifications | الإشعارات | draft | DEC-052 |
 | `profile.deleteAccount` | Delete account | حذف الحساب | draft | Phase 9 (blocked list, account deletion) |
 | `profile.deleteAccountTitle` | Delete your account? | هل تريد حذف حسابك؟ | draft | Phase 9 (blocked list, account deletion) |
 | `profile.deleteAccountMessage` | Your drafts, scheduled letters, invites and connections will be removed. Letters already delivered stay with their recipients, shown as from a deleted account. | ستُحذف مسوداتك ورسائلك المجدولة ودعواتك واتصالاتك. أما الرسائل التي سُلِّمت فتبقى لدى مستلميها وتظهر كأنها من حساب محذوف. | draft | Phase 9 (blocked list, account deletion) |
@@ -289,6 +290,10 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `avatar.option` | Avatar {{number}} | الصورة الرمزية {{number}} | draft | Preset avatars (DEC-011); `{{number}}` is 1-24, for screen readers |
 | `language.reopenMessage` | Close the app and open it again to switch the layout direction. | أغلق التطبيق وافتحه مرة أخرى لتغيير اتجاه الواجهة. | draft | OPEN-8: release builds, until expo-updates |
 | `notifications.channelName` | Letters | الرسائل | draft | Android notification channel name (system settings), Phase 7 |
+| `notifications.title` | Notifications | الإشعارات | draft | Notification settings screen (DEC-052) |
+| `notifications.pushOnDeliveryLabel` | Notify me when a letter arrives | أعلمني عند وصول رسالة | draft | DEC-052 |
+| `notifications.pushOnDeliveryHint` | Letters still arrive in your inbox either way. | تصل الرسائل إلى صندوق الوارد في كل الأحوال. | draft | DEC-052 |
+| `notifications.openSystemSettings` | Phone notification settings | إعدادات الإشعارات في الهاتف | draft | DEC-052 |
 | `auth.resetPassword.title` | Set a new password | تعيين كلمة مرور جديدة | draft | Password reset completion (OPEN-10) |
 | `auth.resetPassword.checking` | Checking your link… | جارٍ التحقق من الرابط… | draft | Password reset completion (OPEN-10) |
 | `auth.resetPassword.invalidTitle` | This link can't be used | لا يمكن استخدام هذا الرابط | draft | Password reset completion (OPEN-10) |

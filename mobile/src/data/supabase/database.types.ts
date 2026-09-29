@@ -360,6 +360,7 @@ export type Database = {
           id: string
           locale: Database["public"]["Enums"]["app_locale"]
           onboarded_at: string | null
+          push_on_delivery: boolean
           read_receipts_enabled: boolean
           receive_mode: Database["public"]["Enums"]["receive_mode"]
           username: string | null
@@ -375,6 +376,7 @@ export type Database = {
           id: string
           locale?: Database["public"]["Enums"]["app_locale"]
           onboarded_at?: string | null
+          push_on_delivery?: boolean
           read_receipts_enabled?: boolean
           receive_mode?: Database["public"]["Enums"]["receive_mode"]
           username?: string | null
@@ -390,6 +392,7 @@ export type Database = {
           id?: string
           locale?: Database["public"]["Enums"]["app_locale"]
           onboarded_at?: string | null
+          push_on_delivery?: boolean
           read_receipts_enabled?: boolean
           receive_mode?: Database["public"]["Enums"]["receive_mode"]
           username?: string | null
@@ -596,6 +599,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      invoke_send_notifications: { Args: never; Returns: number }
       is_blocked: { Args: { p_a: string; p_b: string }; Returns: boolean }
       is_reserved_word: { Args: { p_value: string }; Returns: boolean }
       is_valid_avatar_key: { Args: { p_key: string }; Returns: boolean }

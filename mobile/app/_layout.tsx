@@ -35,6 +35,10 @@ export default function RootLayout() {
             <Stack.Screen name="settings/language" options={{ title: t('language.title') }} />
             <Stack.Screen name="settings/privacy" options={{ title: t('privacy.title') }} />
             <Stack.Screen name="settings/blocked" options={{ title: t('blocked.title') }} />
+            <Stack.Screen
+              name="settings/notifications"
+              options={{ title: t('notifications.title') }}
+            />
             <Stack.Screen name="settings/avatar" options={{ title: t('avatar.title') }} />
             <Stack.Screen name="compose/[id]" options={{ title: t('compose.title') }} />
             <Stack.Screen name="compose/pick-design" options={{ headerShown: false }} />

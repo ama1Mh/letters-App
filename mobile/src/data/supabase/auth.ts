@@ -35,6 +35,8 @@ export interface OwnProfile {
   discoverableByUsername: boolean;
   discoverableByEmail: boolean;
   readReceiptsEnabled: boolean;
+  /** Push me when a letter is delivered to me (DEC-052). Only silences the push, not delivery. */
+  pushOnDelivery: boolean;
   /** Onboarding is complete once this is set (mirrors the `profiles_onboarded_complete` check). */
   onboardedAt: string | null;
   /** Set once the account was deleted (Phase 9); such a session is treated as signed out. */
@@ -131,6 +133,9 @@ export interface AuthRepository {
   /** Sets (or, with null, removes) the preset avatar (DEC-011). The database checks the key
    *  against the catalog. Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
   updateAvatar(avatarKey: string | null): Promise<void>;
+  /** Turns the delivery push on or off (DEC-052), a direct column update like the two above.
+   *  Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
+  updatePushOnDelivery(enabled: boolean): Promise<void>;
   /** Deletes the signed-in account through the `delete-account` Edge Function (Phase 9), then ends
    *  the local session. Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
   deleteAccount(): Promise<void>;
@@ -146,6 +151,7 @@ interface ProfileRow {
   discoverable_by_username: boolean;
   discoverable_by_email: boolean;
   read_receipts_enabled: boolean;
+  push_on_delivery: boolean;
   onboarded_at: string | null;
   deleted_at: string | null;
 }
@@ -161,6 +167,7 @@ function mapProfileRow(row: ProfileRow): OwnProfile {
     discoverableByUsername: row.discoverable_by_username,
     discoverableByEmail: row.discoverable_by_email,
     readReceiptsEnabled: row.read_receipts_enabled,
+    pushOnDelivery: row.push_on_delivery,
     onboardedAt: row.onboarded_at,
     deletedAt: row.deleted_at,
   };
@@ -222,7 +229,7 @@ const ONBOARDING_CODES: readonly OnboardingErrorCode[] = [
 ];
 
 const PROFILE_COLUMNS =
-  'id, username, display_name, avatar_key, locale, receive_mode, discoverable_by_username, discoverable_by_email, read_receipts_enabled, onboarded_at, deleted_at';
+  'id, username, display_name, avatar_key, locale, receive_mode, discoverable_by_username, discoverable_by_email, read_receipts_enabled, push_on_delivery, onboarded_at, deleted_at';
 
 /** The real implementation, over a live `SupabaseClient`. Pure of native modules (the client is
  *  injected), so it is unit-testable the same way `createSupabaseClient` is. */
@@ -351,6 +358,18 @@ export function createSupabaseAuthRepository(client: SupabaseClient): AuthReposi
       const { error } = await client
         .from('profiles')
         .update({ avatar_key: avatarKey })
+        .eq('id', session.user.id);
+      if (error) throw new AuthActionError<'not_authenticated' | 'unknown'>('unknown');
+    },
+
+    async updatePushOnDelivery(enabled) {
+      const {
+        data: { session },
+      } = await client.auth.getSession();
+      if (!session) throw new AuthActionError('not_authenticated');
+      const { error } = await client
+        .from('profiles')
+        .update({ push_on_delivery: enabled })
         .eq('id', session.user.id);
       if (error) throw new AuthActionError<'not_authenticated' | 'unknown'>('unknown');
     },

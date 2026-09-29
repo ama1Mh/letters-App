@@ -134,6 +134,7 @@
     "myInvite": "My invite link",
     "privacy": "Privacy",
     "blocked": "Blocked people",
+    "notifications": "Notifications",
     "deleteAccount": "Delete account",
     "deleteAccountTitle": "Delete your account?",
     "deleteAccountMessage": "Your drafts, scheduled letters, invites and connections will be removed. Letters already delivered stay with their recipients, shown as from a deleted account.",
@@ -379,6 +380,10 @@
     "option": "Avatar {{number}}"
   },
   "notifications": {
-    "channelName": "Letters"
+    "channelName": "Letters",
+    "title": "Notifications",
+    "pushOnDeliveryLabel": "Notify me when a letter arrives",
+    "pushOnDeliveryHint": "Letters still arrive in your inbox either way.",
+    "openSystemSettings": "Phone notification settings"
   }
 }
