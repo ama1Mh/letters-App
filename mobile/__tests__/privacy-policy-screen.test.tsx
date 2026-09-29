@@ -12,11 +12,11 @@ describe('privacy policy screen (en, DEC-053)', () => {
     await fireEvent.press(await screen.findByTestId('profile-privacy-policy-row'));
     await waitFor(() => expect(screen.getByTestId('privacy-policy-screen')).toBeTruthy());
 
-    for (const section of PRIVACY_POLICY.en.sections) {
+    for (const section of PRIVACY_POLICY.content.en.sections) {
       expect(screen.getByText(section.heading)).toBeTruthy();
     }
     expect(screen.getByText(/Last updated: September 29, 2026/)).toBeTruthy();
-    expect(screen.getAllByText(/privacy@letterapp\.invalid/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/contact@letterapp.invalid/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/\{\{/)).toBeNull();
   });
 });

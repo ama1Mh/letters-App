@@ -3,28 +3,11 @@
  * it must be reviewed (legal + the owner's Arabic review) before release, and updated whenever data
  * handling changes (new processor, analytics, crash reporting, retention). Kept here rather than in
  * ar.json/en.json because it is a document, not UI copy; both languages change together.
- * `{{appName}}` and `{{email}}` are filled in by the screen (i18n `app.name`, brand config).
+ * `{{appName}}`, `{{email}}` and `{{date}}` are filled in by LegalDocumentView.
  */
-import type { Language } from '@/core/i18n/languages';
+import { list, p, type LegalDocument } from './document';
 
-/** ISO date shown as "Last updated". Bump it with every change to the text. */
-export const PRIVACY_POLICY_UPDATED = '2026-09-29';
-
-export type PolicyBlock = { kind: 'p'; text: string } | { kind: 'list'; items: string[] };
-export interface PolicySection {
-  heading: string;
-  blocks: PolicyBlock[];
-}
-/** The screen title comes from i18n (`legal.privacyTitle`), shown in the header. */
-export interface PolicyDocument {
-  updatedLabel: string;
-  sections: PolicySection[];
-}
-
-const p = (text: string): PolicyBlock => ({ kind: 'p', text });
-const list = (...items: string[]): PolicyBlock => ({ kind: 'list', items });
-
-const en: PolicyDocument = {
+const en = {
   updatedLabel: 'Last updated: {{date}}',
   sections: [
     {
@@ -153,7 +136,7 @@ const en: PolicyDocument = {
   ],
 };
 
-const ar: PolicyDocument = {
+const ar = {
   updatedLabel: 'آخر تحديث: {{date}}',
   sections: [
     {
@@ -282,9 +265,4 @@ const ar: PolicyDocument = {
   ],
 };
 
-export const PRIVACY_POLICY: Record<Language, PolicyDocument> = { en, ar };
-
-/** Fills `{{name}}` placeholders; unknown names are left as they are. */
-export function fillPolicyText(text: string, values: Record<string, string>): string {
-  return text.replace(/\{\{(\w+)\}\}/g, (match, name: string) => values[name] ?? match);
-}
+export const PRIVACY_POLICY: LegalDocument = { updated: '2026-09-29', content: { en, ar } };

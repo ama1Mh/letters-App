@@ -136,6 +136,7 @@
     "blocked": "Blocked people",
     "notifications": "Notifications",
     "privacyPolicy": "Privacy policy",
+    "terms": "Terms of Service",
     "deleteAccount": "Delete account",
     "deleteAccountTitle": "Delete your account?",
     "deleteAccountMessage": "Your drafts, scheduled letters, invites and connections will be removed. Letters already delivered stay with their recipients, shown as from a deleted account.",
@@ -206,7 +207,8 @@
     "discoverableByEmailLabel": "Let people find me by email"
   },
   "legal": {
-    "privacyTitle": "Privacy policy"
+    "privacyTitle": "Privacy policy",
+    "termsTitle": "Terms of Service"
   },
   "language": {
     "title": "Language",
@@ -243,7 +245,9 @@
       "submit": "Create account",
       "hasAccount": "Already have an account?",
       "signInLink": "Sign in",
-      "privacyNotice": "By creating an account, you accept how we handle your data as described in our",
+      "termsNotice": "By creating an account, you agree to the",
+      "termsLink": "Terms of Service",
+      "privacyNotice": "and accept how we handle your data as described in the",
       "privacyLink": "Privacy policy",
       "confirmationTitle": "Check your email",
       "confirmationBody": "We sent a confirmation link to {{email}}. Open it, then sign in.",

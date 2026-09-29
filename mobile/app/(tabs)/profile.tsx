@@ -203,6 +203,23 @@ export default function ProfileScreen() {
         <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
       </Pressable>
       <Pressable
+        testID="profile-terms-row"
+        accessibilityRole="button"
+        onPress={() => router.push('/legal/terms')}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.lg,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
+      >
+        <AppText style={{ flex: 1 }}>{t('profile.terms')}</AppText>
+        <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
+      </Pressable>
+      <Pressable
         testID="profile-sign-out-row"
         accessibilityRole="button"
         onPress={() => void onSignOut()}

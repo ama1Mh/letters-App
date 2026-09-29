@@ -47,6 +47,7 @@ export default function RootLayout() {
             <Stack.Screen name="thread/[id]" options={{ title: t('thread.title') }} />
             <Stack.Screen name="report" options={{ title: t('report.title') }} />
             <Stack.Screen name="legal/privacy" options={{ title: t('legal.privacyTitle') }} />
+            <Stack.Screen name="legal/terms" options={{ title: t('legal.termsTitle') }} />
             <Stack.Screen name="connections" options={{ title: t('connections.title') }} />
             <Stack.Screen name="invite/index" options={{ title: t('invite.title') }} />
             <Stack.Screen name="invite/[code]" options={{ headerShown: false }} />

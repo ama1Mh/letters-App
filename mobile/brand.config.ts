@@ -19,15 +19,15 @@ export interface BrandConfig {
   scheme: string;
   /** Android application ID. */
   androidPackage: string;
-  /** Address shown in the privacy policy for privacy questions and requests (DEC-053). */
-  privacyContactEmail: string;
+  /** Contact address shown in the privacy policy and terms (DEC-053/054). */
+  contactEmail: string;
 }
 
 const TEMPORARY_NAME = 'LetterApp';
 const SLUG = 'letterapp';
 const ANDROID_PACKAGE_BASE = 'com.letterapp';
 // Placeholder (.invalid never resolves): the real address is set at the naming freeze (DEC-053).
-const TEMPORARY_PRIVACY_EMAIL = 'privacy@letterapp.invalid';
+const TEMPORARY_CONTACT_EMAIL = 'contact@letterapp.invalid';
 
 /**
  * Brand words that usernames and display names may not take (DEC-010). Add the final brand at the
@@ -44,7 +44,7 @@ const NON_PRODUCTION: Record<Exclude<AppVariant, 'production'>, BrandConfig> = {
     slug: SLUG,
     scheme: 'letterapp',
     androidPackage: `${ANDROID_PACKAGE_BASE}.dev`, // DEC-001
-    privacyContactEmail: TEMPORARY_PRIVACY_EMAIL,
+    contactEmail: TEMPORARY_CONTACT_EMAIL,
   },
   preview: {
     variant: 'preview',
@@ -52,7 +52,7 @@ const NON_PRODUCTION: Record<Exclude<AppVariant, 'production'>, BrandConfig> = {
     slug: SLUG,
     scheme: 'letterapp-preview',
     androidPackage: `${ANDROID_PACKAGE_BASE}.preview`,
-    privacyContactEmail: TEMPORARY_PRIVACY_EMAIL,
+    contactEmail: TEMPORARY_CONTACT_EMAIL,
   },
 };
 
