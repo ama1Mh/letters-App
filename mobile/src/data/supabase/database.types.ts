@@ -598,6 +598,7 @@ export type Database = {
       }
       is_blocked: { Args: { p_a: string; p_b: string }; Returns: boolean }
       is_reserved_word: { Args: { p_value: string }; Returns: boolean }
+      is_valid_avatar_key: { Args: { p_key: string }; Returns: boolean }
       is_valid_design: { Args: { p_design: Json }; Returns: boolean }
       is_valid_display_name: { Args: { p_name: string }; Returns: boolean }
       is_valid_username: { Args: { p_username: string }; Returns: boolean }
