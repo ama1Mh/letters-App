@@ -18,6 +18,7 @@ export default function AuthLayout() {
       <Stack.Screen name="sign-in" options={{ headerShown: false }} />
       <Stack.Screen name="sign-up" options={{ title: t('auth.signUp.title') }} />
       <Stack.Screen name="forgot-password" options={{ title: t('auth.forgotPassword.title') }} />
+      <Stack.Screen name="reset-password" options={{ headerShown: false }} />
       {/* No back gesture: onboarding is not optional once signed in (see app/index.tsx gate). */}
       <Stack.Screen name="onboarding" options={{ headerShown: false, gestureEnabled: false }} />
     </Stack>

@@ -16,9 +16,8 @@ const KNOWN_CODES: readonly ResetPasswordErrorCode[] = [
 ];
 
 /**
- * Only sends the reset email. There is deliberately no screen yet to consume the link it points
- * to: that needs the redirect URL allow-listed in the Supabase dashboard (a cloud config change)
- * and a "set new password" screen. See OPEN-10 in docs/DECISIONS.md.
+ * Sends the reset email. Its link opens (auth)/reset-password through app/+native-intent.tsx once
+ * the redirect URL is allow-listed in the Supabase dashboard (owner step, OPEN-10).
  */
 export default function ForgotPasswordScreen() {
   const { t } = useTranslation();

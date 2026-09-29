@@ -87,6 +87,24 @@ export function createFakeAuthRepository(initial?: {
       // Always resolves: Supabase never reveals whether the email exists.
     },
 
+    async startPasswordRecovery({ accessToken }) {
+      // 'recovery-token-for-<userId>' is valid; anything else is expired/used.
+      const match = /^recovery-token-for-(.+)$/.exec(accessToken);
+      if (!match) throw new AuthActionError('invalid_link');
+      session = { userId: match[1] };
+      profile ??= fakeProfile(match[1], {
+        username: 'sara',
+        displayName: 'Sara',
+        onboardedAt: new Date().toISOString(),
+      });
+      notify();
+    },
+
+    async updatePassword(password) {
+      if (!session) throw new AuthActionError('session_not_found');
+      if (password.length < 8) throw new AuthActionError('weak_password');
+    },
+
     async checkUsernameAvailable(username) {
       if (!session) throw new AuthActionError('not_authenticated');
       return username !== 'taken';

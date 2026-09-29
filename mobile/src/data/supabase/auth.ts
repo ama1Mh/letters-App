@@ -57,6 +57,11 @@ export type SignInErrorCode =
 export type ResetPasswordErrorCode =
   'over_email_send_rate_limit' | 'over_request_rate_limit' | 'unknown';
 
+/** Setting the new password from a recovery link (OPEN-10). `session_not_found`: the recovery
+ *  session is gone (expired or signed out), so the user needs a new link. */
+export type UpdatePasswordErrorCode =
+  'weak_password' | 'same_password' | 'session_not_found' | 'invalid_link' | 'unknown';
+
 // Codes complete_onboarding() and check_username_available() raise (DEC-038); the exception
 // message *is* the code, there is no separate `.code` field on a Postgrest RPC error.
 export type OnboardingErrorCode =
@@ -100,6 +105,11 @@ export interface AuthRepository {
   /** Throws `AuthActionError<ResetPasswordErrorCode>`. Always resolves for an unknown/undiscoverable
    *  email too (Supabase does not reveal account existence), so there is nothing to branch on. */
   requestPasswordReset(email: string): Promise<void>;
+  /** Starts the session a password-recovery link carries (OPEN-10). Throws
+   *  `AuthActionError<'invalid_link'>` when the tokens are expired, used or malformed. */
+  startPasswordRecovery(tokens: { accessToken: string; refreshToken: string }): Promise<void>;
+  /** Sets a new password for the current session. Throws `AuthActionError<UpdatePasswordErrorCode>`. */
+  updatePassword(password: string): Promise<void>;
   /** Throws `AuthActionError<OnboardingErrorCode>` only for `not_authenticated`; every other case
    *  the RPC itself defines as "false", not an exception. */
   checkUsernameAvailable(username: string): Promise<boolean>;
@@ -195,6 +205,11 @@ const RESET_PASSWORD_CODES: readonly ResetPasswordErrorCode[] = [
   'over_email_send_rate_limit',
   'over_request_rate_limit',
 ];
+const UPDATE_PASSWORD_CODES: readonly UpdatePasswordErrorCode[] = [
+  'weak_password',
+  'same_password',
+  'session_not_found',
+];
 const ONBOARDING_CODES: readonly OnboardingErrorCode[] = [
   'not_authenticated',
   'invalid_input',
@@ -272,13 +287,26 @@ export function createSupabaseAuthRepository(client: SupabaseClient): AuthReposi
     },
 
     async requestPasswordReset(email) {
-      // The deep-link target this points at is not implemented yet: consuming the recovery link
-      // needs the redirect URL allow-listed in the Supabase dashboard (a cloud config change the
-      // owner must make) and a screen to set the new password. See OPEN-10 in DECISIONS.md.
+      // The link lands on app/(auth)/reset-password via app/+native-intent.tsx. The redirect URL
+      // must be allow-listed in the Supabase dashboard (Auth -> URL Configuration), an owner step
+      // (OPEN-10 in DECISIONS.md); until then Supabase sends the user to the Site URL instead.
       const { error } = await client.auth.resetPasswordForEmail(email, {
         redirectTo: `${currentBrand().scheme}://reset-password`,
       });
       if (error) throw new AuthActionError(resolveErrorCode(error, RESET_PASSWORD_CODES));
+    },
+
+    async startPasswordRecovery({ accessToken, refreshToken }) {
+      const { error } = await client.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+      if (error) throw new AuthActionError('invalid_link');
+    },
+
+    async updatePassword(password) {
+      const { error } = await client.auth.updateUser({ password });
+      if (error) throw new AuthActionError(resolveErrorCode(error, UPDATE_PASSWORD_CODES));
     },
 
     async checkUsernameAvailable(username) {

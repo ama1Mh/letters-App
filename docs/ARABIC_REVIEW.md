@@ -289,6 +289,21 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `avatar.option` | Avatar {{number}} | الصورة الرمزية {{number}} | draft | Preset avatars (DEC-011); `{{number}}` is 1-24, for screen readers |
 | `language.reopenMessage` | Close the app and open it again to switch the layout direction. | أغلق التطبيق وافتحه مرة أخرى لتغيير اتجاه الواجهة. | draft | OPEN-8: release builds, until expo-updates |
 | `notifications.channelName` | Letters | الرسائل | draft | Android notification channel name (system settings), Phase 7 |
+| `auth.resetPassword.title` | Set a new password | تعيين كلمة مرور جديدة | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.checking` | Checking your link… | جارٍ التحقق من الرابط… | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.invalidTitle` | This link can't be used | لا يمكن استخدام هذا الرابط | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.invalidBody` | It may have expired or already been used. Request a new reset email. | ربما انتهت صلاحيته أو استُخدم من قبل. اطلب رسالة جديدة لإعادة التعيين. | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.requestNew` | Send a new link | إرسال رابط جديد | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.password` | New password | كلمة المرور الجديدة | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.confirm` | Confirm new password | تأكيد كلمة المرور الجديدة | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.submit` | Save password | حفظ كلمة المرور | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.doneTitle` | Password updated | تم تحديث كلمة المرور | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.doneBody` | You're signed in with your new password. | تم تسجيل دخولك بكلمة المرور الجديدة. | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.continue` | Continue | متابعة | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.error.mismatch` | The passwords don't match. | كلمتا المرور غير متطابقتين. | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.error.weak_password` | Choose a stronger password. | اختر كلمة مرور أقوى. | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.error.same_password` | Choose a password different from your current one. | اختر كلمة مرور مختلفة عن كلمة المرور الحالية. | draft | Password reset completion (OPEN-10) |
+| `auth.resetPassword.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | Password reset completion (OPEN-10) |
 
 ## Server-side text (not in `ar.json`)
 

@@ -265,6 +265,25 @@
         "unknown": "Something went wrong. Try again."
       }
     },
+    "resetPassword": {
+      "title": "Set a new password",
+      "checking": "Checking your link…",
+      "invalidTitle": "This link can't be used",
+      "invalidBody": "It may have expired or already been used. Request a new reset email.",
+      "requestNew": "Send a new link",
+      "password": "New password",
+      "confirm": "Confirm new password",
+      "submit": "Save password",
+      "doneTitle": "Password updated",
+      "doneBody": "You're signed in with your new password.",
+      "continue": "Continue",
+      "error": {
+        "mismatch": "The passwords don't match.",
+        "weak_password": "Choose a stronger password.",
+        "same_password": "Choose a password different from your current one.",
+        "unknown": "Something went wrong. Try again."
+      }
+    },
     "onboarding": {
       "title": "Set up your profile",
       "usernameLabel": "Username",
