@@ -104,9 +104,8 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `auth.signUp.submit` | Create account | إنشاء حساب | draft | |
 | `auth.signUp.hasAccount` | Already have an account? | لديك حساب بالفعل؟ | draft | |
 | `auth.signUp.signInLink` | Sign in | تسجيل الدخول | draft | |
-| `auth.signUp.termsNotice` | By creating an account, you agree to the | بإنشاء حساب، فإنك توافق على | draft | DEC-054; followed by the terms link |
+| `auth.signUp.legalNotice` | By creating an account, you agree to the Terms of Service and accept the Privacy policy. | بإنشاء حساب، فإنك توافق على شروط الخدمة وتقبل سياسة الخصوصية. | draft | DEC-054; the two links are shown under it as buttons |
 | `auth.signUp.termsLink` | Terms of Service | شروط الخدمة | draft | DEC-054 |
-| `auth.signUp.privacyNotice` | and accept how we handle your data as described in the | وعلى طريقة تعاملنا مع بياناتك كما هو موضح في | draft | DEC-053/054; between the two links |
 | `auth.signUp.privacyLink` | Privacy policy | سياسة الخصوصية | draft | DEC-053 |
 | `auth.signUp.confirmationTitle` | Check your email | تحقق من بريدك الإلكتروني | draft | |
 | `auth.signUp.confirmationBody` | We sent a confirmation link to {{email}}. Open it, then sign in. | أرسلنا رابط تأكيد إلى {{email}}. افتحه ثم سجّل الدخول. | draft | `{{email}}` is the address the user typed, always rendered LTR by the platform bidi algorithm |

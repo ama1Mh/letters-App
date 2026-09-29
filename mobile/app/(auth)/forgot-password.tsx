@@ -59,7 +59,11 @@ export default function ForgotPasswordScreen() {
       >
         <AppText variant="title">{t('auth.forgotPassword.confirmationTitle')}</AppText>
         <AppText>{t('auth.forgotPassword.confirmationBody', { email: sentTo })}</AppText>
-        <Pressable testID="forgot-password-back" onPress={() => router.replace('/sign-in')}>
+        <Pressable
+          testID="forgot-password-back"
+          accessibilityRole="button"
+          onPress={() => router.replace('/sign-in')}
+        >
           <AppText style={{ color: colors.primary }}>
             {t('auth.forgotPassword.backToSignIn')}
           </AppText>

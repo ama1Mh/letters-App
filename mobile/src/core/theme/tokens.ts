@@ -19,7 +19,7 @@ export const lightColors: ColorTokens = {
   border: '#D9DCE1',
   primary: '#1D4ED8',
   onPrimary: '#FFFFFF',
-  danger: '#DC2626',
+  danger: '#B91C1C', // 4.5:1 or better on background and surface (WCAG AA, Phase 10)
 };
 
 export const darkColors: ColorTokens = {

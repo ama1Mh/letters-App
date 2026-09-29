@@ -86,14 +86,22 @@ export default function SignInScreen() {
         loading={submitting}
         disabled={!email || !password}
       />
-      <Pressable testID="sign-in-forgot-password" onPress={() => router.push('/forgot-password')}>
+      <Pressable
+        testID="sign-in-forgot-password"
+        accessibilityRole="button"
+        onPress={() => router.push('/forgot-password')}
+      >
         <AppText variant="muted" style={{ textAlign: 'center' }}>
           {t('auth.signIn.forgotPasswordLink')}
         </AppText>
       </Pressable>
       <View style={{ flexDirection: 'row', gap: spacing.xs, justifyContent: 'center' }}>
         <AppText variant="muted">{t('auth.signIn.noAccount')}</AppText>
-        <Pressable testID="sign-in-go-sign-up" onPress={() => router.push('/sign-up')}>
+        <Pressable
+          testID="sign-in-go-sign-up"
+          accessibilityRole="button"
+          onPress={() => router.push('/sign-up')}
+        >
           <AppText style={{ color: colors.primary }}>{t('auth.signIn.signUpLink')}</AppText>
         </Pressable>
       </View>

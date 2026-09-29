@@ -100,7 +100,11 @@ export default function ResetPasswordScreen() {
           title={t('auth.resetPassword.requestNew')}
           onPress={() => router.replace('/forgot-password')}
         />
-        <Pressable testID="reset-password-back" onPress={() => router.replace('/')}>
+        <Pressable
+          testID="reset-password-back"
+          accessibilityRole="button"
+          onPress={() => router.replace('/')}
+        >
           <AppText style={{ color: colors.primary }}>
             {t('auth.forgotPassword.backToSignIn')}
           </AppText>

@@ -73,7 +73,11 @@ export default function SignUpScreen() {
       >
         <AppText variant="title">{t('auth.signUp.confirmationTitle')}</AppText>
         <AppText>{t('auth.signUp.confirmationBody', { email: confirmationSentTo })}</AppText>
-        <Pressable testID="sign-up-confirmation-back" onPress={() => router.replace('/sign-in')}>
+        <Pressable
+          testID="sign-up-confirmation-back"
+          accessibilityRole="button"
+          onPress={() => router.replace('/sign-in')}
+        >
           <AppText style={{ color: colors.primary }}>{t('auth.signIn.title')}</AppText>
         </Pressable>
       </View>
@@ -125,30 +129,35 @@ export default function SignUpScreen() {
       />
       <View style={{ flexDirection: 'row', gap: spacing.xs, justifyContent: 'center' }}>
         <AppText variant="muted">{t('auth.signUp.hasAccount')}</AppText>
-        <Pressable testID="sign-up-go-sign-in" onPress={() => router.push('/sign-in')}>
+        <Pressable
+          testID="sign-up-go-sign-in"
+          accessibilityRole="button"
+          onPress={() => router.push('/sign-in')}
+        >
           <AppText style={{ color: colors.primary }}>{t('auth.signUp.signInLink')}</AppText>
         </Pressable>
       </View>
+      {/* Separate link buttons, not links nested in the sentence: nested Text links are not
+          focusable elements, so TalkBack could not open them (Phase 10 accessibility check). */}
       <AppText variant="muted" style={{ textAlign: 'center' }}>
-        {t('auth.signUp.termsNotice')}{' '}
-        <AppText
+        {t('auth.signUp.legalNotice')}
+      </AppText>
+      <View style={{ flexDirection: 'row', gap: spacing.lg, justifyContent: 'center' }}>
+        <Pressable
           testID="sign-up-terms"
           accessibilityRole="link"
           onPress={() => router.push('/legal/terms')}
-          style={{ color: colors.primary }}
         >
-          {t('auth.signUp.termsLink')}
-        </AppText>{' '}
-        {t('auth.signUp.privacyNotice')}{' '}
-        <AppText
+          <AppText style={{ color: colors.primary }}>{t('auth.signUp.termsLink')}</AppText>
+        </Pressable>
+        <Pressable
           testID="sign-up-privacy-policy"
           accessibilityRole="link"
           onPress={() => router.push('/legal/privacy')}
-          style={{ color: colors.primary }}
         >
-          {t('auth.signUp.privacyLink')}
-        </AppText>
-      </AppText>
+          <AppText style={{ color: colors.primary }}>{t('auth.signUp.privacyLink')}</AppText>
+        </Pressable>
+      </View>
     </View>
   );
 }
