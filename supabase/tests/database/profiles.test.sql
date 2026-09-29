@@ -55,7 +55,7 @@ select ok(has_table_privilege('authenticated', 'public.profiles', 'select'), 'au
 select ok(not has_table_privilege('authenticated', 'public.profiles', 'insert'), 'authenticated cannot insert profiles');
 select ok(not has_table_privilege('authenticated', 'public.profiles', 'delete'), 'authenticated cannot delete profiles');
 select ok(not has_column_privilege('authenticated', 'public.profiles', 'username', 'update'), 'username is not directly updatable');
-select ok(not has_column_privilege('authenticated', 'public.profiles', 'avatar_key', 'update'), 'avatar_key is not directly updatable yet');
+select ok(has_column_privilege('authenticated', 'public.profiles', 'avatar_key', 'update'), 'avatar_key is updatable now that the catalog exists (DEC-011, 20260929220000_avatars.sql)');
 select ok(not has_column_privilege('authenticated', 'public.profiles', 'onboarded_at', 'update'), 'onboarded_at is not directly updatable');
 select ok(has_column_privilege('authenticated', 'public.profiles', 'display_name', 'update'), 'display_name is updatable');
 select ok(not has_table_privilege('authenticated', 'public.reserved_words', 'select'), 'authenticated cannot read reserved_words');
@@ -152,7 +152,7 @@ select is((select id from public.profiles), '00000000-0000-0000-0000-00000000000
 select is_empty($$ select 1 from public.profiles where id = '00000000-0000-0000-0000-000000000002' $$, 'another user''s profile is invisible');
 select lives_ok($$ update public.profiles set display_name = 'Hacked' where id = '00000000-0000-0000-0000-000000000002' $$, 'updating another user''s row is not an error');
 select throws_ok($$ update public.profiles set username = 'hacker' where id = '00000000-0000-0000-0000-000000000001' $$, '42501', null, 'username cannot be written directly');
-select throws_ok($$ update public.profiles set avatar_key = 'x' where id = '00000000-0000-0000-0000-000000000001' $$, '42501', null, 'avatar_key cannot be written directly');
+select throws_ok($$ update public.profiles set avatar_key = 'x' where id = '00000000-0000-0000-0000-000000000001' $$, '23514', null, 'avatar_key only accepts catalog keys (profiles_avatar_key_valid)');
 select throws_ok($$ update public.profiles set onboarded_at = now() where id = '00000000-0000-0000-0000-000000000001' $$, '42501', null, 'onboarded_at cannot be written directly');
 select throws_ok($$ insert into public.profiles (id) values ('00000000-0000-0000-0000-000000000009') $$, '42501', null, 'clients cannot insert profiles');
 select throws_ok($$ delete from public.profiles where id = '00000000-0000-0000-0000-000000000001' $$, '42501', null, 'clients cannot delete profiles');
