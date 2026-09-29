@@ -1,16 +1,18 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { currentLanguage } from '@/core/i18n';
 import { formatDate } from '@/core/i18n/format';
 import { useTheme } from '@/core/theme/useTheme';
+import { getDiscoveryRepository } from '@/data/discovery/discoveryRepository';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import { getLettersRepository, type Letter } from '@/data/letters/lettersRepository';
 import { defaultDesign } from '@/domain/design';
+import { useAuth } from '@/features/auth/AuthProvider';
 import { LetterRenderer } from '@/features/designs/LetterRenderer';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
 import { useLetterEvents } from '@/features/letters/LetterEventsProvider';
@@ -42,7 +44,11 @@ export default function LetterScreen() {
 
   const [letter, setLetter] = useState<Letter | null>(null);
   const [error, setError] = useState<TranslatedLetterError | 'unknown' | null>(null);
+  const [actionNotice, setActionNotice] = useState<'letter.blocked' | null>(null);
+  const [actionError, setActionError] = useState(false);
   const markedRead = useRef(false);
+  const { profile } = useAuth();
+  const myId = profile?.id ?? null;
 
   const alive = useRef(true);
   useEffect(() => {
@@ -117,6 +123,53 @@ export default function LetterScreen() {
     });
     router.push(`/compose/${draft.id}`);
   }
+
+  // Phase 9 (DEC-013, DEC-023): the other person on this letter, delete-for-me, block, report.
+  const other = isRecipient ? letter.sender : letter.recipient;
+  const canDeleteForMe =
+    (isRecipient && letter.status === 'delivered') ||
+    (!isRecipient && (letter.status === 'delivered' || letter.status === 'undeliverable'));
+
+  function confirmDeleteForMe(target: Letter) {
+    Alert.alert(t('letter.deleteConfirmTitle'), t('letter.deleteConfirmMessage'), [
+      { text: t('compose.sendConfirmCancel'), style: 'cancel' },
+      {
+        text: t('letter.deleteForMe'),
+        style: 'destructive',
+        onPress: () =>
+          void (async () => {
+            setActionError(false);
+            try {
+              await getLettersRepository().deleteLetterForMe(target.id);
+              router.back();
+            } catch {
+              setActionError(true);
+            }
+          })(),
+      },
+    ]);
+  }
+
+  function confirmBlock(userId: string) {
+    Alert.alert(t('letter.blockConfirmTitle'), t('letter.blockConfirmMessage'), [
+      { text: t('compose.sendConfirmCancel'), style: 'cancel' },
+      {
+        text: t('letter.block'),
+        style: 'destructive',
+        onPress: () =>
+          void (async () => {
+            setActionError(false);
+            try {
+              await getDiscoveryRepository().blockUser(userId);
+              setActionNotice('letter.blocked');
+            } catch {
+              setActionError(true);
+            }
+          })(),
+      },
+    ]);
+  }
+
   let when: string | null = null;
   if (letter.status === 'scheduled' && letter.scheduledAt) {
     when = t('sent.scheduledFor', {
@@ -164,6 +217,47 @@ export default function LetterScreen() {
           title={t('letter.reply')}
           onPress={() => void onReply(letter)}
         />
+      ) : null}
+      <Button
+        testID="letter-conversation"
+        title={t('letter.viewConversation')}
+        variant="secondary"
+        onPress={() => router.push(`/thread/${letter.threadId}`)}
+      />
+      {actionNotice ? <AppText testID="letter-notice">{t(actionNotice)}</AppText> : null}
+      {actionError ? (
+        <AppText testID="letter-action-error" style={{ color: colors.danger }}>
+          {t('letters.error.unknown')}
+        </AppText>
+      ) : null}
+      {canDeleteForMe ? (
+        <Button
+          testID="letter-delete-for-me"
+          title={t('letter.deleteForMe')}
+          variant="secondary"
+          onPress={() => confirmDeleteForMe(letter)}
+        />
+      ) : null}
+      {other && other.id !== myId ? (
+        <>
+          <Button
+            testID="letter-block"
+            title={t('letter.block')}
+            variant="secondary"
+            onPress={() => confirmBlock(other.id)}
+          />
+          <Button
+            testID="letter-report"
+            title={t('letter.report')}
+            variant="secondary"
+            onPress={() =>
+              router.push({
+                pathname: '/report',
+                params: { userId: other.id, letterId: letter.id },
+              })
+            }
+          />
+        </>
       ) : null}
     </ScrollView>
   );

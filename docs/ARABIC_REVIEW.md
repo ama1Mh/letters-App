@@ -246,3 +246,27 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `letter.reply` | Reply | رد | draft | Phase 8 replies |
 | `letter.replySubject` | Re: {{subject}} | رد: {{subject}} | draft | Phase 8 replies; `{{subject}}` is the original subject |
 | `compose.replyRecipient` | Reply to the letter's sender | رد على مرسل الرسالة | draft | Phase 8 replies |
+| `letter.viewConversation` | View conversation | عرض المحادثة | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.deleteForMe` | Delete for me | حذف من عندي | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.deleteConfirmTitle` | Delete this letter for you? | هل تريد حذف هذه الرسالة من عندك؟ | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.deleteConfirmMessage` | It disappears from your lists only. The other person keeps their copy. | ستختفي من قوائمك فقط، ويحتفظ الطرف الآخر بنسخته. | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.block` | Block | حظر | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.blockConfirmTitle` | Block this person? | هل تريد حظر هذا الشخص؟ | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.blockConfirmMessage` | They won't be able to write to you or find you, and they won't be told. | لن يتمكن من مراسلتك أو العثور عليك، ولن يُبلَّغ بذلك. | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.blocked` | Blocked. | تم الحظر. | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.report` | Report | إبلاغ | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `thread.title` | Conversation | المحادثة | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `thread.mine` | Your letter | رسالتك | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `thread.theirs` | Their letter | رسالة واردة | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.title` | Report | إبلاغ | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.reasonLabel` | What's wrong? | ما المشكلة؟ | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.detailsLabel` | Details (optional) | تفاصيل (اختياري) | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.alsoBlock` | Also block this person | حظر هذا الشخص أيضًا | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.submit` | Send report | إرسال البلاغ | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.sent` | Thank you. The report will be reviewed; the person won't be told. | شكرًا لك. ستتم مراجعة البلاغ، ولن يُبلَّغ الشخص بذلك. | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.close` | Done | تم | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.reason.spam` | Spam | رسائل مزعجة | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.reason.harassment` | Harassment | مضايقة | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.reason.inappropriate` | Inappropriate content | محتوى غير لائق | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.reason.impersonation` | Pretending to be someone else | انتحال شخصية | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `report.reason.other` | Something else | سبب آخر | draft | Phase 8/9 (threads, delete-for-me, block, report) |

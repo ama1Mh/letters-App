@@ -117,7 +117,16 @@
     "title": "الرسالة",
     "from": "من",
     "reply": "رد",
-    "replySubject": "رد: {{subject}}"
+    "replySubject": "رد: {{subject}}",
+    "viewConversation": "عرض المحادثة",
+    "deleteForMe": "حذف من عندي",
+    "deleteConfirmTitle": "هل تريد حذف هذه الرسالة من عندك؟",
+    "deleteConfirmMessage": "ستختفي من قوائمك فقط، ويحتفظ الطرف الآخر بنسخته.",
+    "block": "حظر",
+    "blockConfirmTitle": "هل تريد حظر هذا الشخص؟",
+    "blockConfirmMessage": "لن يتمكن من مراسلتك أو العثور عليك، ولن يُبلَّغ بذلك.",
+    "blocked": "تم الحظر.",
+    "report": "إبلاغ"
   },
   "profile": {
     "language": "اللغة",
@@ -304,5 +313,26 @@
       "unknown": "حدث خطأ ما. حاول مرة أخرى."
     },
     "deletedAccount": "حساب محذوف"
+  },
+  "thread": {
+    "title": "المحادثة",
+    "mine": "رسالتك",
+    "theirs": "رسالة واردة"
+  },
+  "report": {
+    "title": "إبلاغ",
+    "reasonLabel": "ما المشكلة؟",
+    "detailsLabel": "تفاصيل (اختياري)",
+    "alsoBlock": "حظر هذا الشخص أيضًا",
+    "submit": "إرسال البلاغ",
+    "sent": "شكرًا لك. ستتم مراجعة البلاغ، ولن يُبلَّغ الشخص بذلك.",
+    "close": "تم",
+    "reason": {
+      "spam": "رسائل مزعجة",
+      "harassment": "مضايقة",
+      "inappropriate": "محتوى غير لائق",
+      "impersonation": "انتحال شخصية",
+      "other": "سبب آخر"
+    }
   }
 }

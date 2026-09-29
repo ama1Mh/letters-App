@@ -36,6 +36,8 @@ export default function RootLayout() {
           <Stack.Screen name="compose/pick-design" options={{ headerShown: false }} />
           <Stack.Screen name="compose/pick-recipient" options={{ headerShown: false }} />
           <Stack.Screen name="letter/[id]" options={{ title: t('letter.title') }} />
+          <Stack.Screen name="thread/[id]" options={{ title: t('thread.title') }} />
+          <Stack.Screen name="report" options={{ title: t('report.title') }} />
           <Stack.Screen name="connections" options={{ title: t('connections.title') }} />
           <Stack.Screen name="invite/index" options={{ title: t('invite.title') }} />
           <Stack.Screen name="invite/[code]" options={{ headerShown: false }} />

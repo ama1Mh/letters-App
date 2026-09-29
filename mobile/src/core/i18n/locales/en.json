@@ -117,7 +117,16 @@
     "title": "Letter",
     "from": "From",
     "reply": "Reply",
-    "replySubject": "Re: {{subject}}"
+    "replySubject": "Re: {{subject}}",
+    "viewConversation": "View conversation",
+    "deleteForMe": "Delete for me",
+    "deleteConfirmTitle": "Delete this letter for you?",
+    "deleteConfirmMessage": "It disappears from your lists only. The other person keeps their copy.",
+    "block": "Block",
+    "blockConfirmTitle": "Block this person?",
+    "blockConfirmMessage": "They won't be able to write to you or find you, and they won't be told.",
+    "blocked": "Blocked.",
+    "report": "Report"
   },
   "profile": {
     "language": "Language",
@@ -304,5 +313,26 @@
       "unknown": "Something went wrong. Try again."
     },
     "deletedAccount": "Deleted account"
+  },
+  "thread": {
+    "title": "Conversation",
+    "mine": "Your letter",
+    "theirs": "Their letter"
+  },
+  "report": {
+    "title": "Report",
+    "reasonLabel": "What's wrong?",
+    "detailsLabel": "Details (optional)",
+    "alsoBlock": "Also block this person",
+    "submit": "Send report",
+    "sent": "Thank you. The report will be reviewed; the person won't be told.",
+    "close": "Done",
+    "reason": {
+      "spam": "Spam",
+      "harassment": "Harassment",
+      "inappropriate": "Inappropriate content",
+      "impersonation": "Pretending to be someone else",
+      "other": "Something else"
+    }
   }
 }
