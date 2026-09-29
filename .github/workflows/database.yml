@@ -74,6 +74,10 @@ jobs:
         run: |
           summary=$(grep -E '^(Files=|Result:)' pgtap.log | tr '\n' ' ')
           echo "::notice title=pgTAP summary::${summary:-no summary line found}"
+          # Failure details as annotations too (readable through the public API, unlike the log):
+          # each "not ok", its "# Failed test" diagnostics, and the per-file summary lines.
+          grep -E 'not ok|# +Failed test|# +(have|want|caught|wanted|got|expected):|Parse errors|Failed tests?:|Wstat' pgtap.log \
+            | head -40 | while IFS= read -r line; do echo "::error title=pgTAP failure::${line}"; done || true
           tests=$(grep -oE 'Tests=[0-9]+' pgtap.log | head -1 | cut -d= -f2)
           # 514 after Phase 6 step 1, ~580 with delivery.test.sql, +59 with delivery_cron_realtime.test.sql
           # (Phase 6 step 3A; 640 in run #22), +76 with letter_lists.test.sql and +10 with
