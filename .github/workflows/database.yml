@@ -84,8 +84,8 @@ jobs:
           # send_min_lead_time.test.sql (Phase 6 M0), +4 with function_volatility.test.sql (Phase 6 M8),
           # +28 with replies.test.sql (Phase 8), +53 with safety.test.sql and +6 with
           # blocked_list.test.sql (Phase 9), +43 with push.test.sql (Phase 7 server side), +10 with
-          # housekeeping.test.sql. Raise this floor when tests are added.
-          min=870
+          # housekeeping.test.sql, +12 with avatars.test.sql. Raise this floor when tests are added.
+          min=882
           if [ -z "$tests" ] || [ "$tests" -lt "$min" ]; then
             echo "::error title=pgTAP::expected at least $min tests, saw ${tests:-none}"
             exit 1
