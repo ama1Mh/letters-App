@@ -131,6 +131,44 @@ export type Database = {
           },
         ]
       }
+      devices: {
+        Row: {
+          app_version: string | null
+          created_at: string
+          id: string
+          last_seen_at: string
+          platform: string
+          push_token: string
+          user_id: string
+        }
+        Insert: {
+          app_version?: string | null
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          platform: string
+          push_token: string
+          user_id: string
+        }
+        Update: {
+          app_version?: string | null
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          platform?: string
+          push_token?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "devices_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invites: {
         Row: {
           code: string
@@ -453,6 +491,28 @@ export type Database = {
         Args: { p_username: string }
         Returns: boolean
       }
+      claim_notifications: {
+        Args: { p_lease?: string; p_limit?: number }
+        Returns: {
+          attempts: number
+          letter_id: string
+          outbox_id: string
+          push_tokens: string[]
+          recipient_locale: Database["public"]["Enums"]["app_locale"]
+          sender_display_name: string
+          sender_username: string
+          type: Database["public"]["Enums"]["notification_type"]
+        }[]
+      }
+      complete_notification: {
+        Args: {
+          p_error?: string
+          p_ok: boolean
+          p_outbox_id: string
+          p_ticket_id?: string
+        }
+        Returns: undefined
+      }
       complete_onboarding: {
         Args: {
           p_discoverable_by_email: boolean
@@ -486,6 +546,10 @@ export type Database = {
           receive_mode: Database["public"]["Enums"]["receive_mode"]
           username: string
         }[]
+      }
+      forget_device_token: {
+        Args: { p_push_token: string }
+        Returns: undefined
       }
       generate_invite_code: { Args: never; Returns: string }
       get_letter: {
@@ -620,6 +684,7 @@ export type Database = {
         }
         Returns: string
       }
+      purge_housekeeping: { Args: never; Returns: undefined }
       redeem_invite: { Args: { p_code: string }; Returns: string }
       regenerate_invite: {
         Args: never
@@ -638,6 +703,14 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      register_device: {
+        Args: {
+          p_app_version?: string
+          p_platform: string
+          p_push_token: string
+        }
+        Returns: undefined
       }
       remove_connection: {
         Args: { p_connection_id: string }
@@ -675,6 +748,7 @@ export type Database = {
         }
       }
       unblock_user: { Args: { p_blocked_id: string }; Returns: undefined }
+      unregister_device: { Args: { p_push_token: string }; Returns: undefined }
       unschedule_letter: {
         Args: { p_letter_id: string }
         Returns: Database["public"]["CompositeTypes"]["letter_send_state"]
