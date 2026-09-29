@@ -129,6 +129,19 @@ export default function SignUpScreen() {
           <AppText style={{ color: colors.primary }}>{t('auth.signUp.signInLink')}</AppText>
         </Pressable>
       </View>
+      <Pressable
+        testID="sign-up-privacy-policy"
+        accessibilityRole="link"
+        onPress={() => router.push('/legal/privacy')}
+        style={{ alignSelf: 'center' }}
+      >
+        <AppText variant="muted" style={{ textAlign: 'center' }}>
+          {t('auth.signUp.privacyNotice')}{' '}
+          <AppText variant="muted" style={{ color: colors.primary }}>
+            {t('auth.signUp.privacyLink')}
+          </AppText>
+        </AppText>
+      </Pressable>
     </View>
   );
 }

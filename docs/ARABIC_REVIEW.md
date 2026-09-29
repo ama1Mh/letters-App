@@ -104,6 +104,8 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `auth.signUp.submit` | Create account | إنشاء حساب | draft | |
 | `auth.signUp.hasAccount` | Already have an account? | لديك حساب بالفعل؟ | draft | |
 | `auth.signUp.signInLink` | Sign in | تسجيل الدخول | draft | |
+| `auth.signUp.privacyNotice` | By creating an account, you accept how we handle your data as described in our | بإنشاء حساب، فإنك توافق على طريقة تعاملنا مع بياناتك كما هو موضح في | draft | DEC-053; followed by the link |
+| `auth.signUp.privacyLink` | Privacy policy | سياسة الخصوصية | draft | DEC-053 |
 | `auth.signUp.confirmationTitle` | Check your email | تحقق من بريدك الإلكتروني | draft | |
 | `auth.signUp.confirmationBody` | We sent a confirmation link to {{email}}. Open it, then sign in. | أرسلنا رابط تأكيد إلى {{email}}. افتحه ثم سجّل الدخول. | draft | `{{email}}` is the address the user typed, always rendered LTR by the platform bidi algorithm |
 | `auth.signUp.error.user_already_exists` | An account with this email already exists. | يوجد حساب بهذا البريد الإلكتروني بالفعل. | draft | |
@@ -229,6 +231,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `privacy.receiveModeInviteOnly` | Only people I'm connected with | المتصلون بي فقط | draft | |
 | `privacy.discoverableByUsernameLabel` | Let people find me by username | السماح للآخرين بالعثور عليّ باسم المستخدم | draft | |
 | `privacy.discoverableByEmailLabel` | Let people find me by email | السماح للآخرين بالعثور عليّ عبر البريد الإلكتروني | draft | |
+| `legal.privacyTitle` | Privacy policy | سياسة الخصوصية | draft | DEC-053 (screen title) |
 | `letters.error.recipient_required` | Choose a recipient first. | اختر المستلم أولًا. | draft | Phase 6 send/schedule error (DEC-048 M1) |
 | `letters.error.body_empty` | Write your letter before sending it. | اكتب رسالتك قبل إرسالها. | draft | Phase 6 send/schedule error (DEC-048 M1) |
 | `letters.error.cannot_send` | This letter can't be sent to this person. | لا يمكن إرسال هذه الرسالة إلى هذا الشخص. | draft | Phase 6 send/schedule error (DEC-048 M1); neutral: must not reveal a block or the receive setting |
@@ -272,6 +275,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `report.reason.other` | Something else | سبب آخر | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `profile.blocked` | Blocked people | المحظورون | draft | Phase 9 (blocked list, account deletion) |
 | `profile.notifications` | Notifications | الإشعارات | draft | DEC-052 |
+| `profile.privacyPolicy` | Privacy policy | سياسة الخصوصية | draft | DEC-053 |
 | `profile.deleteAccount` | Delete account | حذف الحساب | draft | Phase 9 (blocked list, account deletion) |
 | `profile.deleteAccountTitle` | Delete your account? | هل تريد حذف حسابك؟ | draft | Phase 9 (blocked list, account deletion) |
 | `profile.deleteAccountMessage` | Your drafts, scheduled letters, invites and connections will be removed. Letters already delivered stay with their recipients, shown as from a deleted account. | ستُحذف مسوداتك ورسائلك المجدولة ودعواتك واتصالاتك. أما الرسائل التي سُلِّمت فتبقى لدى مستلميها وتظهر كأنها من حساب محذوف. | draft | Phase 9 (blocked list, account deletion) |
@@ -319,3 +323,11 @@ Push notifications are localized on the server from `profiles.locale` (CLAUDE.md
 | push title | New letter | رسالة جديدة | draft | Phase 7 (DEC-050) |
 | push body | You have a new letter from {name} | لديك رسالة جديدة من {name} | draft | Phase 7 |
 | push body, no name | You have a new letter | لديك رسالة جديدة | draft | Sender without a public name (for example a deleted account) |
+
+## Privacy policy (document, DEC-053)
+
+The Arabic privacy policy lives in `mobile/src/features/legal/privacyPolicy.ts` (not in `ar.json`, so the table test does not cover it). Review it as one document, in the app (Profile -> Privacy policy) or in that file.
+
+| Document | Status | Notes |
+|---|---|---|
+| Privacy policy (ar) | draft | Written 2026-09-29; needs the owner's Arabic review and a legal review (OPEN-6) |
