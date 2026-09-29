@@ -30,6 +30,12 @@ function ensureSchema(): void {
       updated_at text not null
     );
   `);
+  // Phase 8 added replies: existing installs get the column (sqlite has no "add column if not
+  // exists").
+  const columns = database().getAllSync<{ name: string }>('pragma table_info(local_drafts)');
+  if (!columns.some((column) => column.name === 'parent_letter_id')) {
+    database().execSync('alter table local_drafts add column parent_letter_id text');
+  }
   schemaReady = true;
 }
 
@@ -40,6 +46,7 @@ interface DraftRow {
   body_dir: string;
   design: string;
   recipient_id: string | null;
+  parent_letter_id: string | null;
   dirty: number;
   updated_at: string;
 }
@@ -52,6 +59,7 @@ function fromRow(row: DraftRow): LocalDraft {
     bodyDir: row.body_dir === 'rtl' ? 'rtl' : 'ltr',
     design: JSON.parse(row.design) as unknown,
     recipientId: row.recipient_id,
+    parentLetterId: row.parent_letter_id,
     dirty: row.dirty !== 0,
     updatedAt: row.updated_at,
   };
@@ -75,14 +83,16 @@ export const nativeDraftsStore: LocalDraftsStore = {
   async upsert(draft) {
     ensureSchema();
     database().runSync(
-      `insert into local_drafts (id, subject, body, body_dir, design, recipient_id, dirty, updated_at)
-       values (?, ?, ?, ?, ?, ?, ?, ?)
+      `insert into local_drafts
+         (id, subject, body, body_dir, design, recipient_id, parent_letter_id, dirty, updated_at)
+       values (?, ?, ?, ?, ?, ?, ?, ?, ?)
        on conflict(id) do update set
          subject = excluded.subject,
          body = excluded.body,
          body_dir = excluded.body_dir,
          design = excluded.design,
          recipient_id = excluded.recipient_id,
+         parent_letter_id = excluded.parent_letter_id,
          dirty = excluded.dirty,
          updated_at = excluded.updated_at`,
       draft.id,
@@ -91,6 +101,7 @@ export const nativeDraftsStore: LocalDraftsStore = {
       draft.bodyDir,
       JSON.stringify(draft.design),
       draft.recipientId,
+      draft.parentLetterId ?? null,
       draft.dirty ? 1 : 0,
       draft.updatedAt,
     );

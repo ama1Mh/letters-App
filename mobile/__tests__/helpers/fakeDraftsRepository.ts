@@ -17,8 +17,13 @@ export function createFakeDraftsRepository(initial: LocalDraft[] = []): DraftsRe
     },
     async save(input: DraftInput) {
       nextId += 1;
+      const id = input.id ?? `fake-draft-${nextId}`;
       const draft: LocalDraft = {
-        id: input.id ?? `fake-draft-${nextId}`,
+        id,
+        parentLetterId:
+          input.parentLetterId !== undefined
+            ? input.parentLetterId
+            : (rows.get(id)?.parentLetterId ?? null),
         subject: input.subject,
         body: input.body,
         bodyDir: 'ltr',

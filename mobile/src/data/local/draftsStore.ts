@@ -17,6 +17,9 @@ export interface LocalDraft {
    *  and its zod schema exist. */
   design: unknown;
   recipientId: string | null;
+  /** Set for a reply (Phase 8): the delivered letter it answers. Fixed once the draft exists; the
+   *  server requires the recipient to be that letter's sender. Absent/null for a new letter. */
+  parentLetterId?: string | null;
   /** True until this draft's current state has been pushed to `letters`. */
   dirty: boolean;
   /** ISO 8601. The sync's last-write-wins comparison key. */

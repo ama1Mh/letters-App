@@ -32,6 +32,8 @@ export interface DraftInput {
   body: string;
   design: unknown;
   recipientId: string | null;
+  /** For a reply. Omitted on later saves: the draft keeps the parent it was created with. */
+  parentLetterId?: string | null;
 }
 
 export interface SyncResult {
@@ -88,6 +90,7 @@ interface LetterDraftRow {
   body_dir: string;
   design: unknown;
   recipient_id: string | null;
+  parent_letter_id: string | null;
   updated_at: string;
 }
 
@@ -100,6 +103,8 @@ function toRemoteRow(draft: LocalDraft, senderId: string) {
     body: draft.body,
     body_dir: draft.bodyDir,
     design: draft.design,
+    // Insert-only: never part of editableColumns() (the server forbids changing it).
+    parent_letter_id: draft.parentLetterId ?? null,
   };
 }
 
@@ -155,6 +160,7 @@ function fromRemoteRow(row: LetterDraftRow): LocalDraft {
     bodyDir: row.body_dir === 'rtl' ? 'rtl' : 'ltr',
     design: row.design,
     recipientId: row.recipient_id,
+    parentLetterId: row.parent_letter_id,
     dirty: false,
     updatedAt: row.updated_at,
   };
@@ -181,13 +187,20 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
     get: (id) => localStore.get(id),
 
     async save(input) {
+      const id = input.id ?? generateId();
+      // A reply keeps its parent across saves (compose's autosave does not pass it back).
+      const parentLetterId =
+        input.parentLetterId !== undefined
+          ? input.parentLetterId
+          : ((await localStore.get(id))?.parentLetterId ?? null);
       const draft: LocalDraft = {
-        id: input.id ?? generateId(),
+        id,
         subject: input.subject,
         body: input.body,
         bodyDir: detectBodyDirection(input.body, fallbackDirection()),
         design: input.design,
         recipientId: input.recipientId,
+        parentLetterId,
         dirty: true,
         updatedAt: now(),
       };
@@ -265,7 +278,7 @@ export function createDraftsRepository(options: DraftsRepositoryOptions): Drafts
       let pulled = 0;
       const { data, error } = await client
         .from('letters')
-        .select('id, subject, body, body_dir, design, recipient_id, updated_at')
+        .select('id, subject, body, body_dir, design, recipient_id, parent_letter_id, updated_at')
         .eq('sender_id', senderId)
         .eq('status', 'draft');
       if (!error && data) {

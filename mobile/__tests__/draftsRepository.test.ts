@@ -106,6 +106,7 @@ describe('createDraftsRepository', () => {
         bodyDir: 'rtl',
         design: {},
         recipientId: null,
+        parentLetterId: null,
         dirty: true,
         updatedAt: '2026-01-01T00:00:01.000Z',
       });
@@ -209,6 +210,7 @@ describe('createDraftsRepository', () => {
           body: 'Hello',
           body_dir: 'ltr',
           design: { v: 1 },
+          parent_letter_id: null,
         },
       ]);
       await expect(store.get('d1')).resolves.toEqual({ ...DRAFT, dirty: false });
@@ -282,6 +284,81 @@ describe('createDraftsRepository', () => {
       await repo.forgetLocal('d1');
       await expect(store.get('d1')).resolves.toBeNull();
       expect(deletedIds).toEqual([]);
+    });
+  });
+
+  describe('replies (Phase 8)', () => {
+    function setup(clientOpts: FakeClientOptions = { session: { user: { id: 'me' } } }) {
+      const store = createFakeDraftsStore();
+      const fake = fakeClient(clientOpts);
+      const repo = createDraftsRepository({
+        localStore: store,
+        client: fake.client,
+        generateId: () => 'reply-1',
+        now: nextNow,
+        fallbackDirection: FALLBACK,
+      });
+      return { store, repo, ...fake };
+    }
+
+    it('keeps the parent across later saves that do not pass it (autosave)', async () => {
+      const { repo, store } = setup();
+      await repo.save({
+        subject: null,
+        body: '',
+        design: {},
+        recipientId: 'them',
+        parentLetterId: 'parent-1',
+      });
+      await repo.save({
+        id: 'reply-1',
+        subject: null,
+        body: 'thanks!',
+        design: {},
+        recipientId: 'them',
+      });
+      await expect(store.get('reply-1')).resolves.toMatchObject({
+        body: 'thanks!',
+        parentLetterId: 'parent-1',
+      });
+    });
+
+    it('sends parent_letter_id on the first insert, and never in an update', async () => {
+      const { repo, inserts, updates } = setup();
+      await repo.save({
+        subject: null,
+        body: 'hi',
+        design: {},
+        recipientId: 'them',
+        parentLetterId: 'parent-1',
+      });
+      await repo.push('reply-1'); // new on the server: update matches nothing, then insert
+      await repo.push('reply-1'); // now it exists: update only
+      expect(inserts).toHaveLength(1);
+      expect(inserts[0]).toMatchObject({ id: 'reply-1', parent_letter_id: 'parent-1' });
+      for (const { patch } of updates) expect(patch).not.toHaveProperty('parent_letter_id');
+    });
+
+    it('pulls a remote reply draft with its parent', async () => {
+      const { repo, store } = setup({
+        session: { user: { id: 'me' } },
+        remoteRows: [
+          {
+            id: 'remote-reply',
+            subject: null,
+            body: 'from another device',
+            body_dir: 'ltr',
+            design: {},
+            recipient_id: 'them',
+            parent_letter_id: 'parent-9',
+            updated_at: '2026-01-01T00:00:00.000Z',
+          },
+        ],
+      });
+      await repo.sync();
+      await expect(store.get('remote-reply')).resolves.toMatchObject({
+        parentLetterId: 'parent-9',
+      });
     });
   });
 
@@ -413,6 +490,7 @@ describe('createDraftsRepository', () => {
           body: 'x',
           body_dir: 'ltr',
           design: {},
+          parent_letter_id: null,
         },
       ]);
       await expect(store.get('d1')).resolves.toMatchObject({ dirty: false });
