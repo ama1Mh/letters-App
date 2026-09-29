@@ -82,9 +82,9 @@ jobs:
           # 514 after Phase 6 step 1, ~580 with delivery.test.sql, +59 with delivery_cron_realtime.test.sql
           # (Phase 6 step 3A; 640 in run #22), +76 with letter_lists.test.sql and +10 with
           # send_min_lead_time.test.sql (Phase 6 M0), +4 with function_volatility.test.sql (Phase 6 M8),
-          # +28 with replies.test.sql (Phase 8), +53 with safety.test.sql (Phase 9).
-          # Raise this floor when tests are added.
-          min=811
+          # +28 with replies.test.sql (Phase 8), +53 with safety.test.sql and +6 with
+          # blocked_list.test.sql (Phase 9). Raise this floor when tests are added.
+          min=817
           if [ -z "$tests" ] || [ "$tests" -lt "$min" ]; then
             echo "::error title=pgTAP::expected at least $min tests, saw ${tests:-none}"
             exit 1
