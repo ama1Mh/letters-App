@@ -5,7 +5,7 @@ import { Alert, Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { changeLanguagePreference, i18n } from '@/core/i18n';
-import { reloadApp } from '@/core/i18n/direction';
+import { canReloadApp, reloadApp } from '@/core/i18n/direction';
 import type { LanguagePreference } from '@/core/i18n/languages';
 import { getLanguagePreference } from '@/core/i18n/preference';
 import { useTheme } from '@/core/theme/useTheme';
@@ -30,10 +30,15 @@ export default function LanguageScreen() {
     setSelected(value);
     if (needsReload) {
       // Use the global instance: it is already in the new language, unlike this render's `t`.
-      Alert.alert(i18n.t('language.restartTitle'), i18n.t('language.restartMessage'), [
-        { text: i18n.t('language.restartLater'), style: 'cancel' },
-        { text: i18n.t('language.restartNow'), onPress: reloadApp },
-      ]);
+      if (canReloadApp()) {
+        Alert.alert(i18n.t('language.restartTitle'), i18n.t('language.restartMessage'), [
+          { text: i18n.t('language.restartLater'), style: 'cancel' },
+          { text: i18n.t('language.restartNow'), onPress: reloadApp },
+        ]);
+      } else {
+        // Release builds cannot restart themselves yet (OPEN-8): ask the user to reopen the app.
+        Alert.alert(i18n.t('language.restartTitle'), i18n.t('language.reopenMessage'));
+      }
     }
   }
 

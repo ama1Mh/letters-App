@@ -287,3 +287,4 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `avatar.change` | Choose avatar | اختيار صورة رمزية | draft | Preset avatars (DEC-011) |
 | `avatar.none` | No avatar | بدون صورة رمزية | draft | Preset avatars (DEC-011) |
 | `avatar.option` | Avatar {{number}} | الصورة الرمزية {{number}} | draft | Preset avatars (DEC-011); `{{number}}` is 1-24, for screen readers |
+| `language.reopenMessage` | Close the app and open it again to switch the layout direction. | أغلق التطبيق وافتحه مرة أخرى لتغيير اتجاه الواجهة. | draft | OPEN-8: release builds, until expo-updates |

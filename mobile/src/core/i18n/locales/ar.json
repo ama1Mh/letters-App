@@ -212,7 +212,8 @@
     "restartTitle": "إعادة التشغيل مطلوبة",
     "restartMessage": "يلزم إعادة تشغيل التطبيق لتغيير اتجاه الواجهة.",
     "restartNow": "إعادة التشغيل الآن",
-    "restartLater": "لاحقًا"
+    "restartLater": "لاحقًا",
+    "reopenMessage": "أغلق التطبيق وافتحه مرة أخرى لتغيير اتجاه الواجهة."
   },
   "auth": {
     "signIn": {

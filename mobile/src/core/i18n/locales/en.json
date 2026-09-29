@@ -212,7 +212,8 @@
     "restartTitle": "Restart required",
     "restartMessage": "The app needs to restart to change the layout direction.",
     "restartNow": "Restart now",
-    "restartLater": "Later"
+    "restartLater": "Later",
+    "reopenMessage": "Close the app and open it again to switch the layout direction."
   },
   "auth": {
     "signIn": {

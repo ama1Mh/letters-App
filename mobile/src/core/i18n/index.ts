@@ -4,7 +4,7 @@ import { getLocales } from 'expo-localization';
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { applyLayoutDirection, isLayoutRtl, reloadApp } from './direction';
+import { applyLayoutDirection, canReloadApp, isLayoutRtl, reloadApp } from './direction';
 import { resolveLanguage, type Language, type LanguagePreference } from './languages';
 import ar from './locales/ar.json';
 import en from './locales/en.json';
@@ -53,6 +53,9 @@ export function initI18n(): void {
   const { needsReload } = applyLayoutDirection(language);
   if (!needsReload) {
     setDirectionReloadGuard(null);
+  } else if (!canReloadApp()) {
+    // Release build (OPEN-8): forceRTL above already takes effect on the next launch. The text is in
+    // the right language now; only the layout direction waits. Never throw during startup.
   } else if (getDirectionReloadGuard() !== language) {
     setDirectionReloadGuard(language);
     reloadApp();

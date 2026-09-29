@@ -4,11 +4,13 @@ import Storage from 'expo-sqlite/kv-store';
 const mockApplyLayoutDirection = jest.fn();
 const mockReloadApp = jest.fn();
 const mockDeviceLanguage = jest.fn();
+const mockCanReloadApp = jest.fn();
 
 jest.mock('../src/core/i18n/direction', () => ({
   applyLayoutDirection: (...args: unknown[]) => mockApplyLayoutDirection(...args),
   isLayoutRtl: () => false,
   reloadApp: () => mockReloadApp(),
+  canReloadApp: () => mockCanReloadApp(),
 }));
 
 jest.mock('expo-localization', () => ({
@@ -33,6 +35,7 @@ beforeEach(() => {
   mockApplyLayoutDirection.mockReset().mockReturnValue({ needsReload: false });
   mockReloadApp.mockReset();
   mockDeviceLanguage.mockReset().mockReturnValue('en');
+  mockCanReloadApp.mockReset().mockReturnValue(true); // a dev build, unless a test says otherwise
 });
 
 describe('initI18n', () => {
@@ -91,6 +94,18 @@ describe('initI18n', () => {
     freshI18n().initI18n(); // mismatch again -> reload #2
 
     expect(mockReloadApp).toHaveBeenCalledTimes(2);
+  });
+
+  it('never reloads (or throws) at startup in a release build: the direction applies next launch (OPEN-8)', () => {
+    mockDeviceLanguage.mockReturnValue('ar');
+    mockApplyLayoutDirection.mockReturnValue({ needsReload: true });
+    mockCanReloadApp.mockReturnValue(false);
+    const { initI18n, i18n } = freshI18n();
+
+    expect(() => initI18n()).not.toThrow();
+    expect(mockReloadApp).not.toHaveBeenCalled();
+    expect(mockApplyLayoutDirection).toHaveBeenCalledWith('ar'); // forceRTL requested for next launch
+    expect(i18n.t('tabs.inbox')).toBe('الوارد'); // the text is Arabic right away
   });
 
   it('is idempotent within one app session', () => {

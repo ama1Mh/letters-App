@@ -34,6 +34,16 @@ export function applyLayoutDirection(language: Language): { needsReload: boolean
 }
 
 /**
+ * Whether this build can restart its JS bundle in-process (so a direction change applies at once).
+ * Dev builds: yes (DevSettings). Release builds: not until `expo-updates` is set up (OPEN-8, needs
+ * an EAS project); they apply the new direction on the next launch instead - callers check this
+ * rather than calling reloadApp() and crashing.
+ */
+export function canReloadApp(): boolean {
+  return __DEV__;
+}
+
+/**
  * Restarts the JS bundle so a new layout direction takes effect.
  * Dev builds: DevSettings.reload(). Production needs `expo-updates` (`reloadAsync`) — not
  * installed yet, see OPEN-8 in docs/DECISIONS.md. Fail loudly rather than silently doing nothing.
