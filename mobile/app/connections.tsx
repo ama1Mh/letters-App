@@ -8,6 +8,7 @@ import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
 import { useTheme } from '@/core/theme/useTheme';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
+import { PersonActionsButton } from '@/features/safety/PersonActionsButton';
 import {
   DiscoveryActionError,
   getDiscoveryRepository,
@@ -150,6 +151,11 @@ export default function ConnectionsScreen() {
                   }
                 />
               )}
+              <PersonActionsButton
+                testID={`connections-actions-${item.id}`}
+                userId={item.otherUserId}
+                onBlocked={() => void load()}
+              />
             </View>
           );
         }}

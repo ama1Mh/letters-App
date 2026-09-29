@@ -18,6 +18,7 @@ import {
 } from '@/data/discovery/discoveryRepository';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
+import { PersonActionsButton } from '@/features/safety/PersonActionsButton';
 
 const KNOWN_SEARCH_CODES = [
   'query_too_short',
@@ -152,6 +153,14 @@ export default function PickRecipientScreen() {
             onPress={() => void sendRequest(user)}
           />
         )}
+        <PersonActionsButton
+          testID={`pick-recipient-actions-${user.id}`}
+          userId={user.id}
+          onBlocked={() => {
+            setResults((current) => current.filter((item) => item.id !== user.id));
+            setEmailResult((current) => (current?.id === user.id ? null : current));
+          }}
+        />
       </View>
     );
   }

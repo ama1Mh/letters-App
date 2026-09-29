@@ -348,5 +348,8 @@
     "emptyTitle": "No one blocked",
     "emptyBody": "People you block can't write to you or find you.",
     "unblock": "Unblock"
+  },
+  "safety": {
+    "actionsTitle": "Options"
   }
 }

@@ -282,3 +282,4 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `blocked.emptyTitle` | No one blocked | لا يوجد محظورون | draft | Phase 9 (blocked list, account deletion) |
 | `blocked.emptyBody` | People you block can't write to you or find you. | لا يمكن للمحظورين مراسلتك أو العثور عليك. | draft | Phase 9 (blocked list, account deletion) |
 | `blocked.unblock` | Unblock | إلغاء الحظر | draft | Phase 9 (blocked list, account deletion) |
+| `safety.actionsTitle` | Options | خيارات | draft | Phase 9: the … menu (Report / Block) on a person |
