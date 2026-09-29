@@ -270,3 +270,15 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `report.reason.inappropriate` | Inappropriate content | محتوى غير لائق | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `report.reason.impersonation` | Pretending to be someone else | انتحال شخصية | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `report.reason.other` | Something else | سبب آخر | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `profile.blocked` | Blocked people | المحظورون | draft | Phase 9 (blocked list, account deletion) |
+| `profile.deleteAccount` | Delete account | حذف الحساب | draft | Phase 9 (blocked list, account deletion) |
+| `profile.deleteAccountTitle` | Delete your account? | هل تريد حذف حسابك؟ | draft | Phase 9 (blocked list, account deletion) |
+| `profile.deleteAccountMessage` | Your drafts, scheduled letters, invites and connections will be removed. Letters already delivered stay with their recipients, shown as from a deleted account. | ستُحذف مسوداتك ورسائلك المجدولة ودعواتك واتصالاتك. أما الرسائل التي سُلِّمت فتبقى لدى مستلميها وتظهر كأنها من حساب محذوف. | draft | Phase 9 (blocked list, account deletion) |
+| `profile.deleteAccountContinue` | Continue | متابعة | draft | Phase 9 (blocked list, account deletion) |
+| `profile.deleteAccountFinalTitle` | This can't be undone | لا يمكن التراجع عن هذا | draft | Phase 9 (blocked list, account deletion) |
+| `profile.deleteAccountFinalMessage` | You won't be able to sign in to this account again. | لن تتمكن من تسجيل الدخول إلى هذا الحساب مرة أخرى. | draft | Phase 9 (blocked list, account deletion) |
+| `profile.deleteAccountFailed` | The account could not be deleted. Try again. | تعذّر حذف الحساب. حاول مرة أخرى. | draft | Phase 9 (blocked list, account deletion) |
+| `blocked.title` | Blocked people | المحظورون | draft | Phase 9 (blocked list, account deletion) |
+| `blocked.emptyTitle` | No one blocked | لا يوجد محظورون | draft | Phase 9 (blocked list, account deletion) |
+| `blocked.emptyBody` | People you block can't write to you or find you. | لا يمكن للمحظورين مراسلتك أو العثور عليك. | draft | Phase 9 (blocked list, account deletion) |
+| `blocked.unblock` | Unblock | إلغاء الحظر | draft | Phase 9 (blocked list, account deletion) |

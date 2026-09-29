@@ -132,7 +132,15 @@
     "language": "اللغة",
     "connections": "طلبات الاتصال",
     "myInvite": "رابط دعوتي",
-    "privacy": "الخصوصية"
+    "privacy": "الخصوصية",
+    "blocked": "المحظورون",
+    "deleteAccount": "حذف الحساب",
+    "deleteAccountTitle": "هل تريد حذف حسابك؟",
+    "deleteAccountMessage": "ستُحذف مسوداتك ورسائلك المجدولة ودعواتك واتصالاتك. أما الرسائل التي سُلِّمت فتبقى لدى مستلميها وتظهر كأنها من حساب محذوف.",
+    "deleteAccountContinue": "متابعة",
+    "deleteAccountFinalTitle": "لا يمكن التراجع عن هذا",
+    "deleteAccountFinalMessage": "لن تتمكن من تسجيل الدخول إلى هذا الحساب مرة أخرى.",
+    "deleteAccountFailed": "تعذّر حذف الحساب. حاول مرة أخرى."
   },
   "discovery": {
     "title": "البحث عن أشخاص",
@@ -334,5 +342,11 @@
       "impersonation": "انتحال شخصية",
       "other": "سبب آخر"
     }
+  },
+  "blocked": {
+    "title": "المحظورون",
+    "emptyTitle": "لا يوجد محظورون",
+    "emptyBody": "لا يمكن للمحظورين مراسلتك أو العثور عليك.",
+    "unblock": "إلغاء الحظر"
   }
 }

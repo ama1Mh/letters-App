@@ -31,6 +31,7 @@ export function fakeProfile(userId: string, overrides: Partial<OwnProfile> = {})
     discoverableByEmail: false,
     readReceiptsEnabled: true,
     onboardedAt: null,
+    deletedAt: null,
     ...overrides,
   };
 }
@@ -102,6 +103,13 @@ export function createFakeAuthRepository(initial?: {
         discoverableByEmail,
         onboardedAt: new Date().toISOString(),
       };
+    },
+
+    async deleteAccount() {
+      if (!session) throw new AuthActionError('not_authenticated');
+      session = null;
+      profile = null;
+      notify();
     },
 
     async updateReceiveSettings({ receiveMode, discoverableByUsername, discoverableByEmail }) {

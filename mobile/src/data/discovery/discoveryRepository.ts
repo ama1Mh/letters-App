@@ -8,6 +8,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { getSupabase } from '../supabase';
+import type { Database } from '../supabase/database.types';
 
 export type ConnectionState = 'none' | 'pending_out' | 'pending_in' | 'connected';
 
@@ -19,6 +20,22 @@ export interface SearchResult {
   receiveMode: 'everyone' | 'invite_only';
   connectionState: ConnectionState;
 }
+
+/** Someone I blocked (Phase 9). Name fields are null for a deleted account. */
+export interface BlockedUser {
+  userId: string;
+  username: string | null;
+  displayName: string | null;
+  avatarKey: string | null;
+  blockedAt: string;
+}
+
+/** Generated row; `supabase gen types` marks function results non-null, so the profile fields are
+ *  re-marked nullable (deleted account) - see DEC-048 (D3). */
+type BlockedRow = Omit<
+  Database['public']['Functions']['list_blocked_users']['Returns'][number],
+  'username' | 'display_name' | 'avatar_key'
+> & { username: string | null; display_name: string | null; avatar_key: string | null };
 
 export interface Invite {
   id: string;
@@ -67,6 +84,8 @@ export interface DiscoveryRepository {
 
   blockUser(userId: string): Promise<void>;
   unblockUser(userId: string): Promise<void>;
+  /** Only the blocks I made, newest first (Phase 9). */
+  listBlockedUsers(): Promise<BlockedUser[]>;
 
   getOrCreateInvite(): Promise<Invite>;
   regenerateInvite(): Promise<Invite>;
@@ -246,6 +265,18 @@ export function createDiscoveryRepository(client: SupabaseClient): DiscoveryRepo
     async unblockUser(userId) {
       const { error } = await client.rpc('unblock_user', { p_blocked_id: userId });
       if (error) throw toDiscoveryError(error);
+    },
+
+    async listBlockedUsers() {
+      const { data, error } = await client.rpc('list_blocked_users');
+      if (error) throw toDiscoveryError(error);
+      return ((data ?? []) as BlockedRow[]).map((row) => ({
+        userId: row.user_id,
+        username: row.username,
+        displayName: row.display_name,
+        avatarKey: row.avatar_key,
+        blockedAt: row.blocked_at,
+      }));
     },
 
     async getOrCreateInvite() {

@@ -37,6 +37,8 @@ export interface AuthContextValue {
   /** Re-reads the session and profile from scratch. Call after an action that changes them. */
   refresh: () => Promise<void>;
   signOut: () => Promise<void>;
+  /** Deletes the account (Edge Function), clears local drafts and ends the session (Phase 9). */
+  deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -62,6 +64,13 @@ export function AuthProvider({ children, repository }: AuthProviderProps) {
         return;
       }
       const p = await repo.getOwnProfile(session.userId);
+      // An account deleted elsewhere (another device): end this stale session.
+      if (p?.deletedAt) {
+        await repo.signOut();
+        setProfile(null);
+        setStatus('signedOut');
+        return;
+      }
       // Before any screen can list or sync local drafts: drop another account's (privacy).
       try {
         await getDraftsRepository().claimForUser(session.userId);
@@ -99,8 +108,17 @@ export function AuthProvider({ children, repository }: AuthProviderProps) {
     await repo.signOut();
   }, [repo]);
 
+  const deleteAccount = useCallback(async () => {
+    await repo.deleteAccount();
+    // Server-side drafts are gone with the account; clear the local ones too (the sync step in
+    // releaseForSignOut finds no session and does nothing).
+    await getDraftsRepository().releaseForSignOut();
+  }, [repo]);
+
   return (
-    <AuthContext.Provider value={{ status, profile, repository: repo, refresh, signOut }}>
+    <AuthContext.Provider
+      value={{ status, profile, repository: repo, refresh, signOut, deleteAccount }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -37,6 +37,8 @@ export interface OwnProfile {
   readReceiptsEnabled: boolean;
   /** Onboarding is complete once this is set (mirrors the `profiles_onboarded_complete` check). */
   onboardedAt: string | null;
+  /** Set once the account was deleted (Phase 9); such a session is treated as signed out. */
+  deletedAt: string | null;
 }
 
 export type SignUpErrorCode =
@@ -116,6 +118,9 @@ export interface AuthRepository {
     discoverableByUsername: boolean;
     discoverableByEmail: boolean;
   }): Promise<void>;
+  /** Deletes the signed-in account through the `delete-account` Edge Function (Phase 9), then ends
+   *  the local session. Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
+  deleteAccount(): Promise<void>;
 }
 
 interface ProfileRow {
@@ -129,6 +134,7 @@ interface ProfileRow {
   discoverable_by_email: boolean;
   read_receipts_enabled: boolean;
   onboarded_at: string | null;
+  deleted_at: string | null;
 }
 
 function mapProfileRow(row: ProfileRow): OwnProfile {
@@ -143,6 +149,7 @@ function mapProfileRow(row: ProfileRow): OwnProfile {
     discoverableByEmail: row.discoverable_by_email,
     readReceiptsEnabled: row.read_receipts_enabled,
     onboardedAt: row.onboarded_at,
+    deletedAt: row.deleted_at,
   };
 }
 
@@ -197,7 +204,7 @@ const ONBOARDING_CODES: readonly OnboardingErrorCode[] = [
 ];
 
 const PROFILE_COLUMNS =
-  'id, username, display_name, avatar_key, locale, receive_mode, discoverable_by_username, discoverable_by_email, read_receipts_enabled, onboarded_at';
+  'id, username, display_name, avatar_key, locale, receive_mode, discoverable_by_username, discoverable_by_email, read_receipts_enabled, onboarded_at, deleted_at';
 
 /** The real implementation, over a live `SupabaseClient`. Pure of native modules (the client is
  *  injected), so it is unit-testable the same way `createSupabaseClient` is. */
@@ -244,6 +251,21 @@ export function createSupabaseAuthRepository(client: SupabaseClient): AuthReposi
 
     async signOut() {
       await client.auth.signOut();
+    },
+
+    async deleteAccount() {
+      const {
+        data: { session },
+      } = await client.auth.getSession();
+      if (!session) throw new AuthActionError('not_authenticated');
+      const { error } = await client.functions.invoke('delete-account', { method: 'POST' });
+      if (error) throw new AuthActionError('unknown');
+      try {
+        // The server already revoked the session; this only clears the local copy.
+        await client.auth.signOut({ scope: 'local' });
+      } catch {
+        // Nothing left to clean up.
+      }
     },
 
     async requestPasswordReset(email) {

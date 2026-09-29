@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Pressable, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { DirectionalIcon } from '@/components/DirectionalIcon';
@@ -17,6 +17,39 @@ export default function ProfileScreen() {
   async function onSignOut() {
     await auth.signOut();
     router.replace('/'); // back through the gate, which now sees no session
+  }
+
+  // Phase 9 (PLAN §6.5): two confirmations, then the delete-account Edge Function.
+  function confirmDeleteAccount() {
+    Alert.alert(t('profile.deleteAccountTitle'), t('profile.deleteAccountMessage'), [
+      { text: t('compose.sendConfirmCancel'), style: 'cancel' },
+      {
+        text: t('profile.deleteAccountContinue'),
+        style: 'destructive',
+        onPress: () =>
+          Alert.alert(
+            t('profile.deleteAccountFinalTitle'),
+            t('profile.deleteAccountFinalMessage'),
+            [
+              { text: t('compose.sendConfirmCancel'), style: 'cancel' },
+              {
+                text: t('profile.deleteAccount'),
+                style: 'destructive',
+                onPress: () => void onDeleteAccount(),
+              },
+            ],
+          ),
+      },
+    ]);
+  }
+
+  async function onDeleteAccount() {
+    try {
+      await auth.deleteAccount();
+      router.replace('/');
+    } catch {
+      Alert.alert(t('profile.deleteAccountFailed'));
+    }
   }
 
   return (
@@ -91,6 +124,23 @@ export default function ProfileScreen() {
         <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
       </Pressable>
       <Pressable
+        testID="profile-blocked-row"
+        accessibilityRole="button"
+        onPress={() => router.push('/settings/blocked')}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.lg,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
+      >
+        <AppText style={{ flex: 1 }}>{t('profile.blocked')}</AppText>
+        <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
+      </Pressable>
+      <Pressable
         testID="profile-sign-out-row"
         accessibilityRole="button"
         onPress={() => void onSignOut()}
@@ -105,6 +155,20 @@ export default function ProfileScreen() {
         }}
       >
         <AppText style={{ flex: 1, color: colors.danger }}>{t('auth.signOut')}</AppText>
+      </Pressable>
+      <Pressable
+        testID="profile-delete-account-row"
+        accessibilityRole="button"
+        onPress={confirmDeleteAccount}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.lg,
+        }}
+      >
+        <AppText style={{ flex: 1, color: colors.danger }}>{t('profile.deleteAccount')}</AppText>
       </Pressable>
     </View>
   );

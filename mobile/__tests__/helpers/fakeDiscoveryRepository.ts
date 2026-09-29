@@ -1,5 +1,6 @@
 import {
   DiscoveryActionError,
+  type BlockedUser,
   type ConnectionRow,
   type DiscoveryErrorCode,
   type DiscoveryRepository,
@@ -15,6 +16,7 @@ export function createFakeDiscoveryRepository(
     invite?: Invite;
     pending?: { incoming: ConnectionRow[]; outgoing: ConnectionRow[] };
     fail?: Partial<Record<keyof DiscoveryRepository, DiscoveryErrorCode>>;
+    blocked?: BlockedUser[];
   } = {},
 ): DiscoveryRepository {
   function maybeThrow(method: keyof DiscoveryRepository) {
@@ -29,6 +31,7 @@ export function createFakeDiscoveryRepository(
     expiresAt: null,
   };
   const pending = options.pending ?? { incoming: [], outgoing: [] };
+  let blocked = [...(options.blocked ?? [])];
 
   return {
     async searchUsers(_query) {
@@ -62,9 +65,15 @@ export function createFakeDiscoveryRepository(
     async blockUser(_userId) {
       maybeThrow('blockUser');
     },
-    async unblockUser(_userId) {
+    async unblockUser(userId) {
       maybeThrow('unblockUser');
+      blocked = blocked.filter((item) => item.userId !== userId);
     },
+    async listBlockedUsers() {
+      maybeThrow('listBlockedUsers');
+      return blocked;
+    },
+
     async getOrCreateInvite() {
       maybeThrow('getOrCreateInvite');
       return invite;

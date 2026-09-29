@@ -537,6 +537,16 @@ export type Database = {
       is_valid_design: { Args: { p_design: Json }; Returns: boolean }
       is_valid_display_name: { Args: { p_name: string }; Returns: boolean }
       is_valid_username: { Args: { p_username: string }; Returns: boolean }
+      list_blocked_users: {
+        Args: never
+        Returns: {
+          avatar_key: string
+          blocked_at: string
+          display_name: string
+          user_id: string
+          username: string
+        }[]
+      }
       list_inbox: {
         Args: { p_cursor_at?: string; p_cursor_id?: string; p_limit?: number }
         Returns: {

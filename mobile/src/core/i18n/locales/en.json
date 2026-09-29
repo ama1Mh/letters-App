@@ -132,7 +132,15 @@
     "language": "Language",
     "connections": "Connection requests",
     "myInvite": "My invite link",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "blocked": "Blocked people",
+    "deleteAccount": "Delete account",
+    "deleteAccountTitle": "Delete your account?",
+    "deleteAccountMessage": "Your drafts, scheduled letters, invites and connections will be removed. Letters already delivered stay with their recipients, shown as from a deleted account.",
+    "deleteAccountContinue": "Continue",
+    "deleteAccountFinalTitle": "This can't be undone",
+    "deleteAccountFinalMessage": "You won't be able to sign in to this account again.",
+    "deleteAccountFailed": "The account could not be deleted. Try again."
   },
   "discovery": {
     "title": "Find people",
@@ -334,5 +342,11 @@
       "impersonation": "Pretending to be someone else",
       "other": "Something else"
     }
+  },
+  "blocked": {
+    "title": "Blocked people",
+    "emptyTitle": "No one blocked",
+    "emptyBody": "People you block can't write to you or find you.",
+    "unblock": "Unblock"
   }
 }

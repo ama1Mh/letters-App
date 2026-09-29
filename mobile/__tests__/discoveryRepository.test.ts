@@ -162,4 +162,33 @@ describe('createDiscoveryRepository', () => {
       new DiscoveryActionError('not_authenticated'),
     );
   });
+
+  it('lists blocked users, mapping nullable names (Phase 9)', async () => {
+    const repo = createDiscoveryRepository(
+      fakeClient({
+        rpcResults: {
+          list_blocked_users: {
+            data: [
+              {
+                user_id: 'u9',
+                username: null,
+                display_name: null,
+                avatar_key: null,
+                blocked_at: '2026-09-29T00:00:00Z',
+              },
+            ],
+          },
+        },
+      }),
+    );
+    await expect(repo.listBlockedUsers()).resolves.toEqual([
+      {
+        userId: 'u9',
+        username: null,
+        displayName: null,
+        avatarKey: null,
+        blockedAt: '2026-09-29T00:00:00Z',
+      },
+    ]);
+  });
 });

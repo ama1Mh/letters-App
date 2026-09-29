@@ -19,6 +19,7 @@ type Overrides = {
   sessionUserId?: string;
   updateError?: unknown;
   onUpdate?: (payload: unknown, id: string) => void;
+  functionsInvoke?: (name: string, options: unknown) => Promise<{ data: unknown; error: unknown }>;
 };
 
 function fakeClient(overrides: Overrides = {}) {
@@ -52,6 +53,9 @@ function fakeClient(overrides: Overrides = {}) {
       }),
     }),
     rpc: overrides.rpc,
+    functions: {
+      invoke: overrides.functionsInvoke ?? (async () => ({ data: { ok: true }, error: null })),
+    },
   } as unknown as SupabaseClient;
 }
 
@@ -264,6 +268,34 @@ describe('createSupabaseAuthRepository', () => {
           discoverableByEmail: false,
         }),
       ).rejects.toEqual(new AuthActionError('unknown'));
+    });
+  });
+
+  describe('deleteAccount (Phase 9)', () => {
+    it('rejects with not_authenticated when there is no session, without calling the function', async () => {
+      const invoke = jest.fn();
+      const repo = createSupabaseAuthRepository(fakeClient({ functionsInvoke: invoke }));
+      await expect(repo.deleteAccount()).rejects.toEqual(new AuthActionError('not_authenticated'));
+      expect(invoke).not.toHaveBeenCalled();
+    });
+
+    it('calls the delete-account Edge Function with POST', async () => {
+      const invoke = jest.fn(async () => ({ data: { ok: true }, error: null }));
+      const repo = createSupabaseAuthRepository(
+        fakeClient({ sessionUserId: 'user-1', functionsInvoke: invoke }),
+      );
+      await repo.deleteAccount();
+      expect(invoke).toHaveBeenCalledWith('delete-account', { method: 'POST' });
+    });
+
+    it('maps a function failure to unknown', async () => {
+      const repo = createSupabaseAuthRepository(
+        fakeClient({
+          sessionUserId: 'user-1',
+          functionsInvoke: async () => ({ data: null, error: new Error('500') }),
+        }),
+      );
+      await expect(repo.deleteAccount()).rejects.toEqual(new AuthActionError('unknown'));
     });
   });
 });
