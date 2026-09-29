@@ -1,17 +1,23 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { Button } from '@/components/Button';
 import { currentLanguage } from '@/core/i18n';
 import { formatDate } from '@/core/i18n/format';
 import { useTheme } from '@/core/theme/useTheme';
+import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import { getLettersRepository, type Letter } from '@/data/letters/lettersRepository';
+import { defaultDesign } from '@/domain/design';
 import { LetterRenderer } from '@/features/designs/LetterRenderer';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
 import { useLetterEvents } from '@/features/letters/LetterEventsProvider';
 import { letterErrorKey, type TranslatedLetterError } from '@/features/letters/letterErrors';
+
+/** letters.subject is limited to 120 characters (letters_subject_length). */
+const REPLY_SUBJECT_MAX = 120;
 
 const WHEN_FORMAT: Intl.DateTimeFormatOptions = {
   weekday: 'long',
@@ -32,6 +38,7 @@ export default function LetterScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const { colors, spacing } = useTheme();
+  const router = useRouter();
 
   const [letter, setLetter] = useState<Letter | null>(null);
   const [error, setError] = useState<TranslatedLetterError | 'unknown' | null>(null);
@@ -94,6 +101,22 @@ export default function LetterScreen() {
 
   const language = currentLanguage();
   const isRecipient = letter.viewerRole === 'recipient';
+
+  // Phase 8: a reply is a new local draft to the sender, pointing at this letter (the server
+  // checks the parent and fixes the recipient). Subject "Re: …" when the letter had one.
+  async function onReply(parent: Letter) {
+    const subject = parent.subject
+      ? t('letter.replySubject', { subject: parent.subject }).slice(0, REPLY_SUBJECT_MAX)
+      : null;
+    const draft = await getDraftsRepository().save({
+      subject,
+      body: '',
+      design: defaultDesign(),
+      recipientId: parent.sender.id,
+      parentLetterId: parent.id,
+    });
+    router.push(`/compose/${draft.id}`);
+  }
   let when: string | null = null;
   if (letter.status === 'scheduled' && letter.scheduledAt) {
     when = t('sent.scheduledFor', {
@@ -135,6 +158,13 @@ export default function LetterScreen() {
         body={letter.body}
         bodyDir={letter.bodyDir}
       />
+      {isRecipient && letter.status === 'delivered' ? (
+        <Button
+          testID="letter-reply"
+          title={t('letter.reply')}
+          onPress={() => void onReply(letter)}
+        />
+      ) : null}
     </ScrollView>
   );
 }

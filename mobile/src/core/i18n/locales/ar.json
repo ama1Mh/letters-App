@@ -41,7 +41,8 @@
     "sendConfirmMessage": "سيتم تسليمها الآن، ولا يمكن تعديلها بعد التسليم.",
     "scheduleConfirmTitle": "هل تريد جدولة هذه الرسالة؟",
     "scheduleConfirmMessage": "سيتم تسليمها في {{when}}. ويمكن إلغاء جدولتها حتى ذلك الحين.",
-    "sendConfirmCancel": "إلغاء"
+    "sendConfirmCancel": "إلغاء",
+    "replyRecipient": "رد على مرسل الرسالة"
   },
   "schedule": {
     "timeZone": "المنطقة الزمنية: {{zone}}",
@@ -114,7 +115,9 @@
   },
   "letter": {
     "title": "الرسالة",
-    "from": "من"
+    "from": "من",
+    "reply": "رد",
+    "replySubject": "رد: {{subject}}"
   },
   "profile": {
     "language": "اللغة",

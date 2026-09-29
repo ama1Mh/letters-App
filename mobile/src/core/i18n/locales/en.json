@@ -41,7 +41,8 @@
     "sendConfirmMessage": "It will be delivered now and can't be changed after delivery.",
     "scheduleConfirmTitle": "Schedule this letter?",
     "scheduleConfirmMessage": "It will be delivered on {{when}}. It can be unscheduled until then.",
-    "sendConfirmCancel": "Cancel"
+    "sendConfirmCancel": "Cancel",
+    "replyRecipient": "Reply to the letter's sender"
   },
   "schedule": {
     "timeZone": "Time zone: {{zone}}",
@@ -114,7 +115,9 @@
   },
   "letter": {
     "title": "Letter",
-    "from": "From"
+    "from": "From",
+    "reply": "Reply",
+    "replySubject": "Re: {{subject}}"
   },
   "profile": {
     "language": "Language",

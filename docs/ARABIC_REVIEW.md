@@ -243,3 +243,6 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `letters.deletedAccount` | Deleted account | حساب محذوف | draft | Phase 6 M4: shown instead of a deleted account's name |
 | `letter.title` | Letter | الرسالة | draft | Phase 6 M6 reading view |
 | `letter.from` | From | من | draft | Phase 6 M6 reading view |
+| `letter.reply` | Reply | رد | draft | Phase 8 replies |
+| `letter.replySubject` | Re: {{subject}} | رد: {{subject}} | draft | Phase 8 replies; `{{subject}}` is the original subject |
+| `compose.replyRecipient` | Reply to the letter's sender | رد على مرسل الرسالة | draft | Phase 8 replies |

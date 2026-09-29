@@ -43,6 +43,8 @@ export default function ComposeScreen() {
   const [body, setBody] = useState('');
   const [design, setDesign] = useState<Design>(defaultDesign());
   const [recipientId, setRecipientId] = useState<string | null>(null);
+  // A reply's recipient is fixed (the server requires the parent letter's sender).
+  const [isReply, setIsReply] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [saving, setSaving] = useState(false);
   const [sending, setSending] = useState(false);
@@ -62,6 +64,7 @@ export default function ComposeScreen() {
           setBody(draft.body);
           setDesign(normalizeDesign(draft.design));
           setRecipientId(draft.recipientId);
+          setIsReply(Boolean(draft.parentLetterId));
         }
         setLoaded(true);
       });
@@ -206,18 +209,24 @@ export default function ComposeScreen() {
         <DirectionalIcon name="chevron-back" size={18} color={colors.primary} />
         <AppText style={{ color: colors.primary }}>{t('tabs.drafts')}</AppText>
       </Pressable>
-      <Pressable
-        testID="compose-recipient-row"
-        accessibilityRole="button"
-        onPress={() => router.push({ pathname: '/compose/pick-recipient', params: { id } })}
-        style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}
-      >
-        <AppText variant="muted">{t('compose.recipientLabel')}: </AppText>
-        <AppText style={{ color: recipientId ? colors.text : colors.primary, flex: 1 }}>
-          {recipientId ? t('compose.recipientChosen') : t('compose.noRecipient')}
+      {isReply ? (
+        <AppText testID="compose-reply-recipient" variant="muted">
+          {t('compose.replyRecipient')}
         </AppText>
-        <DirectionalIcon name="chevron-forward" size={16} color={colors.textMuted} />
-      </Pressable>
+      ) : (
+        <Pressable
+          testID="compose-recipient-row"
+          accessibilityRole="button"
+          onPress={() => router.push({ pathname: '/compose/pick-recipient', params: { id } })}
+          style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}
+        >
+          <AppText variant="muted">{t('compose.recipientLabel')}: </AppText>
+          <AppText style={{ color: recipientId ? colors.text : colors.primary, flex: 1 }}>
+            {recipientId ? t('compose.recipientChosen') : t('compose.noRecipient')}
+          </AppText>
+          <DirectionalIcon name="chevron-forward" size={16} color={colors.textMuted} />
+        </Pressable>
+      )}
       <TextInput
         testID="compose-subject"
         accessibilityLabel={t('compose.subjectLabel')}

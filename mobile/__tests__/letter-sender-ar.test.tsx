@@ -41,5 +41,7 @@ describe('Reading view as the sender (ar/RTL)', () => {
       writingDirection: 'ltr',
     });
     expect(markRead).not.toHaveBeenCalled();
+    // Only the recipient can reply.
+    expect(screen.queryByTestId('letter-reply')).toBeNull();
   });
 });
