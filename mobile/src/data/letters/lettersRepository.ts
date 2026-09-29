@@ -24,6 +24,14 @@ type PublicSchema = Database['public'];
 
 export type LetterStatus = PublicSchema['Enums']['letter_status'];
 export type TextDir = PublicSchema['Enums']['text_dir'];
+export type ReportReason = PublicSchema['Enums']['report_reason'];
+export const REPORT_REASONS: readonly ReportReason[] = [
+  'spam',
+  'harassment',
+  'inappropriate',
+  'impersonation',
+  'other',
+];
 
 export type LetterErrorCode =
   | 'not_authenticated'
@@ -103,6 +111,24 @@ export interface SentItem {
   readAt: string | null;
   sortAt: string;
   recipient: Correspondent;
+}
+
+/** One letter of a conversation (Phase 8), oldest first. `isMine`: I sent it. */
+export interface ThreadItem {
+  id: string;
+  threadId: string;
+  parentLetterId: string | null;
+  subject: string | null;
+  preview: string;
+  bodyDir: TextDir;
+  status: LetterStatus;
+  scheduledAt: string | null;
+  deliveredAt: string | null;
+  /** Mine: masked by the server unless receipts allow; theirs: my own read state. */
+  readAt: string | null;
+  sortAt: string;
+  isMine: boolean;
+  other: Correspondent;
 }
 
 export interface Letter {
@@ -190,6 +216,17 @@ export interface LettersRepository {
   listSent(kind: SentKind, cursor?: ListCursor | null, limit?: number): Promise<Page<SentItem>>;
   /** Rejects with `not_found` for every letter the caller may not see. */
   getLetter(letterId: string): Promise<Letter>;
+  /** The letters of one thread I may see, oldest first (at most 200). `not_found` otherwise. */
+  listThread(threadId: string): Promise<ThreadItem[]>;
+  /** Hides a delivered (or, as sender, undeliverable) letter from my lists only (DEC-023). */
+  deleteLetterForMe(letterId: string): Promise<void>;
+  /** Reports a user, optionally about a letter between us; they are never told (DEC-013). */
+  reportUser(
+    userId: string,
+    reason: ReportReason,
+    letterId?: string | null,
+    details?: string | null,
+  ): Promise<void>;
   /** Joins the private topic `letters:<userId>`; returns the unsubscribe function. */
   subscribeToLetterEvents(userId: string, handlers: LetterEventHandlers): () => void;
 }
@@ -275,6 +312,43 @@ type LetterRow = Omit<
   >,
   'viewer_role'
 > & { viewer_role: 'sender' | 'recipient' };
+
+/** Nullable: parent (thread root), subject, status-dependent times, read_at (unread or masked) and
+ *  the other person's profile fields (deleted account). */
+type ThreadRow = WithNullable<
+  RpcRow<'list_thread'>,
+  | 'parent_letter_id'
+  | 'subject'
+  | 'scheduled_at'
+  | 'delivered_at'
+  | 'read_at'
+  | 'other_username'
+  | 'other_display_name'
+  | 'other_avatar_key'
+>;
+
+function mapThreadRow(row: ThreadRow): ThreadItem {
+  return {
+    id: row.id,
+    threadId: row.thread_id,
+    parentLetterId: row.parent_letter_id,
+    subject: row.subject,
+    preview: row.preview,
+    bodyDir: row.body_dir,
+    status: row.status,
+    scheduledAt: row.scheduled_at,
+    deliveredAt: row.delivered_at,
+    readAt: row.read_at,
+    sortAt: row.sort_at,
+    isMine: row.is_mine,
+    other: {
+      id: row.other_id,
+      username: row.other_username,
+      displayName: row.other_display_name,
+      avatarKey: row.other_avatar_key,
+    },
+  };
+}
 
 function mapSendState(row: SendStateRow): SendState {
   return { status: row.status, scheduledAt: row.scheduled_at, deliveredAt: row.delivered_at };
@@ -410,6 +484,27 @@ export function createLettersRepository(client: SupabaseClient): LettersReposito
       const rows = (data ?? []) as LetterRow[];
       if (rows.length === 0) throw new LetterActionError('not_found');
       return mapLetterRow(rows[0]);
+    },
+
+    async listThread(threadId) {
+      const { data, error } = await client.rpc('list_thread', { p_thread_id: threadId });
+      if (error) throw toLetterError(error);
+      return ((data ?? []) as ThreadRow[]).map(mapThreadRow);
+    },
+
+    async deleteLetterForMe(letterId) {
+      const { error } = await client.rpc('delete_letter_for_me', { p_letter_id: letterId });
+      if (error) throw toLetterError(error);
+    },
+
+    async reportUser(userId, reason, letterId, details) {
+      const { error } = await client.rpc('report_user', {
+        p_reported_id: userId,
+        p_reason: reason,
+        p_letter_id: letterId ?? null,
+        p_details: details ?? null,
+      });
+      if (error) throw toLetterError(error);
     },
 
     subscribeToLetterEvents(userId, handlers) {

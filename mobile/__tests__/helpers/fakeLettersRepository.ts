@@ -8,12 +8,15 @@ import {
   type LettersRepository,
   type SentItem,
   type SentKind,
+  type ThreadItem,
 } from '@/data/letters/lettersRepository';
 
 export interface FakeLettersOptions {
   inbox?: InboxItem[];
   sent?: Partial<Record<SentKind, SentItem[]>>;
   letters?: Letter[];
+  /** Conversations by thread id, oldest first. */
+  threads?: Record<string, ThreadItem[]>;
   fail?: Partial<Record<keyof LettersRepository, LetterErrorCode>>;
   /** Fixed "now" for delivered_at / read_at values the fake invents. */
   now?: string;
@@ -23,7 +26,16 @@ export type FakeLettersCall =
   | { method: 'sendLetter'; letterId: string; scheduledAt: string | null }
   | { method: 'unscheduleLetter' | 'markRead' | 'getLetter'; letterId: string }
   | { method: 'listInbox' }
-  | { method: 'listSent'; kind: SentKind };
+  | { method: 'listSent'; kind: SentKind }
+  | { method: 'listThread'; threadId: string }
+  | { method: 'deleteLetterForMe'; letterId: string }
+  | {
+      method: 'reportUser';
+      userId: string;
+      reason: string;
+      letterId: string | null;
+      details: string | null;
+    };
 
 export interface FakeRealtime {
   /** Topics currently subscribed (one entry per live subscription). */
@@ -75,6 +87,29 @@ export function createFakeLettersRepository(
       addInboxItem: (item) => {
         inbox = [item, ...inbox.filter((existing) => existing.id !== item.id)];
       },
+    },
+    async listThread(threadId) {
+      calls.push({ method: 'listThread', threadId });
+      maybeThrow('listThread');
+      const items = options.threads?.[threadId];
+      if (!items || items.length === 0) throw new LetterActionError('not_found');
+      return items;
+    },
+    async deleteLetterForMe(letterId) {
+      calls.push({ method: 'deleteLetterForMe', letterId });
+      maybeThrow('deleteLetterForMe');
+      inbox = inbox.filter((item) => item.id !== letterId);
+      letters.delete(letterId);
+    },
+    async reportUser(userId, reason, letterId, details) {
+      calls.push({
+        method: 'reportUser',
+        userId,
+        reason,
+        letterId: letterId ?? null,
+        details: details ?? null,
+      });
+      maybeThrow('reportUser');
     },
     subscribeToLetterEvents(userId, handlers) {
       const subscription = { topic: `letters:${userId}`, handlers };

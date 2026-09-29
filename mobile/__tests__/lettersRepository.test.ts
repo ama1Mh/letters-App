@@ -424,3 +424,89 @@ describe('subscribeToLetterEvents', () => {
     expect(fake.client.removeChannel).toHaveBeenCalledWith(fake.channel);
   });
 });
+
+describe('Phase 8/9 methods', () => {
+  it('listThread maps rows with nullable fields and the other person', async () => {
+    const { client, calls } = fakeClient({
+      list_thread: {
+        data: [
+          {
+            id: 'root',
+            thread_id: 'root',
+            parent_letter_id: null,
+            subject: null,
+            preview: 'hello',
+            body_dir: 'ltr',
+            status: 'delivered',
+            scheduled_at: null,
+            delivered_at: '2026-09-29T10:00:00Z',
+            read_at: null,
+            sort_at: '2026-09-29T10:00:00Z',
+            is_mine: false,
+            other_id: 'u-sara',
+            other_username: null,
+            other_display_name: null,
+            other_avatar_key: null,
+          },
+        ],
+      },
+    });
+    const items = await createLettersRepository(client).listThread('root');
+    expect(calls).toEqual([{ name: 'list_thread', args: { p_thread_id: 'root' } }]);
+    expect(items).toEqual([
+      {
+        id: 'root',
+        threadId: 'root',
+        parentLetterId: null,
+        subject: null,
+        preview: 'hello',
+        bodyDir: 'ltr',
+        status: 'delivered',
+        scheduledAt: null,
+        deliveredAt: '2026-09-29T10:00:00Z',
+        readAt: null,
+        sortAt: '2026-09-29T10:00:00Z',
+        isMine: false,
+        other: { id: 'u-sara', username: null, displayName: null, avatarKey: null },
+      },
+    ]);
+  });
+
+  it('listThread maps not_found', async () => {
+    const { client } = fakeClient({ list_thread: { error: { message: 'not_found' } } });
+    await expect(createLettersRepository(client).listThread('x')).rejects.toEqual(
+      new LetterActionError('not_found'),
+    );
+  });
+
+  it('deleteLetterForMe calls the RPC and maps its errors', async () => {
+    const ok = fakeClient();
+    await createLettersRepository(ok.client).deleteLetterForMe('l1');
+    expect(ok.calls).toEqual([{ name: 'delete_letter_for_me', args: { p_letter_id: 'l1' } }]);
+    const missing = fakeClient({ delete_letter_for_me: { error: { message: 'not_found' } } });
+    await expect(createLettersRepository(missing.client).deleteLetterForMe('l1')).rejects.toEqual(
+      new LetterActionError('not_found'),
+    );
+  });
+
+  it('reportUser passes the reason, optional letter and details (null when absent)', async () => {
+    const { client, calls } = fakeClient();
+    const repo = createLettersRepository(client);
+    await repo.reportUser('u2', 'spam');
+    await repo.reportUser('u2', 'harassment', 'l1', 'rude');
+    expect(calls).toEqual([
+      {
+        name: 'report_user',
+        args: { p_reported_id: 'u2', p_reason: 'spam', p_letter_id: null, p_details: null },
+      },
+      {
+        name: 'report_user',
+        args: { p_reported_id: 'u2', p_reason: 'harassment', p_letter_id: 'l1', p_details: 'rude' },
+      },
+    ]);
+    const limited = fakeClient({ report_user: { error: { message: 'rate_limited' } } });
+    await expect(createLettersRepository(limited.client).reportUser('u2', 'spam')).rejects.toEqual(
+      new LetterActionError('rate_limited'),
+    );
+  });
+});

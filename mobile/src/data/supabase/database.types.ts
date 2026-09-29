@@ -359,6 +359,58 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          letter_id: string | null
+          reason: Database["public"]["Enums"]["report_reason"]
+          reported_id: string
+          reporter_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          letter_id?: string | null
+          reason: Database["public"]["Enums"]["report_reason"]
+          reported_id: string
+          reporter_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          letter_id?: string | null
+          reason?: Database["public"]["Enums"]["report_reason"]
+          reported_id?: string
+          reporter_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_letter_id_fkey"
+            columns: ["letter_id"]
+            isOneToOne: false
+            referencedRelation: "letters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_reported_id_fkey"
+            columns: ["reported_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reserved_words: {
         Row: {
           word: string
@@ -414,6 +466,11 @@ export type Database = {
         Args: { p_connection_id: string }
         Returns: undefined
       }
+      delete_letter_for_me: {
+        Args: { p_letter_id: string }
+        Returns: undefined
+      }
+      delete_my_account: { Args: never; Returns: undefined }
       deliver_due_letters: { Args: { p_batch?: number }; Returns: number }
       deliver_letter_internal: {
         Args: { p_letter_id: string }
@@ -521,6 +578,27 @@ export type Database = {
           thread_id: string
         }[]
       }
+      list_thread: {
+        Args: { p_thread_id: string }
+        Returns: {
+          body_dir: Database["public"]["Enums"]["text_dir"]
+          delivered_at: string
+          id: string
+          is_mine: boolean
+          other_avatar_key: string
+          other_display_name: string
+          other_id: string
+          other_username: string
+          parent_letter_id: string
+          preview: string
+          read_at: string
+          scheduled_at: string
+          sort_at: string
+          status: Database["public"]["Enums"]["letter_status"]
+          subject: string
+          thread_id: string
+        }[]
+      }
       mark_read: { Args: { p_letter_id: string }; Returns: string }
       masked_read_at: {
         Args: {
@@ -553,6 +631,15 @@ export type Database = {
       }
       remove_connection: {
         Args: { p_connection_id: string }
+        Returns: undefined
+      }
+      report_user: {
+        Args: {
+          p_details?: string
+          p_letter_id?: string
+          p_reason: Database["public"]["Enums"]["report_reason"]
+          p_reported_id: string
+        }
         Returns: undefined
       }
       request_connection: { Args: { p_addressee_id: string }; Returns: string }
@@ -598,6 +685,12 @@ export type Database = {
       notification_status: "pending" | "sent" | "failed"
       notification_type: "letter_delivered"
       receive_mode: "everyone" | "invite_only"
+      report_reason:
+        | "spam"
+        | "harassment"
+        | "inappropriate"
+        | "impersonation"
+        | "other"
       text_dir: "ltr" | "rtl"
     }
     CompositeTypes: {
@@ -737,6 +830,13 @@ export const Constants = {
       notification_status: ["pending", "sent", "failed"],
       notification_type: ["letter_delivered"],
       receive_mode: ["everyone", "invite_only"],
+      report_reason: [
+        "spam",
+        "harassment",
+        "inappropriate",
+        "impersonation",
+        "other",
+      ],
       text_dir: ["ltr", "rtl"],
     },
   },
