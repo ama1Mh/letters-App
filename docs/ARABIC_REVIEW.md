@@ -288,3 +288,14 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `avatar.none` | No avatar | بدون صورة رمزية | draft | Preset avatars (DEC-011) |
 | `avatar.option` | Avatar {{number}} | الصورة الرمزية {{number}} | draft | Preset avatars (DEC-011); `{{number}}` is 1-24, for screen readers |
 | `language.reopenMessage` | Close the app and open it again to switch the layout direction. | أغلق التطبيق وافتحه مرة أخرى لتغيير اتجاه الواجهة. | draft | OPEN-8: release builds, until expo-updates |
+| `notifications.channelName` | Letters | الرسائل | draft | Android notification channel name (system settings), Phase 7 |
+
+## Server-side text (not in `ar.json`)
+
+Push notifications are localized on the server from `profiles.locale` (CLAUDE.md), in `supabase/functions/send-notifications/pushText.ts`. Same release gate: no `draft` rows. `{name}` is the sender's display name followed by `(@username)`, each wrapped in Unicode isolates so neither can reorder the sentence.
+
+| Where | English | Arabic | Status | Notes |
+|---|---|---|---|---|
+| push title | New letter | رسالة جديدة | draft | Phase 7 (DEC-050) |
+| push body | You have a new letter from {name} | لديك رسالة جديدة من {name} | draft | Phase 7 |
+| push body, no name | You have a new letter | لديك رسالة جديدة | draft | Sender without a public name (for example a deleted account) |

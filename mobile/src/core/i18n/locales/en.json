@@ -358,5 +358,8 @@
     "change": "Choose avatar",
     "none": "No avatar",
     "option": "Avatar {{number}}"
+  },
+  "notifications": {
+    "channelName": "Letters"
   }
 }

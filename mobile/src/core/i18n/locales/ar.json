@@ -358,5 +358,8 @@
     "change": "اختيار صورة رمزية",
     "none": "بدون صورة رمزية",
     "option": "الصورة الرمزية {{number}}"
+  },
+  "notifications": {
+    "channelName": "الرسائل"
   }
 }

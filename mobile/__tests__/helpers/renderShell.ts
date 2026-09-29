@@ -9,14 +9,17 @@ import {
 import type { DraftsRepository } from '@/data/letters/draftsRepository';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import { getLettersRepository } from '@/data/letters/lettersRepository';
+import { getDevicesRepository } from '@/data/notifications/devicesRepository';
 import type { LocalDraft } from '@/data/local/draftsStore';
 import { getAuthRepository, type AuthSession, type OwnProfile } from '@/data/supabase/auth';
+import { getPushPlatform } from '@/features/notifications/pushPlatform';
 
 import { initI18n } from '../../src/core/i18n';
 import { createFakeAuthRepository, fakeProfile, type FakeAuthBackend } from './fakeAuthRepository';
 import { createFakeDiscoveryRepository } from './fakeDiscoveryRepository';
 import { createFakeDraftsRepository } from './fakeDraftsRepository';
 import { createFakeLettersRepository, type FakeLettersOptions } from './fakeLettersRepository';
+import { createFakeDevicesRepository, createFakePushPlatform } from './fakePushPlatform';
 
 // The app never mocks these: the real getters always reach a real backend (Supabase, expo-sqlite).
 // Tests replace them with fakes so the shell renders without native modules or a server.
@@ -35,6 +38,14 @@ jest.mock('@/data/discovery/discoveryRepository', () => ({
 jest.mock('@/data/letters/lettersRepository', () => ({
   ...jest.requireActual('@/data/letters/lettersRepository'),
   getLettersRepository: jest.fn(),
+}));
+jest.mock('@/data/notifications/devicesRepository', () => ({
+  ...jest.requireActual('@/data/notifications/devicesRepository'),
+  getDevicesRepository: jest.fn(),
+}));
+jest.mock('@/features/notifications/pushPlatform', () => ({
+  ...jest.requireActual('@/features/notifications/pushPlatform'),
+  getPushPlatform: jest.fn(),
 }));
 
 export interface AuthOverride {
@@ -65,6 +76,7 @@ export async function renderShellIn(
   initialDrafts: LocalDraft[] = [],
   discoveryOverride: Parameters<typeof createFakeDiscoveryRepository>[0] = {},
   lettersOverride: FakeLettersOptions = {},
+  pushOverride: { launchLetterId?: string | null } = {},
 ) {
   jest.spyOn(I18nManager, 'allowRTL').mockImplementation(() => {});
   jest.spyOn(I18nManager, 'forceRTL').mockImplementation(() => {});
@@ -95,6 +107,11 @@ export async function renderShellIn(
   const letters = createFakeLettersRepository(lettersOverride);
   (getLettersRepository as jest.Mock).mockReturnValue(letters);
 
+  const push = createFakePushPlatform(pushOverride.launchLetterId ?? null);
+  (getPushPlatform as jest.Mock).mockReturnValue(push);
+  const devices = createFakeDevicesRepository();
+  (getDevicesRepository as jest.Mock).mockReturnValue(devices);
+
   Storage.setItemSync('i18n.languagePreference', language);
   initI18n();
   // `renderRouter()`'s result is itself thenable (RNTL 14's render() is async): returning
@@ -102,7 +119,7 @@ export async function renderShellIn(
   // outer Promise *adopt* that thenable's resolution instead of resolving with our extended object,
   // silently dropping `backend`/`drafts`. Awaiting it first collapses it to a plain object.
   const rendered = await renderRouter('./app');
-  return Object.assign(rendered, { backend, drafts, discovery, letters });
+  return Object.assign(rendered, { backend, drafts, discovery, letters, push, devices });
 }
 
 // Cold first render loads expo-router and every screen.

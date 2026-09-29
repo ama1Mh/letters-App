@@ -27,6 +27,7 @@ import {
   type OwnProfile,
 } from '@/data/supabase/auth';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
+import { getPushRegistrar } from '@/features/notifications/pushRegistrar';
 
 export type AuthStatus = 'loading' | 'signedOut' | 'needsOnboarding' | 'ready';
 
@@ -103,13 +104,16 @@ export function AuthProvider({ children, repository }: AuthProviderProps) {
   }, [repo, applySession]);
 
   const signOut = useCallback(async () => {
-    // Sync unsent edits while still signed in, then clear this account's local drafts.
+    // While still signed in: stop this device's delivery notifications for this account, sync
+    // unsent edits, then clear this account's local drafts.
+    await getPushRegistrar().unregister();
     await getDraftsRepository().releaseForSignOut();
     await repo.signOut();
   }, [repo]);
 
   const deleteAccount = useCallback(async () => {
     await repo.deleteAccount();
+    getPushRegistrar().forget(); // the server removed this account's devices with it
     // Server-side drafts are gone with the account; clear the local ones too (the sync step in
     // releaseForSignOut finds no session and does nothing).
     await getDraftsRepository().releaseForSignOut();

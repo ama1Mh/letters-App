@@ -14,7 +14,7 @@
 // Nothing about users or letters is logged.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
-type Locale = 'en' | 'ar';
+import { pushText, type Locale } from './pushText.ts';
 
 interface ClaimedRow {
   outbox_id: string;
@@ -36,24 +36,6 @@ interface ExpoTicket {
 
 const EXPO_PUSH_URL = 'https://exp.host/--/api/v2/push/send';
 const BATCH = 100; // Expo accepts up to 100 messages per request.
-
-/** Localized push text. The name is the sender's public name; `@username` keeps look-alikes apart
- *  (display names are not unique). A deleted sender gets a neutral line. */
-export function pushText(row: ClaimedRow): { title: string; body: string } {
-  const name = row.sender_username
-    ? `${row.sender_display_name ?? row.sender_username} (@${row.sender_username})`
-    : null;
-  if (row.recipient_locale === 'ar') {
-    return {
-      title: 'رسالة جديدة',
-      body: name ? `لديك رسالة جديدة من ${name}` : 'لديك رسالة جديدة',
-    };
-  }
-  return {
-    title: 'New letter',
-    body: name ? `You have a new letter from ${name}` : 'You have a new letter',
-  };
-}
 
 function json(status: number, body: Record<string, unknown>): Response {
   return new Response(JSON.stringify(body), {
