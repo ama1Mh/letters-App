@@ -206,9 +206,10 @@ select is(
 reset role;
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-000000000e03","role":"authenticated"}', true);
 set local role authenticated;
+-- The thread id is the root letter's id (a literal: RLS hides the letters from cat, so a subquery
+-- would yield null and test invalid_input instead).
 select throws_ok(
-  $$ select * from public.list_thread(
-       (select thread_id from public.letters where id = 'e0000000-0000-0000-0000-000000000011')) $$,
+  $$ select * from public.list_thread('e0000000-0000-0000-0000-000000000001') $$,
   'P0001', 'not_found', 'an outsider gets not_found for a thread that exists'
 );
 select throws_ok(
