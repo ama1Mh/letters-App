@@ -14,13 +14,16 @@ export default function NotificationsScreen() {
   const { colors, spacing } = useTheme();
   const auth = useAuth();
   const [pushOnDelivery, setPushOnDelivery] = useState(auth.profile?.pushOnDelivery ?? true);
+  const [saveFailed, setSaveFailed] = useState(false);
 
   async function apply(next: boolean) {
     setPushOnDelivery(next);
+    setSaveFailed(false);
     try {
       await auth.repository.updatePushOnDelivery(next);
     } catch {
       setPushOnDelivery(!next);
+      setSaveFailed(true);
       return;
     }
     await auth.refresh();
@@ -54,6 +57,15 @@ export default function NotificationsScreen() {
       <AppText variant="muted" style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.sm }}>
         {t('notifications.pushOnDeliveryHint')}
       </AppText>
+      {saveFailed ? (
+        <AppText
+          testID="notifications-save-error"
+          accessibilityLiveRegion="polite"
+          style={{ color: colors.danger, paddingHorizontal: spacing.lg, paddingTop: spacing.sm }}
+        >
+          {t('notifications.saveError')}
+        </AppText>
+      ) : null}
 
       <Pressable
         testID="notifications-open-system-settings"

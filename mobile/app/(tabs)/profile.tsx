@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Alert, Pressable, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Avatar } from '@/components/Avatar';
@@ -56,7 +56,13 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View testID="profile-screen" style={{ flex: 1, backgroundColor: colors.background }}>
+    // Scrolls: at large font sizes or on short screens the last rows (sign out, delete account)
+    // must stay reachable.
+    <ScrollView
+      testID="profile-screen"
+      style={{ flex: 1, backgroundColor: colors.background }}
+      contentContainerStyle={{ paddingBottom: spacing.xl }}
+    >
       <Pressable
         testID="profile-avatar-row"
         accessibilityRole="button"
@@ -249,6 +255,6 @@ export default function ProfileScreen() {
       >
         <AppText style={{ flex: 1, color: colors.danger }}>{t('profile.deleteAccount')}</AppText>
       </Pressable>
-    </View>
+    </ScrollView>
   );
 }

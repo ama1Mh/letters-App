@@ -68,8 +68,11 @@ export default function ThreadScreen() {
 
   if (error) {
     return (
-      <View testID="thread-error" style={{ flex: 1, padding: spacing.lg }}>
+      <View testID="thread-error" style={{ flex: 1, padding: spacing.lg, gap: spacing.md }}>
         <AppText style={{ color: colors.danger }}>{t(`letters.error.${error}`)}</AppText>
+        {error !== 'not_found' ? (
+          <Button testID="thread-retry" title={t('sent.retry')} onPress={() => void load()} />
+        ) : null}
       </View>
     );
   }

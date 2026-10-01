@@ -17,5 +17,7 @@ describe('Reading view: a letter the caller may not see', () => {
     expect(screen.getByText(en.letters.error.not_found)).toBeTruthy();
     expect(screen.queryByTestId('letter-screen')).toBeNull();
     expect(markRead).not.toHaveBeenCalled();
+    // Retrying cannot help with a letter that is not there (or not ours).
+    expect(screen.queryByTestId('letter-retry')).toBeNull();
   });
 });

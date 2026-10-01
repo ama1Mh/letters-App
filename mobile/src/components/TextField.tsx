@@ -42,7 +42,11 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
         {...props}
       />
       {error ? (
-        <AppText testID={testID ? `${testID}-error` : undefined} style={{ color: colors.danger }}>
+        <AppText
+          testID={testID ? `${testID}-error` : undefined}
+          accessibilityLiveRegion="polite"
+          style={{ color: colors.danger }}
+        >
           {error}
         </AppText>
       ) : null}

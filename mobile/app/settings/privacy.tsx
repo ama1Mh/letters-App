@@ -27,6 +27,7 @@ export default function PrivacyScreen() {
   );
   const [byUsername, setByUsername] = useState(profile?.discoverableByUsername ?? true);
   const [byEmail, setByEmail] = useState(profile?.discoverableByEmail ?? false);
+  const [saveFailed, setSaveFailed] = useState(false);
 
   async function apply(
     patch: Partial<{
@@ -35,15 +36,31 @@ export default function PrivacyScreen() {
       discoverableByEmail: boolean;
     }>,
   ) {
+    const previous = {
+      receiveMode,
+      discoverableByUsername: byUsername,
+      discoverableByEmail: byEmail,
+    };
     const next = {
       receiveMode: patch.receiveMode ?? receiveMode,
       discoverableByUsername: patch.discoverableByUsername ?? byUsername,
       discoverableByEmail: patch.discoverableByEmail ?? byEmail,
     };
-    setReceiveMode(next.receiveMode);
-    setByUsername(next.discoverableByUsername);
-    setByEmail(next.discoverableByEmail);
-    await auth.repository.updateReceiveSettings(next);
+    const show = (values: typeof next) => {
+      setReceiveMode(values.receiveMode);
+      setByUsername(values.discoverableByUsername);
+      setByEmail(values.discoverableByEmail);
+    };
+    show(next);
+    setSaveFailed(false);
+    try {
+      await auth.repository.updateReceiveSettings(next);
+    } catch {
+      // A privacy control must never show a value the server does not have: put it back.
+      show(previous);
+      setSaveFailed(true);
+      return;
+    }
     await auth.refresh();
   }
 
@@ -53,6 +70,15 @@ export default function PrivacyScreen() {
       contentContainerStyle={{ paddingVertical: spacing.lg }}
       style={{ backgroundColor: colors.background }}
     >
+      {saveFailed ? (
+        <AppText
+          testID="privacy-save-error"
+          accessibilityLiveRegion="polite"
+          style={{ color: colors.danger, paddingHorizontal: spacing.lg, paddingBottom: spacing.md }}
+        >
+          {t('privacy.saveError')}
+        </AppText>
+      ) : null}
       <AppText variant="muted" style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.sm }}>
         {t('privacy.receiveModeLabel')}
       </AppText>
@@ -96,6 +122,7 @@ export default function PrivacyScreen() {
         <AppText style={{ flex: 1 }}>{t('privacy.discoverableByUsernameLabel')}</AppText>
         <Switch
           testID="privacy-discoverable-by-username"
+          accessibilityLabel={t('privacy.discoverableByUsernameLabel')}
           value={byUsername}
           onValueChange={(next) => void apply({ discoverableByUsername: next })}
         />
@@ -114,6 +141,7 @@ export default function PrivacyScreen() {
         <AppText style={{ flex: 1 }}>{t('privacy.discoverableByEmailLabel')}</AppText>
         <Switch
           testID="privacy-discoverable-by-email"
+          accessibilityLabel={t('privacy.discoverableByEmailLabel')}
           value={byEmail}
           onValueChange={(next) => void apply({ discoverableByEmail: next })}
         />

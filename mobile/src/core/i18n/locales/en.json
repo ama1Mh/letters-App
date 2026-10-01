@@ -209,7 +209,8 @@
     "receiveModeEveryone": "Everyone",
     "receiveModeInviteOnly": "Only people I'm connected with",
     "discoverableByUsernameLabel": "Let people find me by username",
-    "discoverableByEmailLabel": "Let people find me by email"
+    "discoverableByEmailLabel": "Let people find me by email",
+    "saveError": "Couldn't save this setting. Check your connection and try again."
   },
   "legal": {
     "privacyTitle": "Privacy policy",
@@ -398,7 +399,8 @@
     "title": "Notifications",
     "pushOnDeliveryLabel": "Notify me when a letter arrives",
     "pushOnDeliveryHint": "Letters still arrive in your inbox either way.",
-    "openSystemSettings": "Phone notification settings"
+    "openSystemSettings": "Phone notification settings",
+    "saveError": "Couldn't save this setting. Check your connection and try again."
   },
   "network": {
     "offline": "You're offline. Drafts are saved on this phone; letters will update when you're back online."

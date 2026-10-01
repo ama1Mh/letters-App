@@ -3,7 +3,7 @@ import { randomUUID } from 'expo-crypto';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, Pressable, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { EmptyState } from '@/components/EmptyState';
@@ -16,7 +16,7 @@ export default function DraftsScreen() {
   const { t } = useTranslation();
   const { colors, spacing, radius } = useTheme();
   const router = useRouter();
-  const { drafts, refresh } = useDrafts();
+  const { drafts, loading, refresh } = useDrafts();
 
   // Refresh on every visit, not just first mount: coming back from editing/deleting a draft, or
   // returning to the app online after drafting offline, should show the current list.
@@ -83,7 +83,9 @@ export default function DraftsScreen() {
           {t('drafts.newButton')}
         </AppText>
       </Pressable>
-      {drafts.length === 0 ? (
+      {loading && drafts.length === 0 ? (
+        <ActivityIndicator testID="drafts-loading" style={{ marginTop: spacing.xl }} />
+      ) : drafts.length === 0 ? (
         <EmptyState
           testID="drafts-empty"
           title={t('drafts.emptyTitle')}

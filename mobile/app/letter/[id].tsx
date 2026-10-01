@@ -95,8 +95,11 @@ export default function LetterScreen() {
   if (error) {
     // not_found for every invisible case; anything else (e.g. offline) gets the generic text.
     return (
-      <View testID="letter-error" style={{ flex: 1, padding: spacing.lg }}>
+      <View testID="letter-error" style={{ flex: 1, padding: spacing.lg, gap: spacing.md }}>
         <AppText style={{ color: colors.danger }}>{t(`letters.error.${error}`)}</AppText>
+        {error !== 'not_found' ? (
+          <Button testID="letter-retry" title={t('sent.retry')} onPress={() => void load()} />
+        ) : null}
       </View>
     );
   }

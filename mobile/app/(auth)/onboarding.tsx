@@ -161,6 +161,7 @@ export default function OnboardingScreen() {
         <AppText style={{ flex: 1 }}>{t('auth.onboarding.discoverableByEmailLabel')}</AppText>
         <Switch
           testID="onboarding-discoverable-by-email"
+          accessibilityLabel={t('auth.onboarding.discoverableByEmailLabel')}
           value={discoverableByEmail}
           onValueChange={setDiscoverableByEmail}
         />

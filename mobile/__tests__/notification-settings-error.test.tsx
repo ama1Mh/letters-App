@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { renderShellIn } from './helpers/renderShell';
 
 describe('notification settings, save fails (DEC-052)', () => {
-  it('reverts the switch', async () => {
+  it('reverts the switch and says it could not save', async () => {
     const view = await renderShellIn('en');
     jest
       .spyOn(view.backend.repository, 'updatePushOnDelivery')
@@ -17,5 +17,6 @@ describe('notification settings, save fails (DEC-052)', () => {
     await waitFor(() =>
       expect(screen.getByTestId('notifications-push-on-delivery').props.value).toBe(true),
     );
+    expect(screen.getByTestId('notifications-save-error')).toBeTruthy();
   });
 });

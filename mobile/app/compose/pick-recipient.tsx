@@ -1,8 +1,8 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
@@ -25,6 +25,12 @@ const KNOWN_SEARCH_CODES = [
   'rate_limited',
   'unknown',
 ] as const satisfies readonly DiscoveryErrorCode[];
+/**
+ * Username search waits for a pause in typing: the server allows 30 searches an hour
+ * (`search_users`), and one call per keystroke used ~5 of them per username typed.
+ */
+export const SEARCH_DEBOUNCE_MS = 400;
+
 const KNOWN_EMAIL_CODES = [
   'invalid_input',
   'rate_limited',
@@ -53,22 +59,45 @@ export default function PickRecipientScreen() {
   const [searching, setSearching] = useState(false);
   const [requestedIds, setRequestedIds] = useState<ReadonlySet<string>>(new Set());
 
-  async function runSearch(next: string) {
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Bumped on every keystroke; a response applies only if no newer query was typed meanwhile.
+  const searchGeneration = useRef(0);
+
+  useEffect(
+    () => () => {
+      if (searchTimer.current) clearTimeout(searchTimer.current);
+    },
+    [],
+  );
+
+  function runSearch(next: string) {
     setQuery(next);
     setError(null);
-    if (next.trim().length < 3) {
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchGeneration.current += 1;
+    const mine = searchGeneration.current;
+    const trimmed = next.trim();
+    if (trimmed.length < 3) {
       setResults([]);
+      setSearching(false);
       return;
     }
+    // "Searching" from the first keystroke, so "no results" never flashes during the pause.
     setSearching(true);
-    try {
-      setResults(await getDiscoveryRepository().searchUsers(next.trim()));
-    } catch (e) {
-      const code = e instanceof DiscoveryActionError ? e.code : 'unknown';
-      setError(t(`discovery.error.${knownErrorKey(code, KNOWN_SEARCH_CODES)}`));
-    } finally {
-      setSearching(false);
-    }
+    searchTimer.current = setTimeout(() => {
+      void (async () => {
+        try {
+          const found = await getDiscoveryRepository().searchUsers(trimmed);
+          if (mine === searchGeneration.current) setResults(found);
+        } catch (e) {
+          if (mine !== searchGeneration.current) return;
+          const code = e instanceof DiscoveryActionError ? e.code : 'unknown';
+          setError(t(`discovery.error.${knownErrorKey(code, KNOWN_SEARCH_CODES)}`));
+        } finally {
+          if (mine === searchGeneration.current) setSearching(false);
+        }
+      })();
+    }, SEARCH_DEBOUNCE_MS);
   }
 
   async function runEmailSearch() {
@@ -182,7 +211,7 @@ export default function PickRecipientScreen() {
           testID="pick-recipient-search"
           label={t('discovery.searchPlaceholder')}
           value={query}
-          onChangeText={(next) => void runSearch(next)}
+          onChangeText={runSearch}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -212,7 +241,10 @@ export default function PickRecipientScreen() {
         ) : null}
         {emailResult ? renderResultRow(emailResult) : null}
       </View>
-      {!searching && query.trim().length >= 3 && results.length === 0 ? (
+      {searching ? (
+        <ActivityIndicator testID="pick-recipient-searching" style={{ margin: spacing.md }} />
+      ) : null}
+      {!searching && !error && query.trim().length >= 3 && results.length === 0 ? (
         <AppText testID="pick-recipient-no-results" variant="muted" style={{ textAlign: 'center' }}>
           {t('discovery.noResults')}
         </AppText>

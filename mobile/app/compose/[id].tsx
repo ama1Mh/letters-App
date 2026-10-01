@@ -257,6 +257,8 @@ export default function ComposeScreen() {
           fontSize: fontSize.md,
           color: colors.text,
           textAlign: 'auto',
+          // Android centres multiline text vertically by default (seen on the phone, 2026-10-01).
+          textAlignVertical: 'top',
         }}
       />
       {shouldShowBodyCounter(body.length) ? (

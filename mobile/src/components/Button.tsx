@@ -35,6 +35,11 @@ export function Button({
         borderColor: colors.border,
         borderRadius: radius.sm,
         paddingVertical: spacing.md,
+        // Compact buttons (e.g. Accept/Decline in a row) must not hug their label, and every
+        // button keeps Android's 48 dp minimum touch target (device QA 2026-10-01).
+        paddingHorizontal: spacing.lg,
+        minHeight: 48,
+        justifyContent: 'center',
         alignItems: 'center',
         opacity: isDisabled ? 0.6 : 1,
       }}
