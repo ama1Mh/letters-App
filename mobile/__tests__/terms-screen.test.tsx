@@ -19,5 +19,9 @@ describe('terms of service screen (en, DEC-054)', () => {
       ).toBeTruthy();
     }
     expect(screen.queryByText(/\{\{/)).toBeNull();
+    expect(screen.getByTestId('terms-screen-draft-notice')).toBeTruthy();
+    expect(screen.getByText(en.legal.draftNotice)).toBeTruthy();
+    expect(screen.getByText(/laws of the Kingdom of Saudi Arabia/)).toBeTruthy();
+    expect(screen.getByText(/operated by .*Amal Faqihi/)).toBeTruthy();
   });
 });

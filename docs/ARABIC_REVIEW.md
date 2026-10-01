@@ -324,6 +324,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `network.offline` | You're offline. Drafts are saved on this phone; letters will update when you're back online. | أنت غير متصل بالإنترنت. المسودات محفوظة على هذا الهاتف، وستُحدَّث الرسائل عند عودة الاتصال. | draft | Phase 10: app-wide offline banner |
 | `privacy.saveError` | Couldn't save this setting. Check your connection and try again. | تعذّر حفظ هذا الإعداد. تحقّق من اتصالك ثم حاول مرة أخرى. | draft | Phase 10: shown when a settings change fails; the switch reverts |
 | `notifications.saveError` | Couldn't save this setting. Check your connection and try again. | تعذّر حفظ هذا الإعداد. تحقّق من اتصالك ثم حاول مرة أخرى. | draft | Phase 10: shown when a settings change fails; the switch reverts |
+| `legal.draftNotice` | Draft: this document has not been legally reviewed yet and may change before the app is released. | مسودة: لم تخضع هذه الوثيقة للمراجعة القانونية بعد، وقد تتغير قبل إطلاق التطبيق. | draft | Shown above both legal documents until the owner marks them legally reviewed (OPEN-6) |
 
 ## Server-side text (not in `ar.json`)
 
@@ -341,8 +342,8 @@ The Arabic privacy policy and terms live in `mobile/src/features/legal/` (not in
 
 | Document | Status | Notes |
 |---|---|---|
-| Privacy policy (ar) | draft | Written 2026-09-29, crash reports (Sentry) added 2026-10-01; needs the owner's Arabic review and a legal review (OPEN-6) |
-| Terms of service (ar) | draft | `mobile/src/features/legal/terms.ts`, written 2026-09-29 (DEC-054); same reviews |
+| Privacy policy (ar) | draft | Written 2026-09-29; 2026-10-01: crash reports (Sentry), minimum age 16, operator line (DEC-058); needs the owner's Arabic review and a legal review (OPEN-6) |
+| Terms of service (ar) | draft | `mobile/src/features/legal/terms.ts`, written 2026-09-29 (DEC-054); 2026-10-01: minimum age 16, governing-law section (Saudi Arabia), operator line (DEC-058); same reviews |
 
 ## Launcher labels (DEC-055)
 

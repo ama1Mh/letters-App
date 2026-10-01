@@ -3,7 +3,9 @@
  * it must be reviewed (legal + the owner's Arabic review) before release, and updated whenever data
  * handling changes (new processor, analytics, crash reporting, retention). Kept here rather than in
  * ar.json/en.json because it is a document, not UI copy; both languages change together.
- * `{{appName}}`, `{{email}}` and `{{date}}` are filled in by LegalDocumentView.
+ * It has NOT been legally reviewed (`legalReviewed: false`, shown in the app). Operator, contact
+ * address and minimum age (16) are the owner's confirmed OPEN-6 values (DEC-058).
+ * `{{appName}}`, `{{email}}`, `{{operator}}` and `{{date}}` are filled in by LegalDocumentView.
  */
 import { list, p, type LegalDocument } from './document';
 
@@ -119,7 +121,7 @@ const en = {
       heading: 'Children',
       blocks: [
         p(
-          '{{appName}} is not intended for children under 13, or under the minimum age required in your country. If you believe a child has created an account, contact us and we will delete it.',
+          '{{appName}} is not intended for anyone under 16, or under the minimum age required in your country if it is higher. If you believe a child has created an account, contact us and we will delete it.',
         ),
       ],
     },
@@ -133,7 +135,10 @@ const en = {
     },
     {
       heading: 'Contact',
-      blocks: [p('Questions or requests about your privacy: {{email}}')],
+      blocks: [
+        p('{{appName}} is operated by {{operator}}, who is responsible for your information.'),
+        p('Questions or requests about your privacy: {{email}}'),
+      ],
     },
   ],
 };
@@ -250,7 +255,7 @@ const ar = {
       heading: 'الأطفال',
       blocks: [
         p(
-          'لم يُصمَّم {{appName}} للأطفال دون 13 عامًا، أو دون الحد الأدنى للسن المعمول به في بلدك. إذا كنت تعتقد أن طفلًا أنشأ حسابًا، فتواصل معنا وسنحذفه.',
+          'لم يُصمَّم {{appName}} لمن هم دون 16 عامًا، أو دون الحد الأدنى للسن المعمول به في بلدك إن كان أعلى. إذا كنت تعتقد أن طفلًا أنشأ حسابًا، فتواصل معنا وسنحذفه.',
         ),
       ],
     },
@@ -264,9 +269,16 @@ const ar = {
     },
     {
       heading: 'التواصل',
-      blocks: [p('للأسئلة أو الطلبات المتعلقة بخصوصيتك: {{email}}')],
+      blocks: [
+        p('الجهة المشغّلة لتطبيق {{appName}} والمسؤولة عن معلوماتك: {{operator}}.'),
+        p('للأسئلة أو الطلبات المتعلقة بخصوصيتك: {{email}}'),
+      ],
     },
   ],
 };
 
-export const PRIVACY_POLICY: LegalDocument = { updated: '2026-10-01', content: { en, ar } };
+export const PRIVACY_POLICY: LegalDocument = {
+  updated: '2026-10-01',
+  legalReviewed: false,
+  content: { en, ar },
+};

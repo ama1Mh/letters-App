@@ -28,6 +28,7 @@ export function LegalDocumentView({
   const values = {
     appName: t('app.name'),
     email: `⁦${currentBrand().contactEmail}⁩`,
+    operator: `⁦${currentBrand().operatorName}⁩`,
     date,
   };
   const fill = (text: string) => fillLegalText(text, values);
@@ -38,6 +39,11 @@ export function LegalDocumentView({
       style={{ backgroundColor: colors.background }}
       contentContainerStyle={{ padding: spacing.lg, gap: spacing.md }}
     >
+      {document.legalReviewed ? null : (
+        <AppText testID={`${testID}-draft-notice`} style={{ color: colors.danger }}>
+          {t('legal.draftNotice')}
+        </AppText>
+      )}
       <AppText variant="muted">{fill(updatedLabel)}</AppText>
       {sections.map((section) => (
         <View key={section.heading} style={{ gap: spacing.sm }}>

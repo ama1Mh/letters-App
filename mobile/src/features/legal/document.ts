@@ -14,6 +14,9 @@ export interface LegalSection {
 export interface LegalDocument {
   /** ISO date shown as "Last updated". Bump it with every change to the text. */
   updated: string;
+  /** False until a lawyer has reviewed this exact text; the app then shows a draft notice. Only
+   *  the owner may set it to true (OPEN-6). */
+  legalReviewed: boolean;
   content: Record<Language, { updatedLabel: string; sections: LegalSection[] }>;
 }
 

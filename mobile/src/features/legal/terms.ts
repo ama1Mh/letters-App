@@ -1,8 +1,10 @@
 /**
  * Terms of service text (OPEN-6, DEC-054). Draft written from how the app actually behaves; it
- * must be reviewed (legal + the owner's Arabic review) before release. No governing law, operator
- * name or fees are stated yet: those are the owner's decisions (see DEC-054).
- * `{{appName}}`, `{{email}}` and `{{date}}` are filled in by LegalDocumentView.
+ * must be reviewed (legal + the owner's Arabic review) before release; it has NOT been legally
+ * reviewed (`legalReviewed: false`, shown in the app). Operator, contact address, minimum age (16)
+ * and governing law (Kingdom of Saudi Arabia) are the owner's confirmed OPEN-6 values (DEC-058);
+ * nothing else (courts, dispute resolution, fees) is stated, because it has not been decided.
+ * `{{appName}}`, `{{email}}`, `{{operator}}` and `{{date}}` are filled in by LegalDocumentView.
  */
 import { list, p, type LegalDocument } from './document';
 
@@ -21,7 +23,7 @@ const en = {
       heading: 'Who can use {{appName}}',
       blocks: [
         list(
-          'You must be at least 13 years old, or the minimum age required in your country if it is higher.',
+          'You must be at least 16 years old, or the minimum age required in your country if it is higher.',
           'An account is for one person. Use an email address you control, and keep your password to yourself.',
           'You are responsible for what happens in your account. Tell us at {{email}} if you think someone else is using it.',
         ),
@@ -104,8 +106,15 @@ const en = {
       ],
     },
     {
+      heading: 'Governing law',
+      blocks: [p('These terms are governed by the laws of the Kingdom of Saudi Arabia.')],
+    },
+    {
       heading: 'Contact',
-      blocks: [p('Questions about these terms: {{email}}')],
+      blocks: [
+        p('{{appName}} is operated by {{operator}}.'),
+        p('Questions about these terms: {{email}}'),
+      ],
     },
   ],
 };
@@ -125,7 +134,7 @@ const ar = {
       heading: 'من يمكنه استخدام {{appName}}',
       blocks: [
         list(
-          'يجب ألا يقل عمرك عن 13 عامًا، أو عن الحد الأدنى للسن المعمول به في بلدك إن كان أعلى.',
+          'يجب ألا يقل عمرك عن 16 عامًا، أو عن الحد الأدنى للسن المعمول به في بلدك إن كان أعلى.',
           'الحساب لشخص واحد. استخدم بريدًا إلكترونيًا تملكه، واحتفظ بكلمة المرور لنفسك.',
           'أنت مسؤول عما يحدث في حسابك. أبلغنا عبر {{email}} إذا ظننت أن شخصًا آخر يستخدمه.',
         ),
@@ -208,10 +217,21 @@ const ar = {
       ],
     },
     {
+      heading: 'القانون الواجب التطبيق',
+      blocks: [p('تخضع هذه الشروط لأنظمة المملكة العربية السعودية.')],
+    },
+    {
       heading: 'التواصل',
-      blocks: [p('للأسئلة المتعلقة بهذه الشروط: {{email}}')],
+      blocks: [
+        p('الجهة المشغّلة لتطبيق {{appName}}: {{operator}}.'),
+        p('للأسئلة المتعلقة بهذه الشروط: {{email}}'),
+      ],
     },
   ],
 };
 
-export const TERMS: LegalDocument = { updated: '2026-09-29', content: { en, ar } };
+export const TERMS: LegalDocument = {
+  updated: '2026-10-01',
+  legalReviewed: false,
+  content: { en, ar },
+};

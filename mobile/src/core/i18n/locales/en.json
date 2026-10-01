@@ -214,7 +214,8 @@
   },
   "legal": {
     "privacyTitle": "Privacy policy",
-    "termsTitle": "Terms of Service"
+    "termsTitle": "Terms of Service",
+    "draftNotice": "Draft: this document has not been legally reviewed yet and may change before the app is released."
   },
   "language": {
     "title": "Language",

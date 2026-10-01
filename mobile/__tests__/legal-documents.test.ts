@@ -21,13 +21,27 @@ describe.each(DOCUMENTS)('%s', (_name, doc) => {
       allLegalText(doc, lang)
         .flatMap((text) => [...text.matchAll(/\{\{(\w+)\}\}/g)].map((m) => m[1]))
         .sort();
-    expect(['appName', 'email', 'date']).toEqual(expect.arrayContaining([...new Set(names('en'))]));
+    expect(['appName', 'email', 'operator', 'date']).toEqual(
+      expect.arrayContaining([...new Set(names('en'))]),
+    );
     expect(names('en')).toEqual(expect.arrayContaining(['email', 'date']));
     expect(names('ar')).toEqual(names('en'));
   });
 
   it('writes Arabic with Western digits only', () => {
     expect(allLegalText(doc, 'ar').join(' ')).not.toMatch(/[٠-٩۰-۹]/);
+  });
+
+  it('states the owner-confirmed OPEN-6 values and is marked as not legally reviewed', () => {
+    const en = allLegalText(doc, 'en').join(' ');
+    const ar = allLegalText(doc, 'ar').join(' ');
+    expect(en).toContain('16');
+    expect(en).not.toMatch(/13/);
+    expect(ar).toContain('16 عامًا');
+    expect(en).toContain('{{operator}}');
+    expect(ar).toContain('{{operator}}');
+    // Only the owner may flip this, after an actual legal review (OPEN-6).
+    expect(doc.legalReviewed).toBe(false);
   });
 
   it('has a valid "last updated" date', () => {
