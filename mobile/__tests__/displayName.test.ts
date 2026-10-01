@@ -118,12 +118,19 @@ describe('validateDisplayName', () => {
     expect(codeOf('company')).toBe('ok');
   });
 
-  it.each(['Admin', 'ADMIN', 'A d m i n', 'Support', 'System', 'adm1n', 'LetterApp'])(
-    'rejects the reserved name %s',
-    (input) => {
-      expect(codeOf(input)).toBe('reserved');
-    },
-  );
+  it.each([
+    'Admin',
+    'ADMIN',
+    'A d m i n',
+    'Support',
+    'System',
+    'adm1n',
+    'LetterApp',
+    'Mirsal',
+    'مرسال',
+  ])('rejects the reserved name %s', (input) => {
+    expect(codeOf(input)).toBe('reserved');
+  });
 
   it('does not reserve names that merely contain a reserved word', () => {
     expect(codeOf('Admin Sara')).toBe('ok');

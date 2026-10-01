@@ -42,3 +42,12 @@ describe('getBrandConfig', () => {
     }
   });
 });
+
+describe('public name (DEC-055)', () => {
+  it('labels the launcher Mirsal / مرسال while keeping the dev identifiers', () => {
+    const dev = getBrandConfig('dev');
+    expect(dev.name).toMatch(/^Mirsal/);
+    expect(dev.nameAr).toMatch(/^مرسال/);
+    expect(dev.androidPackage).toBe('com.letterapp.dev');
+  });
+});

@@ -52,7 +52,7 @@ describe('validateUsername', () => {
     expect(codeOf('_a')).toBe('must_start_with_letter');
   });
 
-  it.each(['admin', 'Admin', 'ADMINISTRATOR', 'support', 'root', 'www', 'letterapp'])(
+  it.each(['admin', 'Admin', 'ADMINISTRATOR', 'support', 'root', 'www', 'letterapp', 'mirsal'])(
     'rejects the reserved word %s',
     (input) => {
       expect(codeOf(input)).toBe('reserved');

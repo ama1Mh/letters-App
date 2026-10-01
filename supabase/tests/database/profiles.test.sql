@@ -138,6 +138,9 @@ select ok(public.is_reserved_word('ADMIN'), 'reserved: ADMIN');
 select ok(public.is_reserved_word('adm1n'), 'reserved look-alike: adm1n');
 select ok(public.is_reserved_word('ad_min'), 'reserved look-alike: ad_min');
 select ok(public.is_reserved_word('letterapp'), 'reserved: brand word');
+select ok(public.is_reserved_word('mirsal'), 'reserved: public brand (Latin)');
+select ok(public.is_reserved_word('m1rsal'), 'reserved look-alike: m1rsal');
+select ok(public.is_reserved_word('مرسال'), 'reserved: public brand (Arabic)');
 select ok(not public.is_reserved_word('sara'), 'not reserved: sara');
 select ok(not public.is_reserved_word('admin_sara'), 'not reserved: contains a reserved word');
 

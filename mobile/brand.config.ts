@@ -2,8 +2,9 @@
  * Single source of truth for app identity (DEC-001).
  * Nothing else in the repo may hard-code the name, slug, scheme or package ID.
  *
- * All values below are TEMPORARY and development-only. The production identity is
- * decided at the naming freeze (OPEN-2) and must never reuse a temporary ID.
+ * The public name is final (Mirsal / مرسال, DEC-055, 2026-10-01). The slug, scheme, package IDs
+ * and contact address below are still TEMPORARY and development-only: they move to production
+ * values with the credential migration (OPEN-2) and must never be published as they are.
  */
 
 export const APP_VARIANTS = ['dev', 'preview', 'production'] as const;
@@ -11,8 +12,10 @@ export type AppVariant = (typeof APP_VARIANTS)[number];
 
 export interface BrandConfig {
   variant: AppVariant;
-  /** Launcher label. In-app text uses the i18n key `app.name`, not this. */
+  /** Launcher label (English/default). In-app text uses the i18n key `app.name`, not this. */
   name: string;
+  /** Launcher label on devices whose language is Arabic. */
+  nameAr: string;
   /** Expo project slug. Identical across variants (identifies the EAS project). */
   slug: string;
   /** URL scheme. Invite links are `<scheme>://invite/<code>` (DEC-012). */
@@ -23,24 +26,26 @@ export interface BrandConfig {
   contactEmail: string;
 }
 
-const TEMPORARY_NAME = 'LetterApp';
+const PUBLIC_NAME = 'Mirsal';
+const PUBLIC_NAME_AR = 'مرسال';
 const SLUG = 'letterapp';
 const ANDROID_PACKAGE_BASE = 'com.letterapp';
 // Placeholder (.invalid never resolves): the real address is set at the naming freeze (DEC-053).
 const TEMPORARY_CONTACT_EMAIL = 'contact@letterapp.invalid';
 
 /**
- * Brand words that usernames and display names may not take (DEC-010). Add the final brand at the
- * naming freeze (OPEN-2). The database keeps its own copy of this list, so change both together.
+ * Brand words that usernames and display names may not take (DEC-010): the dev slug and the public
+ * name in both scripts. The database keeps its own copy of this list, so change both together.
  */
-export const RESERVED_BRAND_WORDS: readonly string[] = [SLUG];
+export const RESERVED_BRAND_WORDS: readonly string[] = [SLUG, 'mirsal', PUBLIC_NAME_AR];
 
 const DEFAULT_VARIANT: AppVariant = 'dev';
 
 const NON_PRODUCTION: Record<Exclude<AppVariant, 'production'>, BrandConfig> = {
   dev: {
     variant: 'dev',
-    name: `${TEMPORARY_NAME} (Dev)`,
+    name: `${PUBLIC_NAME} (Dev)`,
+    nameAr: `${PUBLIC_NAME_AR} (تطوير)`,
     slug: SLUG,
     scheme: 'letterapp',
     androidPackage: `${ANDROID_PACKAGE_BASE}.dev`, // DEC-001
@@ -48,7 +53,8 @@ const NON_PRODUCTION: Record<Exclude<AppVariant, 'production'>, BrandConfig> = {
   },
   preview: {
     variant: 'preview',
-    name: `${TEMPORARY_NAME} (Preview)`,
+    name: `${PUBLIC_NAME} (Preview)`,
+    nameAr: `${PUBLIC_NAME_AR} (معاينة)`,
     slug: SLUG,
     scheme: 'letterapp-preview',
     androidPackage: `${ANDROID_PACKAGE_BASE}.preview`,

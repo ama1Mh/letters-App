@@ -463,7 +463,7 @@ Block/unblock UI, report, delete-for-me, account deletion (Edge Function), priva
 Polish states (loading/empty/error/offline) in both directions, accessibility (TalkBack in Arabic, font scaling, contrast), performance for long letters, Sentry, icon/splash, Arabic + English store listing, Data Safety form, EAS production build, Play internal → closed testing → production.
 *Exit:* on Play internal track; testers use it for a week without data-loss bugs.
 
-**Phase 11 — iOS readiness (after MVP)**
+**Phase 11 — iOS readiness (after MVP)** — **dropped 2026-10-01: iOS is permanently out of scope (DECISIONS.md DEC-055).**
 Apple Developer account, EAS iOS build, APNs credentials, Sign in with Apple, iOS permission strings (Info.plist localized ar/en), RTL/bidi parity checks, universal links.
 
 ### Testing strategy
