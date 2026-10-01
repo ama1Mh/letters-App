@@ -396,6 +396,7 @@ Email + password (verified) and **Google Sign-In** (native SDK, via development 
 - **Arabic + English UI, RTL/LTR, runtime language switch, localized push notifications, Arabic-capable design fonts**
 - Compose plain-text letters (subject + body), autosave drafts (offline-capable), bidi-aware editor
 - Design v1: ~6 papers, ~5 fonts incl. Arabic ones, ~8 inks, ~4 stamps; live preview
+- **Added 2026-10-01 (owner, Phase 12, pending DEC-060):** vintage letter editor: textured papers, stamps/stickers/postmarks placed, moved, resized, rotated and layered on the letter, stored as structured design v2
 - **Find users by username and by email (opt-in); share invite link/QR/code; redeem invites; pen-pal connection requests (accept/decline/remove — DEC-007); receive setting Everyone / Invite-only (default Invite-only)**
 - Send now / schedule (date+time, UTC), cancel/edit until delivered, letter to self
 - Inbox, reading view, reply, threads, sent/scheduled list with status
@@ -463,8 +464,13 @@ Block/unblock UI, report, delete-for-me, account deletion (Edge Function), priva
 Polish states (loading/empty/error/offline) in both directions, accessibility (TalkBack in Arabic, font scaling, contrast), performance for long letters, Sentry, icon/splash, Arabic + English store listing, Data Safety form, EAS production build, Play internal → closed testing → production.
 *Exit:* on Play internal track; testers use it for a week without data-loss bugs.
 
-**Phase 11 — iOS readiness (after MVP)** — **dropped 2026-10-01: iOS is permanently out of scope (DECISIONS.md DEC-055).**
-Apple Developer account, EAS iOS build, APNs credentials, Sign in with Apple, iOS permission strings (Info.plist localized ar/en), RTL/bidi parity checks, universal links.
+**Phase 11 — iOS: OUT OF SCOPE.** Dropped 2026-10-01: iOS is permanently out of scope (DECISIONS.md DEC-055). The number is not reused; nothing iOS-specific (Apple account, EAS iOS build, APNs, Sign in with Apple, Info.plist strings, universal links) will be built.
+
+**Phase 12 — Vintage letter editor (L) — proposed 2026-10-01, Needs confirmation (DEC-060)**
+The letter becomes a visual canvas: choose paper → write → decorate → arrange → send. Design v2 (structured, never a flattened image): textured papers, physical inks, font categories, text size, and `elements[]` (stamps, stickers, postmarks) with position, scale, rotation and z-order; `is_valid_design()` accepts v1 and v2; one desk-style editor (Paper / Write / Decorate) with drag, pinch, rotate, layer and delete plus accessible button equivalents; read-only `LetterCanvas` for reading view and threads. First catalog only: 3 papers, 3 stamps, 3 stickers, 2 postmarks. Steps 12.0 (spike) to 12.6 and all trade-offs: `docs/LETTER_EDITOR_ASSESSMENT.md`.
+*Exit:* place → move → resize → rotate → save → send → receive → reopen shows the same composition on two devices, EN/LTR and AR/RTL, including a draft decorated offline.
+
+**Roadmap order from 2026-10-01:** Phase 10 baseline (done) → **Phase 12** → naming freeze / production-ID and credential migration → the rest of Phase 10 (accessibility/performance re-check of the new editor, store listing, Data Safety, EAS production build, Play tracks). Phase 11 (iOS) is out of scope.
 
 ### Testing strategy
 Unit (domain rules, direction detection, design validation, time-zone) · pgTAP (RLS, RPCs, cron idempotency — highest value) · component tests in both locales · Maestro E2E happy path (run once in `en`, once in `ar`) · manual device matrix: Android 8, 13, 14+; battery saver; app killed; airplane mode; system language ≠ app language.
