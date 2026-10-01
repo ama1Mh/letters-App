@@ -28,4 +28,32 @@ jest.mock('expo-localization', () => ({
   getLocales: jest.fn(() => [{ languageCode: 'en' }]),
 }));
 
+// NetInfo: online by default; tests flip it with `global.__setNetInfo({ isConnected: false })`.
+declare global {
+  // eslint-disable-next-line no-var -- `declare global` requires var
+  var __setNetInfo: (state: { isConnected: boolean; isInternetReachable?: boolean | null }) => void;
+}
+
+jest.mock('@react-native-community/netinfo', () => {
+  type MockState = { isConnected: boolean; isInternetReachable: boolean | null };
+  type MockListener = (mockState: MockState) => void;
+  const mockListeners = new Set<MockListener>();
+  let mockCurrent: MockState = { isConnected: true, isInternetReachable: true };
+  globalThis.__setNetInfo = (mockNext) => {
+    mockCurrent = { isInternetReachable: mockNext.isConnected, ...mockNext };
+    for (const mockListener of [...mockListeners]) mockListener(mockCurrent);
+  };
+  return {
+    __esModule: true,
+    default: {
+      addEventListener: (mockListener: MockListener) => {
+        mockListeners.add(mockListener);
+        mockListener(mockCurrent);
+        return () => mockListeners.delete(mockListener);
+      },
+      fetch: async () => mockCurrent,
+    },
+  };
+});
+
 export {};

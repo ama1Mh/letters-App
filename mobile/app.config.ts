@@ -21,6 +21,8 @@ const config: ExpoConfig = {
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   userInterfaceStyle: 'automatic',
+  // Arabic launcher label (values-b+ar/strings.xml). English is `name` above.
+  locales: { ar: { android: { app_name: brand.nameAr } } },
   android: {
     package: brand.androidPackage,
     ...(googleServicesFile ? { googleServicesFile } : {}),
@@ -35,8 +37,17 @@ const config: ExpoConfig = {
   plugins: [
     'expo-router',
     'expo-secure-store',
-    // `letters` must match the channelId sent by supabase/functions/send-notifications.
-    ['expo-notifications', { defaultChannel: 'letters' }],
+    // `letters` must match the channelId sent by supabase/functions/send-notifications. The icon is
+    // the status-bar small icon: white on transparent (Android uses only its alpha); `color` tints
+    // it in the shade (light-theme primary, src/core/theme/tokens.ts).
+    [
+      'expo-notifications',
+      {
+        defaultChannel: 'letters',
+        icon: './assets/images/notification-icon.png',
+        color: '#1D4ED8',
+      },
+    ],
     // Declares en/ar to the OS (per-app language on Android 13+) and RTL support. `forcesRTL` is
     // deliberately unset: direction is managed at runtime by src/core/i18n/direction.ts.
     ['expo-localization', { supportsRTL: true, supportedLocales: ['en', 'ar'] }],

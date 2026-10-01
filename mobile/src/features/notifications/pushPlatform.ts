@@ -50,20 +50,31 @@ function readProjectId(): string | null {
 
 let handlerSet = false;
 
+/**
+ * Lets our notifications show while the app is in the foreground. Without a JS handler,
+ * expo-notifications drops a foreground notification entirely, so this must run at module load
+ * (app/_layout.tsx), not in an effect after the first render: on 2026-10-01 a delivery that
+ * reached the app while it was still building its first screens after a cold start was never
+ * shown. Idempotent. (Before the JS bundle has run at all, nothing can be shown in the foreground;
+ * the letter still appears in the inbox through Realtime / the next refresh.)
+ */
+export function installForegroundNotificationHandler(): void {
+  if (handlerSet) return;
+  handlerSet = true;
+  // In the foreground the inbox refreshes live (Realtime); still show the banner so the user
+  // notices, but no sound or badge.
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+}
+
 function createNativePushPlatform(): PushPlatform {
-  if (!handlerSet) {
-    handlerSet = true;
-    // In the foreground the inbox refreshes live (Realtime); still show the banner so the user
-    // notices, but no sound or badge.
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowBanner: true,
-        shouldShowList: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-      }),
-    });
-  }
+  installForegroundNotificationHandler();
   const os = Platform.OS === 'android' || Platform.OS === 'ios' ? Platform.OS : 'other';
 
   return {

@@ -28,5 +28,18 @@ describe('my invite', () => {
     await fireEvent.changeText(screen.getByTestId('my-invite-enter-code'), 'zzzzzzzzzz');
     await fireEvent.press(screen.getByTestId('my-invite-enter-code-submit'));
     await waitFor(() => expect(screen.getByTestId('my-invite-enter-code').props.value).toBe(''));
+    expect(screen.getByTestId('my-invite-redeemed')).toBeTruthy();
+  });
+
+  it('leaves the title to the header and labels the field as the link', async () => {
+    await renderShellIn('en', undefined, [], {
+      invite: { id: 'invite-1', code: 'ABCDEFGH23', revokedAt: null, expiresAt: null },
+    });
+    // eslint-disable-next-line @typescript-eslint/require-await
+    await act(async () => router.push('/invite'));
+    await waitFor(() => expect(screen.getByTestId('my-invite-link')).toBeTruthy());
+    // The test shell does not draw stack headers, so the body itself must not repeat the title.
+    expect(screen.queryAllByText('My invite')).toHaveLength(0);
+    expect(screen.getByText('Your invite link')).toBeTruthy();
   });
 });

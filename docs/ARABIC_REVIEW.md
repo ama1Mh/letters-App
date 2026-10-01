@@ -10,7 +10,7 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 
 | Key | English | Arabic | Status | Notes |
 |---|---|---|---|---|
-| `app.name` | LetterApp | LetterApp | draft | Temporary name (DEC-001); Arabic may use a different localized name at the naming freeze |
+| `app.name` | Mirsal | مرسال | draft | Public name chosen by the owner 2026-10-01 (DEC-055); also the Arabic launcher label |
 | `tabs.inbox` | Inbox | الوارد | draft | |
 | `tabs.drafts` | Drafts | المسودات | draft | |
 | `tabs.sent` | Sent | المرسلة | draft | |
@@ -316,6 +316,12 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `auth.resetPassword.error.weak_password` | Choose a stronger password. | اختر كلمة مرور أقوى. | draft | Password reset completion (OPEN-10) |
 | `auth.resetPassword.error.same_password` | Choose a password different from your current one. | اختر كلمة مرور مختلفة عن كلمة المرور الحالية. | draft | Password reset completion (OPEN-10) |
 | `auth.resetPassword.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | Password reset completion (OPEN-10) |
+| `compose.bodyCounter` | {{used}} / {{max}} characters | عدد الأحرف: {{used}} / {{max}} | draft | Phase 10: shown from 90% of the 10,000-character limit; Western digits |
+| `invite.linkLabel` | Your invite link | رابط دعوتك | draft | Phase 10: label of the invite link field (replaces the repeated title) |
+| `invite.linkHint` | Anyone who opens this link is connected with you, so you can write to each other. | كل من يفتح هذا الرابط يتصل بك، فيمكنكما تبادل الرسائل. | draft | Phase 10 |
+| `invite.retry` | Try again | إعادة المحاولة | draft | Phase 10 |
+| `invite.loadError` | Your invite link couldn't be loaded. | تعذّر تحميل رابط دعوتك. | draft | Phase 10 |
+| `network.offline` | You're offline. Drafts are saved on this phone; letters will update when you're back online. | أنت غير متصل بالإنترنت. المسودات محفوظة على هذا الهاتف، وستُحدَّث الرسائل عند عودة الاتصال. | draft | Phase 10: app-wide offline banner |
 
 ## Server-side text (not in `ar.json`)
 
@@ -335,3 +341,12 @@ The Arabic privacy policy and terms live in `mobile/src/features/legal/` (not in
 |---|---|---|
 | Privacy policy (ar) | draft | Written 2026-09-29; needs the owner's Arabic review and a legal review (OPEN-6) |
 | Terms of service (ar) | draft | `mobile/src/features/legal/terms.ts`, written 2026-09-29 (DEC-054); same reviews |
+
+## Launcher labels (DEC-055)
+
+Set in `mobile/brand.config.ts` (`nameAr`), not in `ar.json`; shown under the app icon when the phone's language is Arabic.
+
+| Label | Arabic | Status | Notes |
+|---|---|---|---|
+| Dev build | مرسال (تطوير) | draft | Development build only |
+| Preview build | مرسال (معاينة) | draft | Internal test build only |

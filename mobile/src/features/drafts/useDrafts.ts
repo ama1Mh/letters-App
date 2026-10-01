@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { subscribeReconnect } from '@/core/network/connectivity';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import type { LocalDraft } from '@/data/local/draftsStore';
 
@@ -34,6 +35,9 @@ export function useDrafts(): UseDraftsResult {
       setLoading(false);
     })();
   }, [refresh]);
+
+  // Edits made offline reach the server as soon as the connection is back.
+  useEffect(() => subscribeReconnect(() => void refresh()), [refresh]);
 
   return { drafts, loading, refresh };
 }

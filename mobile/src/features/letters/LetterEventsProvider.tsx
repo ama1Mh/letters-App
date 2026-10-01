@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
+import { subscribeReconnect } from '@/core/network/connectivity';
 import { getLettersRepository, type LetterEvent } from '@/data/letters/lettersRepository';
 import { useAuth } from '@/features/auth/AuthProvider';
 
@@ -16,11 +17,12 @@ import { useAuth } from '@/features/auth/AuthProvider';
  * Why listeners are told to refresh:
  * - `event`: one or more letter events arrived (merged if they came in a burst);
  * - `subscribed`: the channel (re)joined, e.g. after a reconnect; events may have been missed;
- * - `foreground`: the app came back to the foreground; the socket may have been asleep.
+ * - `foreground`: the app came back to the foreground; the socket may have been asleep;
+ * - `online`: the device came back online after being offline (Phase 10 offline states).
  * Listeners refetch through the normal RLS-checked reads in every case, so a refresh is always
  * safe to repeat: a duplicate or reordered event can at worst cause one extra reload.
  */
-export type LetterRefreshReason = 'event' | 'subscribed' | 'foreground';
+export type LetterRefreshReason = 'event' | 'subscribed' | 'foreground' | 'online';
 export type LetterEventsListener = (reason: LetterRefreshReason, events: LetterEvent[]) => void;
 
 /** Events arriving within this window are delivered to listeners as one refresh. */
@@ -89,6 +91,11 @@ export function LetterEventsProvider({ children }: { children: ReactNode }) {
       previous = next;
     });
     return () => subscription.remove();
+  }, [userId, notify]);
+
+  useEffect(() => {
+    if (!userId) return undefined;
+    return subscribeReconnect(() => notify('online', []));
   }, [userId, notify]);
 
   const value = useMemo<LetterEventsContextValue>(

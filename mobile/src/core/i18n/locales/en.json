@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "LetterApp"
+    "name": "Mirsal"
   },
   "tabs": {
     "inbox": "Inbox",
@@ -42,7 +42,8 @@
     "scheduleConfirmTitle": "Schedule this letter?",
     "scheduleConfirmMessage": "It will be delivered on {{when}}. It can be unscheduled until then.",
     "sendConfirmCancel": "Cancel",
-    "replyRecipient": "Reply to the letter's sender"
+    "replyRecipient": "Reply to the letter's sender",
+    "bodyCounter": "{{used}} / {{max}} characters"
   },
   "schedule": {
     "timeZone": "Time zone: {{zone}}",
@@ -196,7 +197,11 @@
       "invalid_input": "You can't redeem your own invite.",
       "rate_limited": "Too many attempts. Try again in a few minutes.",
       "unknown": "Something went wrong. Try again."
-    }
+    },
+    "linkLabel": "Your invite link",
+    "linkHint": "Anyone who opens this link is connected with you, so you can write to each other.",
+    "retry": "Try again",
+    "loadError": "Your invite link couldn't be loaded."
   },
   "privacy": {
     "title": "Privacy",
@@ -394,5 +399,8 @@
     "pushOnDeliveryLabel": "Notify me when a letter arrives",
     "pushOnDeliveryHint": "Letters still arrive in your inbox either way.",
     "openSystemSettings": "Phone notification settings"
+  },
+  "network": {
+    "offline": "You're offline. Drafts are saved on this phone; letters will update when you're back online."
   }
 }

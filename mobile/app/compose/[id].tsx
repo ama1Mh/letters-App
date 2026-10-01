@@ -1,5 +1,5 @@
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, ScrollView, TextInput } from 'react-native';
 
@@ -7,13 +7,14 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { DirectionalIcon } from '@/components/DirectionalIcon';
 import { currentLanguage } from '@/core/i18n';
-import { formatDate } from '@/core/i18n/format';
+import { formatDate, formatNumber } from '@/core/i18n/format';
 import { useTheme } from '@/core/theme/useTheme';
 import { isLayoutRtl } from '@/core/i18n/direction';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import { getLettersRepository } from '@/data/letters/lettersRepository';
 import { detectBodyDirection } from '@/domain/bodyDirection';
 import { defaultDesign, normalizeDesign, type Design } from '@/domain/design';
+import { LETTER_BODY_MAX, LETTER_SUBJECT_MAX, shouldShowBodyCounter } from '@/domain/letterLimits';
 import { defaultScheduleTime, validateScheduleTime } from '@/domain/schedule';
 import { LetterRenderer } from '@/features/designs/LetterRenderer';
 import { letterErrorKey, type TranslatedLetterError } from '@/features/letters/letterErrors';
@@ -192,7 +193,11 @@ export default function ComposeScreen() {
 
   // Live, not read back from the saved draft: the preview must reflect what is on screen right
   // now, not the last debounced save (PLAN §3.5's body_dir fallback is the sender's UI direction).
-  const bodyDir = detectBodyDirection(body, isLayoutRtl() ? 'rtl' : 'ltr');
+  // The preview (and its direction) follow a deferred copy of the text, so with a long letter a
+  // keystroke updates the input first and the full re-layout of the preview never blocks typing.
+  const previewSubject = useDeferredValue(subject);
+  const previewBody = useDeferredValue(body);
+  const bodyDir = detectBodyDirection(previewBody, isLayoutRtl() ? 'rtl' : 'ltr');
 
   return (
     <ScrollView
@@ -234,6 +239,7 @@ export default function ComposeScreen() {
         placeholderTextColor={colors.textMuted}
         value={subject}
         onChangeText={setSubject}
+        maxLength={LETTER_SUBJECT_MAX}
         style={{ fontSize: fontSize.lg, color: colors.text, textAlign: 'auto' }}
       />
       <TextInput
@@ -243,6 +249,7 @@ export default function ComposeScreen() {
         placeholderTextColor={colors.textMuted}
         value={body}
         onChangeText={setBody}
+        maxLength={LETTER_BODY_MAX}
         multiline
         style={{
           flex: 1,
@@ -252,6 +259,14 @@ export default function ComposeScreen() {
           textAlign: 'auto',
         }}
       />
+      {shouldShowBodyCounter(body.length) ? (
+        <AppText testID="compose-body-counter" variant="muted" accessibilityLiveRegion="polite">
+          {t('compose.bodyCounter', {
+            used: formatNumber(body.length, currentLanguage()),
+            max: formatNumber(LETTER_BODY_MAX, currentLanguage()),
+          })}
+        </AppText>
+      ) : null}
       {saving ? (
         <AppText testID="compose-saving" variant="muted">
           {t('compose.saving')}
@@ -261,8 +276,8 @@ export default function ComposeScreen() {
       <LetterRenderer
         testID="compose-preview"
         design={design}
-        subject={subject}
-        body={body}
+        subject={previewSubject}
+        body={previewBody}
         bodyDir={bodyDir}
       />
       {sendError ? (

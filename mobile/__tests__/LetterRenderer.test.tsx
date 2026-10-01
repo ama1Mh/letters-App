@@ -1,7 +1,11 @@
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 
-import { LetterRenderer } from '@/features/designs/LetterRenderer';
+import {
+  LETTER_BODY_SIZE,
+  LetterRenderer,
+  letterTextSize,
+} from '@/features/designs/LetterRenderer';
 import { DESIGN_CATALOG, defaultDesign } from '@/domain/design';
 
 function styleOf(testID: string) {
@@ -82,5 +86,36 @@ describe('LetterRenderer', () => {
       />,
     );
     expect(screen.queryByTestId('letter-stamp')).toBeNull();
+  });
+});
+
+describe('LetterRenderer text size (Phase 10 font scaling)', () => {
+  it('enlarges small-x-height handwriting fonts and keeps line height proportional', async () => {
+    await render(
+      <LetterRenderer
+        testID="letter"
+        design={{ ...defaultDesign(), font: 'caveat' }}
+        body="Hi"
+        bodyDir="ltr"
+      />,
+    );
+    const caveat = styleOf('letter-body');
+    expect(caveat?.fontSize).toBe(letterTextSize('caveat', LETTER_BODY_SIZE).fontSize);
+    expect(caveat?.fontSize).toBeGreaterThan(LETTER_BODY_SIZE);
+    expect(caveat?.lineHeight).toBeGreaterThan(caveat?.fontSize as number);
+  });
+
+  it('never opts out of the system font scale', async () => {
+    await render(
+      <LetterRenderer
+        testID="letter"
+        design={defaultDesign()}
+        subject="S"
+        body="B"
+        bodyDir="ltr"
+      />,
+    );
+    expect(screen.getByTestId('letter-body').props.allowFontScaling).not.toBe(false);
+    expect(screen.getByTestId('letter-subject').props.maxFontSizeMultiplier).toBeUndefined();
   });
 });

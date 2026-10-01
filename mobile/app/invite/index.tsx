@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Share, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Share, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
@@ -23,14 +23,31 @@ export default function MyInviteScreen() {
   const { t } = useTranslation();
   const { colors, spacing } = useTheme();
   const [invite, setInvite] = useState<Invite | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
   const [code, setCode] = useState('');
   const [redeeming, setRedeeming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [redeemed, setRedeemed] = useState(false);
 
+  const [attempt, setAttempt] = useState(0);
+
+  // Re-runs on Retry (attempt + 1). An async IIFE, not a direct call, the same as
+  // AuthProvider.tsx's mount effect (react-hooks/set-state-in-effect).
   useEffect(() => {
-    void getDiscoveryRepository().getOrCreateInvite().then(setInvite);
-  }, []);
+    void (async () => {
+      try {
+        setInvite(await getDiscoveryRepository().getOrCreateInvite());
+      } catch {
+        setLoadFailed(true);
+      }
+    })();
+  }, [attempt]);
+
+  function retry() {
+    setLoadFailed(false);
+    setAttempt((count) => count + 1);
+  }
 
   const link = invite ? `${currentBrand().scheme}://invite/${invite.code}` : null;
 
@@ -43,6 +60,8 @@ export default function MyInviteScreen() {
     setRegenerating(true);
     try {
       setInvite(await getDiscoveryRepository().regenerateInvite());
+    } catch {
+      setLoadFailed(true);
     } finally {
       setRegenerating(false);
     }
@@ -50,10 +69,12 @@ export default function MyInviteScreen() {
 
   async function onRedeem() {
     setError(null);
+    setRedeemed(false);
     setRedeeming(true);
     try {
       await getDiscoveryRepository().redeemInvite(code.trim());
       setCode('');
+      setRedeemed(true);
     } catch (e) {
       const errCode = e instanceof DiscoveryActionError ? e.code : 'unknown';
       setError(t(`invite.error.${knownErrorKey(errCode, REDEEM_CODES)}`));
@@ -62,20 +83,34 @@ export default function MyInviteScreen() {
     }
   }
 
+  // The header already says "My invite" (app/_layout.tsx), so the body has no second title.
   return (
-    <View
+    <ScrollView
       testID="my-invite-screen"
-      style={{ flex: 1, backgroundColor: colors.background, padding: spacing.lg, gap: spacing.md }}
+      style={{ flex: 1, backgroundColor: colors.background }}
+      contentContainerStyle={{ padding: spacing.lg, gap: spacing.md }}
+      keyboardShouldPersistTaps="handled"
     >
-      <AppText variant="title">{t('invite.title')}</AppText>
       {link ? (
-        <TextField
-          testID="my-invite-link"
-          label={t('invite.title')}
-          value={link}
-          editable={false}
-        />
-      ) : null}
+        <>
+          <TextField
+            testID="my-invite-link"
+            label={t('invite.linkLabel')}
+            value={link}
+            editable={false}
+          />
+          <AppText variant="muted">{t('invite.linkHint')}</AppText>
+        </>
+      ) : loadFailed ? (
+        <View style={{ gap: spacing.sm }}>
+          <AppText testID="my-invite-load-error" style={{ color: colors.danger }}>
+            {t('invite.loadError')}
+          </AppText>
+          <Button testID="my-invite-retry" title={t('invite.retry')} onPress={retry} />
+        </View>
+      ) : (
+        <ActivityIndicator testID="my-invite-loading" accessibilityLabel={t('invite.linkLabel')} />
+      )}
       <Button
         testID="my-invite-share"
         title={t('invite.shareButton')}
@@ -102,8 +137,17 @@ export default function MyInviteScreen() {
           autoCorrect={false}
         />
         {error ? (
-          <AppText testID="my-invite-enter-code-error" style={{ color: colors.danger }}>
+          <AppText
+            testID="my-invite-enter-code-error"
+            accessibilityLiveRegion="polite"
+            style={{ color: colors.danger }}
+          >
             {error}
+          </AppText>
+        ) : null}
+        {redeemed ? (
+          <AppText testID="my-invite-redeemed" accessibilityLiveRegion="polite">
+            {t('invite.redeemedTitle')} {t('invite.redeemedBody')}
           </AppText>
         ) : null}
         <Button
@@ -115,6 +159,6 @@ export default function MyInviteScreen() {
           onPress={() => void onRedeem()}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }

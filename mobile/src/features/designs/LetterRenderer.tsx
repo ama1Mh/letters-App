@@ -10,6 +10,30 @@ import { inkOf, paperOf, resolveFont, stampOf, type Design } from '@/domain/desi
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
+/** Letter text is read, not skimmed, so it sits above the UI's body size (fontSize.md = 16). */
+export const LETTER_BODY_SIZE = 18;
+export const LETTER_SUBJECT_SIZE = 22;
+const LINE_HEIGHT_RATIO = 1.6;
+
+/**
+ * Per-font optical correction, keyed by catalog font key. Handwriting faces such as Caveat have a
+ * much smaller x-height than the UI font, so at the same point size they read ~25% smaller, and
+ * the gap was obvious at large system font scales (QA 2026-10-01). Sizes stay plain numbers, so
+ * React Native still multiplies them (and the line height) by the user's font scale.
+ */
+const OPTICAL_SCALE: Readonly<Record<string, number>> = { caveat: 1.3, amiri: 1.1 };
+
+export function letterTextSize(
+  fontKey: string,
+  base: number,
+): {
+  fontSize: number;
+  lineHeight: number;
+} {
+  const fontSize = Math.round(base * (OPTICAL_SCALE[fontKey] ?? 1));
+  return { fontSize, lineHeight: Math.round(fontSize * LINE_HEIGHT_RATIO) };
+}
+
 export interface LetterRendererProps {
   design: Design;
   subject?: string | null;
@@ -32,7 +56,7 @@ export interface LetterRendererProps {
  * UI layout and uses the logical `end`, unrelated to the letter's own direction.
  */
 export function LetterRenderer({ design, subject, body, bodyDir, testID }: LetterRendererProps) {
-  const { spacing, radius, fontSize } = useTheme();
+  const { spacing, radius } = useTheme();
   const paper = paperOf(design);
   const ink = inkOf(design);
   const font = resolveFont(design, bodyDir);
@@ -64,7 +88,7 @@ export function LetterRenderer({ design, subject, body, bodyDir, testID }: Lette
           style={{
             fontFamily: font.family,
             color: ink.color,
-            fontSize: fontSize.lg,
+            ...letterTextSize(font.key, LETTER_SUBJECT_SIZE),
             fontWeight: '600',
             textAlign,
             writingDirection: bodyDir,
@@ -78,7 +102,7 @@ export function LetterRenderer({ design, subject, body, bodyDir, testID }: Lette
         style={{
           fontFamily: font.family,
           color: ink.color,
-          fontSize: fontSize.md,
+          ...letterTextSize(font.key, LETTER_BODY_SIZE),
           textAlign,
           writingDirection: bodyDir,
         }}
