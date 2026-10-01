@@ -6,6 +6,7 @@ import { AppText } from '@/components/AppText';
 import { ltrIsolate } from '@/core/i18n/bidi';
 import { formatDate } from '@/core/i18n/format';
 import type { Language } from '@/core/i18n/languages';
+import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import { SCHEDULE_MINUTE_STEP, addDays, addMinutes, utcOffsetLabel } from '@/domain/schedule';
 
@@ -94,11 +95,15 @@ function StepperRow({
   onIncrease,
 }: StepperRowProps) {
   const { colors, spacing } = useTheme();
+  // 48 dp circles: these are tapped repeatedly, often one-handed (Phase 10 accessibility pass).
   const buttonStyle = {
+    width: MIN_TOUCH_TARGET,
+    height: MIN_TOUCH_TARGET,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 999,
-    padding: spacing.xs,
   };
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>

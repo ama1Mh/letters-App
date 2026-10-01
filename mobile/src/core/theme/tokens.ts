@@ -34,6 +34,19 @@ export const darkColors: ColorTokens = {
 };
 
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 } as const;
+
+/** Android's minimum touch target (48 dp). Rows use it as minHeight; small swatches reach it
+ *  with `hitSlopTo()` instead, so they keep their size (Phase 10 accessibility pass). */
+export const MIN_TOUCH_TARGET = 48;
+
+/** Inline text links (one line of text, ~18-22 dp tall) reach 48 dp without moving any text.
+ *  One number = the same on every side, so it is direction-neutral (LTR and RTL). */
+export const TEXT_LINK_HIT_SLOP = 15;
+
+/** Equal hitSlop on every side that grows a `size` x `size` control to MIN_TOUCH_TARGET. */
+export function hitSlopTo(size: number): number {
+  return Math.max(0, Math.ceil((MIN_TOUCH_TARGET - size) / 2));
+}
 export const radius = { sm: 6, md: 10, lg: 16 } as const;
 export const fontSize = { sm: 13, md: 16, lg: 20, xl: 28 } as const;
 

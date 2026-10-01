@@ -2,10 +2,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, ScrollView, Switch, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
+import { SwitchRow } from '@/components/SwitchRow';
+import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import { getDiscoveryRepository } from '@/data/discovery/discoveryRepository';
 import {
@@ -85,6 +87,7 @@ export default function ReportScreen() {
               flexDirection: 'row',
               alignItems: 'center',
               gap: spacing.sm,
+              minHeight: MIN_TOUCH_TARGET,
               padding: spacing.md,
               borderWidth: 1,
               borderRadius: radius.md,
@@ -120,15 +123,13 @@ export default function ReportScreen() {
           textAlignVertical: 'top',
         }}
       />
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-        <AppText style={{ flex: 1 }}>{t('report.alsoBlock')}</AppText>
-        <Switch
-          testID="report-also-block"
-          accessibilityLabel={t('report.alsoBlock')}
-          value={alsoBlock}
-          onValueChange={setAlsoBlock}
-        />
-      </View>
+      <SwitchRow
+        plain
+        testID="report-also-block"
+        label={t('report.alsoBlock')}
+        value={alsoBlock}
+        onValueChange={setAlsoBlock}
+      />
       {error ? (
         <AppText testID="report-error" style={{ color: colors.danger }}>
           {t(`letters.error.${error}`)}

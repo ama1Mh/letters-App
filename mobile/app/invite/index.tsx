@@ -98,6 +98,8 @@ export default function MyInviteScreen() {
             label={t('invite.linkLabel')}
             value={link}
             editable={false}
+            // Wraps instead of scrolling, so the whole link stays readable at large font sizes.
+            multiline
           />
           <AppText variant="muted">{t('invite.linkHint')}</AppText>
         </>

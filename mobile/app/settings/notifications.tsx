@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, Pressable, ScrollView, Switch, View } from 'react-native';
+import { Linking, Pressable, ScrollView } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { SwitchRow } from '@/components/SwitchRow';
 import { DirectionalIcon } from '@/components/DirectionalIcon';
 import { useTheme } from '@/core/theme/useTheme';
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -35,25 +36,12 @@ export default function NotificationsScreen() {
       contentContainerStyle={{ paddingVertical: spacing.lg }}
       style={{ backgroundColor: colors.background }}
     >
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: spacing.md,
-          paddingHorizontal: spacing.lg,
-          paddingVertical: spacing.md,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
-        }}
-      >
-        <AppText style={{ flex: 1 }}>{t('notifications.pushOnDeliveryLabel')}</AppText>
-        <Switch
-          testID="notifications-push-on-delivery"
-          accessibilityLabel={t('notifications.pushOnDeliveryLabel')}
-          value={pushOnDelivery}
-          onValueChange={(next) => void apply(next)}
-        />
-      </View>
+      <SwitchRow
+        testID="notifications-push-on-delivery"
+        label={t('notifications.pushOnDeliveryLabel')}
+        value={pushOnDelivery}
+        onValueChange={(next) => void apply(next)}
+      />
       <AppText variant="muted" style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.sm }}>
         {t('notifications.pushOnDeliveryHint')}
       </AppText>

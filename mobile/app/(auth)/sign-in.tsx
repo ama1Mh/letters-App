@@ -6,6 +6,7 @@ import { Pressable, View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { TextField } from '@/components/TextField';
+import { TEXT_LINK_HIT_SLOP } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import { AuthActionError, type SignInErrorCode } from '@/data/supabase/auth';
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -88,6 +89,7 @@ export default function SignInScreen() {
       />
       <Pressable
         testID="sign-in-forgot-password"
+        hitSlop={TEXT_LINK_HIT_SLOP}
         accessibilityRole="button"
         onPress={() => router.push('/forgot-password')}
       >
@@ -99,6 +101,7 @@ export default function SignInScreen() {
         <AppText variant="muted">{t('auth.signIn.noAccount')}</AppText>
         <Pressable
           testID="sign-in-go-sign-up"
+          hitSlop={TEXT_LINK_HIT_SLOP}
           accessibilityRole="button"
           onPress={() => router.push('/sign-up')}
         >

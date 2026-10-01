@@ -9,6 +9,7 @@ import { Button } from '@/components/Button';
 import { DirectionalIcon } from '@/components/DirectionalIcon';
 import { TextField } from '@/components/TextField';
 import { knownErrorKey } from '@/core/i18n/errorKey';
+import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import {
   DiscoveryActionError,
@@ -201,7 +202,12 @@ export default function PickRecipientScreen() {
           testID="pick-recipient-back"
           accessibilityRole="button"
           onPress={() => router.back()}
-          style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: spacing.xs,
+            minHeight: MIN_TOUCH_TARGET,
+          }}
         >
           <DirectionalIcon name="chevron-back" size={18} color={colors.primary} />
           <AppText style={{ color: colors.primary }}>{t('compose.title')}</AppText>

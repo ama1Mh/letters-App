@@ -7,6 +7,7 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { TextField } from '@/components/TextField';
 import { currentLanguage } from '@/core/i18n';
+import { TEXT_LINK_HIT_SLOP } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import { AuthActionError, type SignUpErrorCode } from '@/data/supabase/auth';
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -75,6 +76,7 @@ export default function SignUpScreen() {
         <AppText>{t('auth.signUp.confirmationBody', { email: confirmationSentTo })}</AppText>
         <Pressable
           testID="sign-up-confirmation-back"
+          hitSlop={TEXT_LINK_HIT_SLOP}
           accessibilityRole="button"
           onPress={() => router.replace('/sign-in')}
         >
@@ -131,6 +133,7 @@ export default function SignUpScreen() {
         <AppText variant="muted">{t('auth.signUp.hasAccount')}</AppText>
         <Pressable
           testID="sign-up-go-sign-in"
+          hitSlop={TEXT_LINK_HIT_SLOP}
           accessibilityRole="button"
           onPress={() => router.push('/sign-in')}
         >
@@ -145,6 +148,7 @@ export default function SignUpScreen() {
       <View style={{ flexDirection: 'row', gap: spacing.lg, justifyContent: 'center' }}>
         <Pressable
           testID="sign-up-terms"
+          hitSlop={TEXT_LINK_HIT_SLOP}
           accessibilityRole="link"
           onPress={() => router.push('/legal/terms')}
         >
@@ -152,6 +156,7 @@ export default function SignUpScreen() {
         </Pressable>
         <Pressable
           testID="sign-up-privacy-policy"
+          hitSlop={TEXT_LINK_HIT_SLOP}
           accessibilityRole="link"
           onPress={() => router.push('/legal/privacy')}
         >

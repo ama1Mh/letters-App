@@ -6,6 +6,7 @@ import { Pressable, View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { TextField } from '@/components/TextField';
+import { TEXT_LINK_HIT_SLOP } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import { AuthActionError, type ResetPasswordErrorCode } from '@/data/supabase/auth';
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -61,6 +62,7 @@ export default function ForgotPasswordScreen() {
         <AppText>{t('auth.forgotPassword.confirmationBody', { email: sentTo })}</AppText>
         <Pressable
           testID="forgot-password-back"
+          hitSlop={TEXT_LINK_HIT_SLOP}
           accessibilityRole="button"
           onPress={() => router.replace('/sign-in')}
         >

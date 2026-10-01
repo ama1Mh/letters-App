@@ -9,6 +9,7 @@ import { EmptyState } from '@/components/EmptyState';
 import { currentLanguage } from '@/core/i18n';
 import { formatDate } from '@/core/i18n/format';
 import { contentTextAlign } from '@/core/i18n/direction';
+import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import {
@@ -73,6 +74,8 @@ export default function SentScreen() {
               style={{
                 flex: 1,
                 alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: MIN_TOUCH_TARGET,
                 paddingVertical: spacing.sm,
                 backgroundColor: selected ? colors.primary : 'transparent',
               }}

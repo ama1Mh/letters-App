@@ -8,6 +8,7 @@ import { Button } from '@/components/Button';
 import { DirectionalIcon } from '@/components/DirectionalIcon';
 import { currentLanguage } from '@/core/i18n';
 import { formatDate, formatNumber } from '@/core/i18n/format';
+import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import { isLayoutRtl } from '@/core/i18n/direction';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
@@ -47,12 +48,19 @@ export default function ComposeScreen() {
   // A reply's recipient is fixed (the server requires the parent letter's sender).
   const [isReply, setIsReply] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  // Whether this draft exists in the local store yet. A brand-new draft is only written once it
+  // has some content, so opening "New draft" and backing out leaves nothing behind (phone QA).
+  const [stored, setStored] = useState(false);
   const [saving, setSaving] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<TranslatedLetterError | 'unknown' | null>(null);
   const [scheduleAt, setScheduleAt] = useState<Date | null>(null);
   const sendingRef = useRef(false);
   const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // The save waiting on the debounce, if any. Leaving the screen runs it at once instead of
+  // dropping it: typing and going straight back lost the last edits (Maestro run on the phone).
+  const pendingSave = useRef<(() => void) | null>(null);
+  const deletedRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -61,6 +69,7 @@ export default function ComposeScreen() {
       .then((draft) => {
         if (cancelled) return;
         if (draft) {
+          setStored(true);
           setSubject(draft.subject ?? '');
           setBody(draft.body);
           setDesign(normalizeDesign(draft.design));
@@ -82,6 +91,7 @@ export default function ComposeScreen() {
         .get(id)
         .then((draft) => {
           if (draft) {
+            setStored(true);
             setDesign(normalizeDesign(draft.design));
             setRecipientId(draft.recipientId);
           }
@@ -89,10 +99,25 @@ export default function ComposeScreen() {
     }, [id]),
   );
 
+  // Flush a debounced save when the screen loses focus (back, or opening a picker).
+  useFocusEffect(
+    useCallback(
+      () => () => {
+        const save = pendingSave.current;
+        if (!save || sendingRef.current || deletedRef.current) return;
+        if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+        save();
+      },
+      [],
+    ),
+  );
+
   useEffect(() => {
     if (!loaded) return; // do not autosave while the initial load is still in flight
-    if (sendingRef.current) return; // see the Send note in the header comment
-    const timer = setTimeout(() => {
+    if (sendingRef.current || deletedRef.current) return; // see the Send note in the header comment
+    if (!stored && !subject.trim() && !body.trim() && recipientId === null) return;
+    const run = () => {
+      pendingSave.current = null;
       setSaving(true);
       void getDraftsRepository()
         .save({
@@ -102,8 +127,11 @@ export default function ComposeScreen() {
           design,
           recipientId,
         })
+        .then(() => setStored(true))
         .finally(() => setSaving(false));
-    }, AUTOSAVE_DEBOUNCE_MS);
+    };
+    pendingSave.current = run;
+    const timer = setTimeout(run, AUTOSAVE_DEBOUNCE_MS);
     autosaveTimer.current = timer;
     return () => clearTimeout(timer);
     // Autosave fires only when subject/body/design/recipientId actually change; `loaded` just
@@ -127,6 +155,7 @@ export default function ComposeScreen() {
     }
     sendingRef.current = true;
     if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+    pendingSave.current = null;
     setSending(true);
     setSendError(null);
     try {
@@ -186,7 +215,13 @@ export default function ComposeScreen() {
       {
         text: t('compose.deleteConfirmConfirm'),
         style: 'destructive',
-        onPress: () => void getDraftsRepository().remove(id).then(router.back),
+        onPress: () => {
+          // Like Send: nothing may save this draft again, or leaving would re-create it.
+          deletedRef.current = true;
+          if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+          pendingSave.current = null;
+          void getDraftsRepository().remove(id).then(router.back);
+        },
       },
     ]);
   }
@@ -209,7 +244,12 @@ export default function ComposeScreen() {
         testID="compose-back"
         accessibilityRole="button"
         onPress={() => router.back()}
-        style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.xs,
+          minHeight: MIN_TOUCH_TARGET,
+        }}
       >
         <DirectionalIcon name="chevron-back" size={18} color={colors.primary} />
         <AppText style={{ color: colors.primary }}>{t('tabs.drafts')}</AppText>
@@ -223,7 +263,12 @@ export default function ComposeScreen() {
           testID="compose-recipient-row"
           accessibilityRole="button"
           onPress={() => router.push({ pathname: '/compose/pick-recipient', params: { id } })}
-          style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: spacing.xs,
+            minHeight: MIN_TOUCH_TARGET,
+          }}
         >
           <AppText variant="muted">{t('compose.recipientLabel')}: </AppText>
           <AppText style={{ color: recipientId ? colors.text : colors.primary, flex: 1 }}>
@@ -240,7 +285,12 @@ export default function ComposeScreen() {
         value={subject}
         onChangeText={setSubject}
         maxLength={LETTER_SUBJECT_MAX}
-        style={{ fontSize: fontSize.lg, color: colors.text, textAlign: 'auto' }}
+        style={{
+          fontSize: fontSize.lg,
+          color: colors.text,
+          textAlign: 'auto',
+          minHeight: MIN_TOUCH_TARGET,
+        }}
       />
       <TextInput
         testID="compose-body"

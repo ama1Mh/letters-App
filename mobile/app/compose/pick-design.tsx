@@ -8,6 +8,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { DirectionalIcon } from '@/components/DirectionalIcon';
+import { MIN_TOUCH_TARGET, hitSlopTo } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import type { LocalDraft } from '@/data/local/draftsStore';
@@ -85,7 +86,12 @@ export default function PickDesignScreen() {
         testID="pick-design-back"
         accessibilityRole="button"
         onPress={() => router.back()}
-        style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.xs,
+          minHeight: MIN_TOUCH_TARGET,
+        }}
       >
         <DirectionalIcon name="chevron-back" size={18} color={colors.primary} />
         <AppText style={{ color: colors.primary }}>{t('compose.title')}</AppText>
@@ -110,6 +116,7 @@ export default function PickDesignScreen() {
               accessibilityLabel={t(`design.paperNames.${paper.key}` as 'design.paperNames.cream')}
               accessibilityState={{ selected: design.paper === paper.key }}
               onPress={() => void apply({ paper: paper.key })}
+              hitSlop={hitSlopTo(40)}
               style={{
                 width: 40,
                 height: 40,
@@ -137,6 +144,7 @@ export default function PickDesignScreen() {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                minHeight: MIN_TOUCH_TARGET,
                 paddingVertical: spacing.sm,
                 paddingHorizontal: spacing.md,
                 borderRadius: radius.sm,
@@ -168,10 +176,11 @@ export default function PickDesignScreen() {
               )}
               accessibilityState={{ selected: design.ink === ink.key }}
               onPress={() => void apply({ ink: ink.key })}
+              hitSlop={hitSlopTo(40)}
               style={{
-                width: 32,
-                height: 32,
-                borderRadius: 16,
+                width: 40,
+                height: 40,
+                borderRadius: 20,
                 backgroundColor: ink.color,
                 borderWidth: design.ink === ink.key ? 3 : 1,
                 borderColor: design.ink === ink.key ? colors.primary : colors.border,
@@ -190,6 +199,7 @@ export default function PickDesignScreen() {
             accessibilityLabel={t('design.noStamp')}
             accessibilityState={{ selected: design.stamp === null }}
             onPress={() => void apply({ stamp: null })}
+            hitSlop={hitSlopTo(40)}
             style={{
               width: 40,
               height: 40,
@@ -210,6 +220,7 @@ export default function PickDesignScreen() {
               accessibilityLabel={t(`design.stampNames.${stamp.key}` as 'design.stampNames.heart')}
               accessibilityState={{ selected: design.stamp === stamp.key }}
               onPress={() => void apply({ stamp: stamp.key })}
+              hitSlop={hitSlopTo(40)}
               style={{
                 width: 40,
                 height: 40,

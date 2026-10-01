@@ -8,6 +8,7 @@ import { ActivityIndicator, FlatList, Pressable, View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { EmptyState } from '@/components/EmptyState';
 import { contentTextAlign } from '@/core/i18n/direction';
+import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import type { LocalDraft } from '@/data/local/draftsStore';
 import { useDrafts } from '@/features/drafts/useDrafts';
@@ -73,6 +74,7 @@ export default function DraftsScreen() {
           justifyContent: 'center',
           gap: spacing.xs,
           margin: spacing.lg,
+          minHeight: MIN_TOUCH_TARGET,
           paddingVertical: spacing.md,
           borderRadius: radius.md,
           backgroundColor: colors.primary,

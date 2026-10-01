@@ -1,9 +1,10 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Switch, View } from 'react-native';
+import { View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { SwitchRow } from '@/components/SwitchRow';
 import { Button } from '@/components/Button';
 import { TextField } from '@/components/TextField';
 import { currentLanguage } from '@/core/i18n';
@@ -157,15 +158,13 @@ export default function OnboardingScreen() {
           <AppText variant="muted">{t('auth.onboarding.displayNameHint')}</AppText>
         ) : null}
       </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <AppText style={{ flex: 1 }}>{t('auth.onboarding.discoverableByEmailLabel')}</AppText>
-        <Switch
-          testID="onboarding-discoverable-by-email"
-          accessibilityLabel={t('auth.onboarding.discoverableByEmailLabel')}
-          value={discoverableByEmail}
-          onValueChange={setDiscoverableByEmail}
-        />
-      </View>
+      <SwitchRow
+        plain
+        testID="onboarding-discoverable-by-email"
+        label={t('auth.onboarding.discoverableByEmailLabel')}
+        value={discoverableByEmail}
+        onValueChange={setDiscoverableByEmail}
+      />
       {error ? (
         <AppText testID="onboarding-error" style={{ color: colors.danger }}>
           {error}

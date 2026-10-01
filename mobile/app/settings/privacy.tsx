@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, ScrollView, Switch, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { SwitchRow } from '@/components/SwitchRow';
+import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import type { ReceiveMode } from '@/data/supabase/auth';
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -95,6 +97,7 @@ export default function PrivacyScreen() {
               flexDirection: 'row',
               alignItems: 'center',
               gap: spacing.md,
+              minHeight: MIN_TOUCH_TARGET,
               paddingHorizontal: spacing.lg,
               paddingVertical: spacing.md,
               borderBottomWidth: 1,
@@ -107,41 +110,16 @@ export default function PrivacyScreen() {
         );
       })}
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: spacing.md,
-          paddingHorizontal: spacing.lg,
-          paddingVertical: spacing.md,
-          marginTop: spacing.lg,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
-        }}
-      >
-        <AppText style={{ flex: 1 }}>{t('privacy.discoverableByUsernameLabel')}</AppText>
-        <Switch
+      <View style={{ marginTop: spacing.lg }}>
+        <SwitchRow
           testID="privacy-discoverable-by-username"
-          accessibilityLabel={t('privacy.discoverableByUsernameLabel')}
+          label={t('privacy.discoverableByUsernameLabel')}
           value={byUsername}
           onValueChange={(next) => void apply({ discoverableByUsername: next })}
         />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: spacing.md,
-          paddingHorizontal: spacing.lg,
-          paddingVertical: spacing.md,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
-        }}
-      >
-        <AppText style={{ flex: 1 }}>{t('privacy.discoverableByEmailLabel')}</AppText>
-        <Switch
+        <SwitchRow
           testID="privacy-discoverable-by-email"
-          accessibilityLabel={t('privacy.discoverableByEmailLabel')}
+          label={t('privacy.discoverableByEmailLabel')}
           value={byEmail}
           onValueChange={(next) => void apply({ discoverableByEmail: next })}
         />

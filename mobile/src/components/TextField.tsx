@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { TextInput, View, type TextInputProps } from 'react-native';
 
+import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 
 import { AppText } from './AppText';
@@ -31,6 +32,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
             borderWidth: 1,
             borderColor: error ? colors.danger : colors.border,
             borderRadius: radius.sm,
+            minHeight: MIN_TOUCH_TARGET,
             paddingHorizontal: spacing.md,
             paddingVertical: spacing.sm,
             fontSize: fontSize.md,
