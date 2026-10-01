@@ -1,0 +1,9 @@
+# Opens the dev client on the local Metro server and waits for the signed-in tab shell.
+appId: com.letterapp.dev
+---
+- stopApp
+- openLink: letterapp://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081
+- extendedWaitUntil:
+    visible:
+      id: inbox-screen
+    timeout: 60000

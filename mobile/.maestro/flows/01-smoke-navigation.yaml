@@ -1,0 +1,46 @@
+# Every tab and the main Profile screens open; selectors are testIDs, so this runs in en and ar.
+appId: com.letterapp.dev
+name: Smoke - tabs and profile screens
+---
+- runFlow: ../subflows/open-app.yaml
+- tapOn:
+    id: tab-drafts-label
+- assertVisible:
+    id: drafts-screen
+- tapOn:
+    id: tab-sent-label
+- assertVisible:
+    id: sent-screen
+- tapOn:
+    id: sent-switch-scheduled
+# The Scheduled view shows its list, or its empty state when nothing is scheduled.
+- assertVisible:
+    id: sent-list-scheduled|sent-scheduled-empty
+- tapOn:
+    id: tab-profile-label
+- assertVisible:
+    id: profile-screen
+- tapOn:
+    id: profile-my-invite-row
+- assertVisible:
+    id: my-invite-link
+- back
+- tapOn:
+    id: profile-privacy-row
+- assertVisible:
+    id: privacy-discoverable-by-username-row
+- back
+- tapOn:
+    id: profile-notifications-row
+- assertVisible:
+    id: notifications-push-on-delivery-row
+- back
+- tapOn:
+    id: profile-connections-row
+- assertVisible:
+    id: connections-screen|connections-empty
+- back
+- tapOn:
+    id: tab-inbox-label
+- assertVisible:
+    id: inbox-screen

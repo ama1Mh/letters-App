@@ -1,0 +1,43 @@
+# Arabic (restart, RTL) -> English. Works from either starting language and always ends in English.
+appId: com.letterapp.dev
+name: Language - switch to Arabic and back
+---
+- runFlow: ../subflows/open-app.yaml
+- tapOn:
+    id: tab-profile-label
+- tapOn:
+    id: profile-language-row
+- tapOn:
+    id: language-option-ar
+# The restart prompt appears only when the direction actually changes.
+- runFlow:
+    when:
+      visible:
+        id: android:id/button1
+    commands:
+      - tapOn:
+          id: android:id/button1 # Restart now
+- runFlow:
+    when:
+      visible:
+        id: language-screen
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      text: الوارد
+    timeout: 60000
+- tapOn:
+    id: tab-profile-label
+- assertVisible:
+    text: الملف الشخصي
+- tapOn:
+    id: profile-language-row
+- tapOn:
+    id: language-option-en
+- tapOn:
+    id: android:id/button1 # Restart now
+- extendedWaitUntil:
+    visible:
+      text: Inbox
+    timeout: 60000

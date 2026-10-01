@@ -1,0 +1,41 @@
+# Compose a draft (live preview), leave and come back to it, then delete it. Leaves no data behind.
+appId: com.letterapp.dev
+name: Compose - write, reopen and delete a draft
+---
+- runFlow: ../subflows/open-app.yaml
+- tapOn:
+    id: tab-drafts-label
+- tapOn:
+    id: drafts-new-button
+- assertVisible:
+    id: compose-screen
+- tapOn:
+    id: compose-subject
+- inputText: Maestro subject
+- tapOn:
+    id: compose-body
+- inputText: Written by the Maestro E2E flow.
+- hideKeyboard
+- assertVisible:
+    text: Written by the Maestro E2E flow.
+    index: 1 # the input is index 0; the live preview is the second match
+- tapOn:
+    id: compose-back
+- assertVisible:
+    text: Maestro subject
+- tapOn:
+    text: Maestro subject
+- assertVisible:
+    id: compose-screen
+- scrollUntilVisible:
+    element:
+      id: compose-delete
+    direction: DOWN
+- tapOn:
+    id: compose-delete
+- tapOn:
+    id: android:id/button1
+- assertVisible:
+    id: drafts-screen
+- assertNotVisible:
+    text: Maestro subject

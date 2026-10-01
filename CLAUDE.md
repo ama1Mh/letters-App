@@ -62,6 +62,8 @@ App configuration: copy `mobile/.env.example` to `mobile/.env` (git-ignored) and
 
 Physical phone (verified 2026-10-01): the same prebuild + Gradle steps with `-PreactNativeArchitectures=arm64-v8a --max-workers=1` (~8 min cached), `adb install -r`, `adb reverse tcp:8081 tcp:8081`, the `debug_http_host` preference and the same deep link; use the SDK's adb (`D:\APPS\Android\Sdk\platform-tools`), a second adb copy is earlier on PATH. Do not run Gradle, Metro and Jest together on this machine (a full parallel run was killed for low memory on 2026-10-01).
 
+Maestro E2E (verified 2026-10-01, Maestro 2.11.0 in `~/.maestro/maestro/bin`, needs Java 17, Metro running, a signed-in QA account): `maestro test .maestro` from `mobile/` (see `mobile/.maestro/README.md`). Never run it alongside Gradle or Jest.
+
 Not yet valid or not yet verified: `npx expo run:android`, EAS builds. (`npx supabase@2.118.0 …` against the linked project is verified: see Project status.) Add them here when they are verified.
 
 ## Hard rules
