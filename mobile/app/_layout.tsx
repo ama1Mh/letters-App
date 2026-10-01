@@ -1,9 +1,11 @@
+import Constants from 'expo-constants';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 
 import { OfflineBoundary } from '@/components/OfflineBanner';
 import { initI18n } from '@/core/i18n';
+import { initCrashReporting } from '@/core/monitoring/crashReporting';
 import { useTheme } from '@/core/theme/useTheme';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { useDesignFonts } from '@/features/designs/useDesignFonts';
@@ -11,6 +13,11 @@ import { LetterEventsProvider } from '@/features/letters/LetterEventsProvider';
 import { NotificationsProvider } from '@/features/notifications/NotificationsProvider';
 import { installForegroundNotificationHandler } from '@/features/notifications/pushPlatform';
 
+// First, so a crash during startup is reported too (no-op without a DSN; see the module).
+initCrashReporting({
+  environment: String(Constants.expoConfig?.extra?.variant ?? 'dev'),
+  release: Constants.expoConfig?.version,
+});
 // Must run before the first render: sets language and aligns layout direction (may reload once).
 initI18n();
 // Also before the first render, so a delivery that arrives during startup is still shown.

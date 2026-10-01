@@ -31,6 +31,7 @@ const en = {
           'Connections and invites: connection requests, the people you are connected with, and invite codes you create or use.',
           'Safety: the people you block, and reports you send (the reason, any details you add, and the letter or person reported).',
           'Device: a push-notification token, the platform (for example Android) and the app version, used only to send you notifications.',
+          'Crash reports: technical details about a crash or an unexpected error in the app, used only to fix it (see "Services we use").',
           'Abuse prevention: short-lived counts of some actions, such as searches and connection requests, so we can limit misuse.',
         ),
         p(
@@ -73,6 +74,7 @@ const en = {
         list(
           'Supabase: hosting, database, sign-in and account emails.',
           "Expo push notification service and Google Firebase Cloud Messaging: delivering notifications to your device. A notification contains the sender's name and username and a reference to the letter, never the letter's text.",
+          'Sentry: crash reports. When the app crashes or hits an unexpected error, it sends a technical report (device model, Android version, app version and where in the code the error happened). Reports never include your letters, email address, name, username or IP address.',
         ),
         p(
           "These providers process data on our behalf and may store it in countries other than yours. We may also disclose information if the law requires it or to protect people's safety.",
@@ -86,7 +88,7 @@ const en = {
           'Your account information is kept while you have an account.',
           '"Delete for me" removes a letter from your lists; the other person keeps their copy.',
           'When you delete your account, we remove your sign-in details, drafts, letters that were scheduled but not yet delivered, invites, connections, blocks, devices and pending notifications, and we clear your profile. Letters that were already delivered stay with the other person and are shown as coming from a deleted account. Your username stays reserved so no one else can use it to pretend to be you.',
-          'Abuse-prevention counts are deleted after about 2 days, and records of sent notifications after 30 days.',
+          'Abuse-prevention counts are deleted after about 2 days, records of sent notifications after 30 days, and crash reports after 90 days.',
           'Reports are kept as long as they are needed for safety and legal reasons.',
           "Copies can remain in our providers' backups for a limited time before they are overwritten.",
         ),
@@ -160,6 +162,7 @@ const ar = {
           'الاتصالات والدعوات: طلبات الاتصال، والأشخاص المتصلون بك، ورموز الدعوة التي تنشئها أو تستخدمها.',
           'الأمان: الأشخاص الذين تحظرهم، والبلاغات التي ترسلها (السبب، وأي تفاصيل تضيفها، والرسالة أو الشخص المُبلَّغ عنه).',
           'الجهاز: رمز الإشعارات، والنظام (مثل Android)، وإصدار التطبيق، ولا نستخدمها إلا لإرسال الإشعارات إليك.',
+          'تقارير الأعطال: تفاصيل تقنية عن تعطل التطبيق أو أي خطأ غير متوقع فيه، ولا نستخدمها إلا لإصلاحه (انظر «الخدمات التي نستخدمها»).',
           'منع إساءة الاستخدام: أعداد مؤقتة لبعض الإجراءات، مثل عمليات البحث وطلبات الاتصال، لنتمكن من الحد من إساءة الاستخدام.',
         ),
         p(
@@ -202,6 +205,7 @@ const ar = {
         list(
           'Supabase: الاستضافة، وقاعدة البيانات، وتسجيل الدخول، ورسائل الحساب الإلكترونية.',
           'خدمة إشعارات Expo وخدمة Google Firebase Cloud Messaging: لإيصال الإشعارات إلى جهازك. يتضمن الإشعار اسم المرسل واسم المستخدم الخاص به ومرجعًا إلى الرسالة، ولا يتضمن نص الرسالة أبدًا.',
+          'Sentry: تقارير الأعطال. عندما يتعطل التطبيق أو يواجه خطأً غير متوقع، يرسل تقريرًا تقنيًا (طراز الجهاز، وإصدار Android، وإصدار التطبيق، وموضع الخطأ في الشيفرة البرمجية). لا تتضمن التقارير أبدًا رسائلك أو بريدك الإلكتروني أو اسمك أو اسم المستخدم أو عنوان IP الخاص بك.',
         ),
         p(
           'يعالج هؤلاء المزودون البيانات نيابة عنا، وقد يخزنونها في دول غير دولتك. وقد نفصح عن المعلومات أيضًا إذا اقتضى القانون ذلك أو لحماية سلامة الأشخاص.',
@@ -215,7 +219,7 @@ const ar = {
           'نحتفظ بمعلومات حسابك ما دام لديك حساب.',
           'يزيل خيار «حذف لديّ» الرسالة من قوائمك، ويحتفظ الطرف الآخر بنسخته.',
           'عند حذف حسابك نزيل بيانات تسجيل الدخول، والمسودات، والرسائل المجدولة التي لم تُسلَّم بعد، والدعوات، والاتصالات، والحظر، والأجهزة، والإشعارات المعلقة، ونمسح ملفك الشخصي. أما الرسائل التي سُلِّمت بالفعل فتبقى لدى الطرف الآخر وتظهر على أنها من حساب محذوف. ويظل اسم المستخدم محجوزًا حتى لا يستخدمه أحد لانتحال شخصيتك.',
-          'تُحذف أعداد منع إساءة الاستخدام بعد يومين تقريبًا، وسجلات الإشعارات المرسلة بعد 30 يومًا.',
+          'تُحذف أعداد منع إساءة الاستخدام بعد يومين تقريبًا، وسجلات الإشعارات المرسلة بعد 30 يومًا، وتقارير الأعطال بعد 90 يومًا.',
           'نحتفظ بالبلاغات ما دامت لازمة لأسباب تتعلق بالسلامة أو بالقانون.',
           'قد تبقى نسخ في النسخ الاحتياطية لدى مزودينا مدة محدودة قبل استبدالها.',
         ),
@@ -265,4 +269,4 @@ const ar = {
   ],
 };
 
-export const PRIVACY_POLICY: LegalDocument = { updated: '2026-09-29', content: { en, ar } };
+export const PRIVACY_POLICY: LegalDocument = { updated: '2026-10-01', content: { en, ar } };

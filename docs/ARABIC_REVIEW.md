@@ -339,7 +339,7 @@ The Arabic privacy policy and terms live in `mobile/src/features/legal/` (not in
 
 | Document | Status | Notes |
 |---|---|---|
-| Privacy policy (ar) | draft | Written 2026-09-29; needs the owner's Arabic review and a legal review (OPEN-6) |
+| Privacy policy (ar) | draft | Written 2026-09-29, crash reports (Sentry) added 2026-10-01; needs the owner's Arabic review and a legal review (OPEN-6) |
 | Terms of service (ar) | draft | `mobile/src/features/legal/terms.ts`, written 2026-09-29 (DEC-054); same reviews |
 
 ## Launcher labels (DEC-055)

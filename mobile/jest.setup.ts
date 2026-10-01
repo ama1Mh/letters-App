@@ -56,4 +56,7 @@ jest.mock('@react-native-community/netinfo', () => {
   };
 });
 
+// Crash reporting is off in tests (no DSN); this keeps the native SDK from loading at all.
+jest.mock('@sentry/react-native', () => ({ init: jest.fn() }));
+
 export {};

@@ -15,7 +15,7 @@ describe('privacy policy screen (en, DEC-053)', () => {
     for (const section of PRIVACY_POLICY.content.en.sections) {
       expect(screen.getByText(section.heading)).toBeTruthy();
     }
-    expect(screen.getByText(/Last updated: September 29, 2026/)).toBeTruthy();
+    expect(screen.getByText(/Last updated: October 1, 2026/)).toBeTruthy();
     expect(screen.getAllByText(/contact@letterapp.invalid/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/\{\{/)).toBeNull();
   });

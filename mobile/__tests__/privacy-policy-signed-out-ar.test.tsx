@@ -12,7 +12,7 @@ describe('privacy policy from sign-up (ar/RTL, signed out, DEC-053)', () => {
     await waitFor(() => expect(screen.getByTestId('privacy-policy-screen')).toBeTruthy());
 
     expect(screen.getByText(PRIVACY_POLICY.content.ar.sections[0].heading)).toBeTruthy();
-    expect(screen.getByText(/آخر تحديث: 29 سبتمبر 2026/)).toBeTruthy();
+    expect(screen.getByText(/آخر تحديث: 1 أكتوبر 2026/)).toBeTruthy();
     expect(screen.queryByText(/\{\{/)).toBeNull();
   });
 });
