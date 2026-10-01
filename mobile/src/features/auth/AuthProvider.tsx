@@ -19,9 +19,11 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   getAuthRepository,
+  type AppLocale,
   type AuthRepository,
   type AuthSession,
   type OwnProfile,
@@ -55,6 +57,9 @@ export function AuthProvider({ children, repository }: AuthProviderProps) {
   const [status, setStatus] = useState<AuthStatus>('loading');
   const [profile, setProfile] = useState<OwnProfile | null>(null);
   const sessionRef = useRef<AuthSession | null>(null);
+  // Re-renders on a language change (react-i18next subscribes to it).
+  const { i18n } = useTranslation();
+  const language: AppLocale = i18n.language === 'ar' ? 'ar' : 'en';
 
   const applySession = useCallback(
     async (session: AuthSession | null) => {
@@ -102,6 +107,24 @@ export function AuthProvider({ children, repository }: AuthProviderProps) {
       unsubscribe();
     };
   }, [repo, applySession]);
+
+  // Push text is localized on the server from `profiles.locale`, which sign-up and onboarding set
+  // once; keep it equal to the UI language after the user changes it (Language screen, or the
+  // device language under "System"). A failed write is retried on the next launch or change.
+  useEffect(() => {
+    if (status !== 'ready' || !profile || profile.locale === language) return;
+    let cancelled = false;
+    const userId = profile.id;
+    repo.updateLocale(language).then(
+      () => {
+        if (!cancelled) setProfile((p) => (p?.id === userId ? { ...p, locale: language } : p));
+      },
+      () => {},
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [status, profile, language, repo]);
 
   const signOut = useCallback(async () => {
     // While still signed in: stop this device's delivery notifications for this account, sync

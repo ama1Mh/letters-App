@@ -326,4 +326,28 @@ describe('createSupabaseAuthRepository', () => {
       await expect(failing.updateAvatar('bogus')).rejects.toEqual(new AuthActionError('unknown'));
     });
   });
+
+  describe('updateLocale (push text language)', () => {
+    it('updates locale on the own profile row', async () => {
+      const updates: { payload: unknown; id: string }[] = [];
+      const repo = createSupabaseAuthRepository(
+        fakeClient({
+          sessionUserId: 'user-1',
+          onUpdate: (payload, id) => updates.push({ payload, id }),
+        }),
+      );
+      await repo.updateLocale('ar');
+      expect(updates).toEqual([{ payload: { locale: 'ar' }, id: 'user-1' }]);
+    });
+
+    it('rejects when signed out, and maps a database error to unknown', async () => {
+      await expect(createSupabaseAuthRepository(fakeClient()).updateLocale('en')).rejects.toEqual(
+        new AuthActionError('not_authenticated'),
+      );
+      const failing = createSupabaseAuthRepository(
+        fakeClient({ sessionUserId: 'user-1', updateError: { code: '42501' } }),
+      );
+      await expect(failing.updateLocale('en')).rejects.toEqual(new AuthActionError('unknown'));
+    });
+  });
 });

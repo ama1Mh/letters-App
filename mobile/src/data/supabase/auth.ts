@@ -136,6 +136,9 @@ export interface AuthRepository {
   /** Turns the delivery push on or off (DEC-052), a direct column update like the two above.
    *  Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
   updatePushOnDelivery(enabled: boolean): Promise<void>;
+  /** Stores the UI language as `profiles.locale`, which the server uses for push text. Throws
+   *  `AuthActionError<'not_authenticated' | 'unknown'>`. */
+  updateLocale(locale: AppLocale): Promise<void>;
   /** Deletes the signed-in account through the `delete-account` Edge Function (Phase 9), then ends
    *  the local session. Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
   deleteAccount(): Promise<void>;
@@ -371,6 +374,15 @@ export function createSupabaseAuthRepository(client: SupabaseClient): AuthReposi
         .from('profiles')
         .update({ push_on_delivery: enabled })
         .eq('id', session.user.id);
+      if (error) throw new AuthActionError<'not_authenticated' | 'unknown'>('unknown');
+    },
+
+    async updateLocale(locale) {
+      const {
+        data: { session },
+      } = await client.auth.getSession();
+      if (!session) throw new AuthActionError('not_authenticated');
+      const { error } = await client.from('profiles').update({ locale }).eq('id', session.user.id);
       if (error) throw new AuthActionError<'not_authenticated' | 'unknown'>('unknown');
     },
   };

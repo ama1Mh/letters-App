@@ -134,6 +134,11 @@ export function createFakeAuthRepository(initial?: {
       profile = { ...(profile ?? fakeProfile(session.userId)), pushOnDelivery: enabled };
     },
 
+    async updateLocale(locale) {
+      if (!session) throw new AuthActionError('not_authenticated');
+      profile = { ...(profile ?? fakeProfile(session.userId)), locale };
+    },
+
     async deleteAccount() {
       if (!session) throw new AuthActionError('not_authenticated');
       session = null;
