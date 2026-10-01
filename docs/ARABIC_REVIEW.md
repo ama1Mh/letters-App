@@ -322,6 +322,8 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `invite.retry` | Try again | إعادة المحاولة | draft | Phase 10 |
 | `invite.loadError` | Your invite link couldn't be loaded. | تعذّر تحميل رابط دعوتك. | draft | Phase 10 |
 | `network.offline` | You're offline. Drafts are saved on this phone; letters will update when you're back online. | أنت غير متصل بالإنترنت. المسودات محفوظة على هذا الهاتف، وستُحدَّث الرسائل عند عودة الاتصال. | draft | Phase 10: app-wide offline banner |
+| `privacy.saveError` | Couldn't save this setting. Check your connection and try again. | تعذّر حفظ هذا الإعداد. تحقّق من اتصالك ثم حاول مرة أخرى. | draft | Phase 10: shown when a settings change fails; the switch reverts |
+| `notifications.saveError` | Couldn't save this setting. Check your connection and try again. | تعذّر حفظ هذا الإعداد. تحقّق من اتصالك ثم حاول مرة أخرى. | draft | Phase 10: shown when a settings change fails; the switch reverts |
 
 ## Server-side text (not in `ar.json`)
 
