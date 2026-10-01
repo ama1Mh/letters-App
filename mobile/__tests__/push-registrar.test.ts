@@ -1,6 +1,10 @@
 import type { DevicesRepository } from '@/data/notifications/devicesRepository';
 import type { PushPlatform } from '@/features/notifications/pushPlatform';
-import { createPushRegistrar, type TokenStore } from '@/features/notifications/pushRegistrar';
+import {
+  REREGISTER_AFTER_MS,
+  createPushRegistrar,
+  type TokenStore,
+} from '@/features/notifications/pushRegistrar';
 
 const TOKEN = 'ExponentPushToken[abcdefghij]';
 
@@ -106,5 +110,70 @@ describe('Push registration (Phase 7)', () => {
     for (const s of [denied, unconfigured, noFirebase, web]) {
       expect(s.devices.register).not.toHaveBeenCalled();
     }
+  });
+});
+
+describe('Push registration across app runs (phone QA: register_device daily limit)', () => {
+  beforeEach(() => jest.spyOn(console, 'warn').mockImplementation(() => {}));
+  afterEach(() => jest.restoreAllMocks());
+
+  function memoStore() {
+    let value: { userId: string; token: string; at: number } | null = null;
+    return { get: () => value, set: (next: typeof value) => (value = next) };
+  }
+
+  function run(
+    memo: ReturnType<typeof memoStore>,
+    stored: { token: string | null },
+    now: number,
+    token = TOKEN,
+  ) {
+    const devices = {
+      register: jest.fn(async () => {}),
+      unregister: jest.fn(async () => {}),
+    };
+    const registrar = createPushRegistrar({
+      platform: {
+        os: 'android',
+        appVersion: '1.0.0',
+        ensureChannel: async () => {},
+        requestPermission: async () => true,
+        getToken: async () => token,
+        takeLaunchLetterId: () => null,
+        onLetterTapped: () => () => {},
+      },
+      devices,
+      store: { get: () => stored.token, set: (t) => (stored.token = t) },
+      channelName: () => 'Letters',
+      memo,
+      now: () => now,
+    });
+    return { registrar, devices };
+  }
+
+  it('does not re-send an unchanged token for the same user on the next cold start', async () => {
+    const memo = memoStore();
+    const stored = { token: null as string | null };
+    const first = run(memo, stored, 1_000);
+    await expect(first.registrar.register('user-a')).resolves.toBe('registered');
+
+    const second = run(memo, stored, 1_000 + 60_000); // a new app run a minute later
+    await expect(second.registrar.register('user-a')).resolves.toBe('alreadyRegistered');
+    expect(second.devices.register).not.toHaveBeenCalled();
+  });
+
+  it('re-sends after a day, for a rotated token, and for another user', async () => {
+    const memo = memoStore();
+    const stored = { token: null as string | null };
+    await run(memo, stored, 0).registrar.register('user-a');
+
+    const later = run(memo, stored, REREGISTER_AFTER_MS + 1);
+    await expect(later.registrar.register('user-a')).resolves.toBe('registered');
+
+    const rotated = run(memo, stored, REREGISTER_AFTER_MS + 2, 'ExponentPushToken[rotated]');
+    await expect(rotated.registrar.register('user-a')).resolves.toBe('registered');
+
+    const other = run(memo, stored, REREGISTER_AFTER_MS + 3, 'ExponentPushToken[rotated]');
+    await expect(other.registrar.register('user-b')).resolves.toBe('registered');
   });
 });

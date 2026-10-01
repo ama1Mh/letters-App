@@ -103,6 +103,10 @@ Deno.serve(async (req) => {
             data: { letter_id: row.letter_id },
             sound: 'default',
             channelId: 'letters',
+            // A delivery is user-visible and time-sensitive: FCM high priority is delivered at
+            // once even in Doze; Expo's default on Android is FCM normal priority, which Doze may
+            // hold until a maintenance window (Phase 10 battery-saver QA, DEC-059).
+            priority: 'high',
           })),
         ),
       });
