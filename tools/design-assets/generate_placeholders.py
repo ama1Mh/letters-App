@@ -12,6 +12,7 @@ Requires Pillow and numpy.
 
 from __future__ import annotations
 
+import json
 import math
 import os
 
@@ -19,6 +20,7 @@ import numpy as np
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "..", "mobile", "assets", "designs")
+CATALOG = os.path.join(os.path.dirname(__file__), "..", "..", "shared", "design-catalog.json")
 SS = 2  # supersampling factor for smooth edges
 
 # Element canvases are drawn at this pixel width; the app shows them at up to ~3x of a 72 dp base.
@@ -50,7 +52,7 @@ def tileable_noise(size: int, scale: int, seed: int) -> np.ndarray:
 
 
 # --------------------------------------------------------------------------------------------
-# Papers: a tileable texture overlay (alpha) drawn over the paper's base colour in the app, plus
+# Papers: an opaque tileable texture (the catalog colour with mottling and fibres baked in), plus
 # one shared edge-ageing overlay stretched over the whole sheet.
 # --------------------------------------------------------------------------------------------
 
@@ -325,7 +327,11 @@ def main() -> None:
     for key, (seed, mottle, fibres, tint) in PAPERS.items():
         # @3x: React Native draws a repeat tile at its density-independent size, so the 512 px tile
         # covers ~171 dp and stays crisp instead of being upscaled (RN picks it for any density).
-        out("papers", key, paper_texture(seed, mottle, fibres, tint), "@3x")
+        # Opaque: the paper colour from the catalog is baked in, so the app can overlap tiles by a
+        # hair to hide sub-pixel gaps without the overlap showing as darker lines.
+        colour = next(p["color"] for p in json.load(open(CATALOG))["papers"] if p["key"] == key)
+        base = Image.new("RGBA", (512, 512), tuple(int(colour[i : i + 2], 16) for i in (1, 3, 5)) + (255,))
+        out("papers", key, Image.alpha_composite(base, paper_texture(seed, mottle, fibres, tint)).convert("RGB"), "@3x")
     out("papers", "edge_ageing", edge_ageing())
     stamp("stamp_dove", (46, 74, 112), (214, 226, 232), dove, "5")
     stamp("stamp_palm", (126, 50, 40), (236, 218, 186), palm, "10")

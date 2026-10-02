@@ -73,6 +73,40 @@ export function sheetHeight(textHeight: number, elements: readonly DesignElement
   return Math.ceil(height);
 }
 
+/** Paper tiles are `name@3x.webp`, 512 px, so each covers 512 / 3 dp of the logical sheet. */
+export const PAPER_TILE = 512 / 3;
+
+/**
+ * The paper texture, tiled explicitly: `resizeMode="repeat"` drew a single tile on the Android
+ * emulator (12.4 device check). The tiles are seamless, so a plain grid looks continuous.
+ */
+function PaperTiles({ paperKey, logicalHeight }: { paperKey: string; logicalHeight: number }) {
+  const cols = Math.ceil(CANVAS_WIDTH / PAPER_TILE);
+  const rows = Math.ceil(logicalHeight / PAPER_TILE);
+  const tiles: ReactNode[] = [];
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      tiles.push(
+        <Image
+          key={`${r}-${c}`}
+          source={PAPER_TEXTURES[paperKey]}
+          accessible={false}
+          importantForAccessibility="no"
+          style={{
+            position: 'absolute',
+            top: r * PAPER_TILE,
+            start: c * PAPER_TILE,
+            // +1: the tile size is fractional, so scaled tiles would leave hairline seams.
+            width: PAPER_TILE + 1,
+            height: PAPER_TILE + 1,
+          }}
+        />,
+      );
+    }
+  }
+  return <>{tiles}</>;
+}
+
 /** Lays the sheet out at 360 dp and scales it to `width`; children use logical coordinates. */
 export function CanvasFrame({
   design,
@@ -109,13 +143,7 @@ export function CanvasFrame({
           transform: [{ scale }],
         }}
       >
-        <Image
-          source={PAPER_TEXTURES[paper.key]}
-          resizeMode="repeat"
-          style={StyleSheet.absoluteFill}
-          accessible={false}
-          importantForAccessibility="no"
-        />
+        <PaperTiles paperKey={paper.key} logicalHeight={logicalHeight} />
         <Image
           source={EDGE_AGEING}
           resizeMode="stretch"
