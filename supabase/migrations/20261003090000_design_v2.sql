@@ -108,6 +108,7 @@ as $$
     and octet_length(p_design::text) <= 8192
     and (select count(*) from jsonb_object_keys(p_design)) = 7
     and p_design ?& array['v', 'paper', 'font', 'ink', 'textSize', 'layout', 'elements']
+    and jsonb_typeof(p_design -> 'v') = 'number' -- "2" as a string is not version 2
     and (p_design ->> 'v') = '2'
     and p_design ->> 'paper' in ('aged_cream', 'warm_ivory', 'parchment')
     and p_design ->> 'font' in (
