@@ -303,7 +303,8 @@ describe('createLettersRepository', () => {
         sender: { id: 'u-sara', username: 'sara', displayName: 'Sara', avatarKey: null },
         recipient: { id: 'u-me', username: 'me_user', displayName: 'Me', avatarKey: null },
       });
-      expect(letter.design).toMatchObject({ paper: 'sky', ink: 'navy' });
+      // A stored v1 design is upgraded on read (DEC-060): sky -> warm_ivory, navy -> faded_blue.
+      expect(letter.design).toMatchObject({ v: 2, paper: 'warm_ivory', ink: 'faded_blue' });
     });
 
     it('falls back to the default design for an invalid stored design', async () => {

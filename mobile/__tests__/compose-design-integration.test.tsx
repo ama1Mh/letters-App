@@ -12,13 +12,13 @@ const DRAFT: LocalDraft = {
   body: 'Hello',
   bodyDir: 'ltr',
   design: {
-    v: 1,
-    paper: 'cream',
+    v: 2,
+    paper: 'aged_cream',
     font: 'caveat',
-    ink: 'classic_black',
+    ink: 'black',
+    textSize: 'm',
     layout: 'standard',
-    stamp: null,
-    stickers: [],
+    elements: [],
   },
   recipientId: null,
   dirty: false,
@@ -34,26 +34,26 @@ describe('compose <-> design picker integration', () => {
     await act(async () => router.push(`/compose/${DRAFT.id}`));
     await waitFor(() => expect(screen.getByTestId('compose-screen')).toBeTruthy());
 
-    // Live preview reflects the loaded draft's default (cream) paper.
+    // Live preview reflects the loaded draft's default (aged_cream) paper.
     await waitFor(
       () =>
         expect(
           StyleSheet.flatten(screen.getByTestId('compose-preview').props.style)?.backgroundColor,
-        ).toBe('#FBF7EE'), // cream
+        ).toBe('#EFE2C4'), // aged_cream
     );
 
     await fireEvent.press(screen.getByTestId('compose-change-design'));
     await waitFor(() => expect(screen.getByTestId('pick-design-screen')).toBeTruthy());
-    await fireEvent.press(screen.getByTestId('pick-design-paper-mint'));
+    await fireEvent.press(screen.getByTestId('pick-design-paper-warm_ivory'));
     await waitFor(() =>
       expect(save).toHaveBeenLastCalledWith(
         expect.objectContaining({
           id: DRAFT.id,
-          design: expect.objectContaining({ paper: 'mint' }),
+          design: expect.objectContaining({ paper: 'warm_ivory' }),
         }),
       ),
     );
-    expect((await view.drafts.get(DRAFT.id))?.design).toMatchObject({ paper: 'mint' });
+    expect((await view.drafts.get(DRAFT.id))?.design).toMatchObject({ paper: 'warm_ivory' });
 
     await fireEvent.press(screen.getByTestId('pick-design-back'));
     await waitFor(() => expect(screen.getByTestId('compose-screen')).toBeTruthy());
@@ -61,7 +61,7 @@ describe('compose <-> design picker integration', () => {
       () =>
         expect(
           StyleSheet.flatten(screen.getByTestId('compose-preview').props.style)?.backgroundColor,
-        ).toBe('#EAF8F1'), // mint - picked up via useFocusEffect, not a second manual save
+        ).toBe('#F8F1E1'), // warm_ivory - picked up via useFocusEffect, not a second manual save
     );
   });
 });

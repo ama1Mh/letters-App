@@ -1,7 +1,10 @@
 import { Amiri_400Regular } from '@expo-google-fonts/amiri';
+import { ArefRuqaa_400Regular } from '@expo-google-fonts/aref-ruqaa';
 import { Cairo_400Regular } from '@expo-google-fonts/cairo';
 import { Caveat_400Regular } from '@expo-google-fonts/caveat';
+import { IMFellEnglish_400Regular } from '@expo-google-fonts/im-fell-english';
 import { PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
+import { ReemKufi_400Regular } from '@expo-google-fonts/reem-kufi';
 import { Tajawal_400Regular } from '@expo-google-fonts/tajawal';
 import { useFonts } from 'expo-font';
 
@@ -23,6 +26,9 @@ export function useDesignFonts(): boolean {
     Cairo_400Regular,
     Tajawal_400Regular,
     Amiri_400Regular,
+    ArefRuqaa_400Regular,
+    ReemKufi_400Regular,
+    IMFellEnglish_400Regular,
   });
   return loaded;
 }

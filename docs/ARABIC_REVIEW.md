@@ -35,31 +35,40 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `design.paperLabel` | Paper | الورق | draft | |
 | `design.fontLabel` | Font | الخط | draft | |
 | `design.inkLabel` | Ink | الحبر | draft | |
-| `design.stampLabel` | Stamp | الطابع | draft | |
-| `design.noStamp` | No stamp | بلا طابع | draft | |
-| `design.paperNames.cream` | Cream | كريمي | draft | |
-| `design.paperNames.blush` | Blush | وردي فاتح | draft | |
-| `design.paperNames.sky` | Sky | سماوي | draft | |
-| `design.paperNames.mint` | Mint | نعناعي | draft | |
-| `design.paperNames.sand` | Sand | رملي | draft | |
-| `design.paperNames.lavender` | Lavender | خزامي | draft | |
+| `design.sizeLabel` | Text size | حجم الخط | draft | Phase 12: per-letter text size S/M/L (DEC-061) |
+| `design.paperNames.aged_cream` | Aged cream | كريمي عتيق | draft | Phase 12 vintage paper |
+| `design.paperNames.warm_ivory` | Warm ivory | عاجي دافئ | draft | Phase 12 vintage paper |
+| `design.paperNames.parchment` | Parchment | رَقّ | draft | Phase 12 vintage paper; رَقّ = parchment (writing skin) |
 | `design.fontNames.caveat` | Caveat | Caveat | draft | Font name, a proper noun: intentionally the same in both files (like the language endonyms) |
+| `design.fontNames.im_fell_english` | IM Fell English | IM Fell English | draft | Font name, not translated |
 | `design.fontNames.playfair_display` | Playfair Display | Playfair Display | draft | Font name, not translated |
-| `design.fontNames.cairo` | Cairo | Cairo | draft | Font name, not translated |
-| `design.fontNames.tajawal` | Tajawal | Tajawal | draft | Font name, not translated |
-| `design.fontNames.amiri` | Amiri | Amiri | draft | Font name, not translated |
-| `design.inkNames.classic_black` | Classic black | أسود كلاسيكي | draft | |
-| `design.inkNames.navy` | Navy | كحلي | draft | |
-| `design.inkNames.forest` | Forest | أخضر غابي | draft | |
-| `design.inkNames.burgundy` | Burgundy | عنّابي | draft | |
-| `design.inkNames.charcoal` | Charcoal | رمادي فحمي | draft | |
-| `design.inkNames.royal_purple` | Royal purple | بنفسجي ملكي | draft | |
-| `design.inkNames.warm_brown` | Warm brown | بني دافئ | draft | |
-| `design.inkNames.teal` | Teal | أزرق مخضر | draft | |
-| `design.stampNames.heart` | Heart | قلب | draft | |
-| `design.stampNames.star` | Star | نجمة | draft | |
-| `design.stampNames.ribbon` | Ribbon | شريط | draft | |
-| `design.stampNames.rocket` | Rocket | صاروخ | draft | |
+| `design.fontNames.aref_ruqaa` | Aref Ruqaa | عارف رقعة | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontNames.amiri` | Amiri | أميري | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontNames.reem_kufi` | Reem Kufi | ريم كوفي | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontNames.cairo` | Cairo | القاهرة | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontNames.tajawal` | Tajawal | تجوال | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontCategories.handwriting` | Handwriting | خط يدوي | draft | Phase 12 font category |
+| `design.fontCategories.traditional` | Traditional | تقليدي | draft | Phase 12 font category |
+| `design.fontCategories.formal` | Formal | رسمي | draft | Phase 12 font category |
+| `design.fontCategories.calligraphic` | Calligraphic | خط زخرفي | draft | Phase 12 font category |
+| `design.fontCategories.modern` | Modern | حديث | draft | Phase 12 font category |
+| `design.inkNames.black` | Black | أسود | draft | Phase 12 ink |
+| `design.inkNames.dark_brown` | Dark brown | بني داكن | draft | Phase 12 ink |
+| `design.inkNames.faded_blue` | Faded blue | أزرق باهت | draft | Phase 12 ink |
+| `design.inkNames.burgundy` | Burgundy | عنّابي | draft | Phase 12 ink |
+| `design.inkNames.forest_green` | Forest green | أخضر غابي | draft | Phase 12 ink |
+| `design.inkNames.sepia` | Sepia | بني عتيق | draft | Phase 12 ink; sepia rendered descriptively |
+| `design.textSizes.s` | Small | صغير | draft | Phase 12 text size |
+| `design.textSizes.m` | Medium | متوسط | draft | Phase 12 text size |
+| `design.textSizes.l` | Large | كبير | draft | Phase 12 text size |
+| `design.elementNames.stamp_dove` | Dove stamp | طابع الحمامة | draft | Phase 12 element; also its accessibility label |
+| `design.elementNames.stamp_palm` | Palm tree stamp | طابع النخلة | draft | Phase 12 element |
+| `design.elementNames.stamp_lighthouse` | Lighthouse stamp | طابع المنارة | draft | Phase 12 element |
+| `design.elementNames.sticker_flower` | Flower sticker | ملصق الزهرة | draft | Phase 12 element |
+| `design.elementNames.sticker_moon` | Moon and stars sticker | ملصق الهلال والنجوم | draft | Phase 12 element |
+| `design.elementNames.sticker_washi` | Paper tape | شريط ورقي | draft | Phase 12 element (washi tape) |
+| `design.elementNames.postmark_round` | Dated postmark | ختم بريدي مؤرَّخ | draft | Phase 12 element |
+| `design.elementNames.postmark_wavy` | Wavy cancellation mark | ختم إلغاء متموّج | draft | Phase 12 element |
 | `sent.emptyTitle` | No sent letters | لا توجد رسائل مرسلة | draft | |
 | `sent.emptyBody` | Letters you send will appear here. | ستظهر هنا الرسائل المرسلة. | draft | Reworded in Phase 6 M4: the Sent kind only (Scheduled has its own empty state) |
 | `sent.tabScheduled` | Scheduled | المجدولة | draft | Phase 6 M4 Sent tab |

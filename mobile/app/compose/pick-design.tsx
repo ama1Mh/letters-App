@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import type { ComponentProps } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,8 +19,6 @@ import {
   type Design,
 } from '@/domain/design';
 import { LetterRenderer } from '@/features/designs/LetterRenderer';
-
-type IconName = ComponentProps<typeof Ionicons>['name'];
 
 /**
  * Reached from the compose screen ("Change design"), draft id passed as a query param rather than
@@ -113,7 +110,9 @@ export default function PickDesignScreen() {
               key={paper.key}
               testID={`pick-design-paper-${paper.key}`}
               accessibilityRole="button"
-              accessibilityLabel={t(`design.paperNames.${paper.key}` as 'design.paperNames.cream')}
+              accessibilityLabel={t(
+                `design.paperNames.${paper.key}` as 'design.paperNames.aged_cream',
+              )}
               accessibilityState={{ selected: design.paper === paper.key }}
               onPress={() => void apply({ paper: paper.key })}
               hitSlop={hitSlopTo(40)}
@@ -171,9 +170,7 @@ export default function PickDesignScreen() {
               key={ink.key}
               testID={`pick-design-ink-${ink.key}`}
               accessibilityRole="button"
-              accessibilityLabel={t(
-                `design.inkNames.${ink.key}` as 'design.inkNames.classic_black',
-              )}
+              accessibilityLabel={t(`design.inkNames.${ink.key}` as 'design.inkNames.black')}
               accessibilityState={{ selected: design.ink === ink.key }}
               onPress={() => void apply({ ink: ink.key })}
               hitSlop={hitSlopTo(40)}
@@ -191,47 +188,27 @@ export default function PickDesignScreen() {
       </View>
 
       <View style={{ gap: spacing.sm }}>
-        <AppText variant="title">{t('design.stampLabel')}</AppText>
+        <AppText variant="title">{t('design.sizeLabel')}</AppText>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-          <Pressable
-            testID="pick-design-stamp-none"
-            accessibilityRole="button"
-            accessibilityLabel={t('design.noStamp')}
-            accessibilityState={{ selected: design.stamp === null }}
-            onPress={() => void apply({ stamp: null })}
-            hitSlop={hitSlopTo(40)}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: radius.sm,
-              borderWidth: design.stamp === null ? 3 : 1,
-              borderColor: design.stamp === null ? colors.primary : colors.border,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Ionicons name="close" size={18} color={colors.textMuted} />
-          </Pressable>
-          {DESIGN_CATALOG.stamps.map((stamp) => (
+          {DESIGN_CATALOG.textSizes.map((size) => (
             <Pressable
-              key={stamp.key}
-              testID={`pick-design-stamp-${stamp.key}`}
+              key={size.key}
+              testID={`pick-design-size-${size.key}`}
               accessibilityRole="button"
-              accessibilityLabel={t(`design.stampNames.${stamp.key}` as 'design.stampNames.heart')}
-              accessibilityState={{ selected: design.stamp === stamp.key }}
-              onPress={() => void apply({ stamp: stamp.key })}
-              hitSlop={hitSlopTo(40)}
+              accessibilityState={{ selected: design.textSize === size.key }}
+              onPress={() => void apply({ textSize: size.key })}
               style={{
-                width: 40,
-                height: 40,
+                minHeight: MIN_TOUCH_TARGET,
+                minWidth: MIN_TOUCH_TARGET,
+                paddingHorizontal: spacing.md,
                 borderRadius: radius.sm,
-                borderWidth: design.stamp === stamp.key ? 3 : 1,
-                borderColor: design.stamp === stamp.key ? colors.primary : colors.border,
+                borderWidth: design.textSize === size.key ? 3 : 1,
+                borderColor: design.textSize === size.key ? colors.primary : colors.border,
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Ionicons name={stamp.icon as IconName} size={20} color={colors.text} />
+              <AppText>{t(`design.textSizes.${size.key}`)}</AppText>
             </Pressable>
           ))}
         </View>

@@ -11,13 +11,13 @@ const DRAFT: LocalDraft = {
   body: 'مرحبا',
   bodyDir: 'rtl',
   design: {
-    v: 1,
-    paper: 'cream',
+    v: 2,
+    paper: 'aged_cream',
     font: 'caveat',
-    ink: 'classic_black',
+    ink: 'black',
+    textSize: 'm',
     layout: 'standard',
-    stamp: null,
-    stickers: [],
+    elements: [],
   },
   recipientId: null,
   dirty: false,
@@ -46,12 +46,12 @@ describe('pick-design', () => {
     await waitFor(() => expect(screen.queryByTestId('pick-design-font-caveat')).toBeNull());
     expect(screen.getByTestId('pick-design-font-cairo')).toBeTruthy();
 
-    await fireEvent.press(screen.getByTestId('pick-design-paper-sky'));
+    await fireEvent.press(screen.getByTestId('pick-design-paper-parchment'));
     await fireEvent.press(screen.getByTestId('pick-design-font-cairo'));
-    await fireEvent.press(screen.getByTestId('pick-design-ink-navy'));
-    await fireEvent.press(screen.getByTestId('pick-design-stamp-heart'));
+    await fireEvent.press(screen.getByTestId('pick-design-ink-faded_blue'));
+    await fireEvent.press(screen.getByTestId('pick-design-size-l'));
 
-    const chosen = { paper: 'sky', font: 'cairo', ink: 'navy', stamp: 'heart' };
+    const chosen = { paper: 'parchment', font: 'cairo', ink: 'faded_blue', textSize: 'l' };
     await waitFor(() =>
       expect(save).toHaveBeenLastCalledWith(
         expect.objectContaining({ id: DRAFT.id, design: expect.objectContaining(chosen) }),

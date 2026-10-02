@@ -57,44 +57,6 @@
     "minuteEarlier": "Move {{step}} minutes earlier",
     "minuteLater": "Move {{step}} minutes later"
   },
-  "design": {
-    "paperLabel": "Paper",
-    "fontLabel": "Font",
-    "inkLabel": "Ink",
-    "stampLabel": "Stamp",
-    "noStamp": "No stamp",
-    "paperNames": {
-      "cream": "Cream",
-      "blush": "Blush",
-      "sky": "Sky",
-      "mint": "Mint",
-      "sand": "Sand",
-      "lavender": "Lavender"
-    },
-    "fontNames": {
-      "caveat": "Caveat",
-      "playfair_display": "Playfair Display",
-      "cairo": "Cairo",
-      "tajawal": "Tajawal",
-      "amiri": "Amiri"
-    },
-    "inkNames": {
-      "classic_black": "Classic black",
-      "navy": "Navy",
-      "forest": "Forest",
-      "burgundy": "Burgundy",
-      "charcoal": "Charcoal",
-      "royal_purple": "Royal purple",
-      "warm_brown": "Warm brown",
-      "teal": "Teal"
-    },
-    "stampNames": {
-      "heart": "Heart",
-      "star": "Star",
-      "ribbon": "Ribbon",
-      "rocket": "Rocket"
-    }
-  },
   "sent": {
     "emptyTitle": "No sent letters",
     "emptyBody": "Letters you send will appear here.",
@@ -405,5 +367,56 @@
   },
   "network": {
     "offline": "You're offline. Drafts are saved on this phone; letters will update when you're back online."
+  },
+  "design": {
+    "paperLabel": "Paper",
+    "fontLabel": "Font",
+    "inkLabel": "Ink",
+    "sizeLabel": "Text size",
+    "paperNames": {
+      "aged_cream": "Aged cream",
+      "warm_ivory": "Warm ivory",
+      "parchment": "Parchment"
+    },
+    "fontNames": {
+      "caveat": "Caveat",
+      "im_fell_english": "IM Fell English",
+      "playfair_display": "Playfair Display",
+      "aref_ruqaa": "Aref Ruqaa",
+      "amiri": "Amiri",
+      "reem_kufi": "Reem Kufi",
+      "cairo": "Cairo",
+      "tajawal": "Tajawal"
+    },
+    "fontCategories": {
+      "handwriting": "Handwriting",
+      "traditional": "Traditional",
+      "formal": "Formal",
+      "calligraphic": "Calligraphic",
+      "modern": "Modern"
+    },
+    "inkNames": {
+      "black": "Black",
+      "dark_brown": "Dark brown",
+      "faded_blue": "Faded blue",
+      "burgundy": "Burgundy",
+      "forest_green": "Forest green",
+      "sepia": "Sepia"
+    },
+    "textSizes": {
+      "s": "Small",
+      "m": "Medium",
+      "l": "Large"
+    },
+    "elementNames": {
+      "stamp_dove": "Dove stamp",
+      "stamp_palm": "Palm tree stamp",
+      "stamp_lighthouse": "Lighthouse stamp",
+      "sticker_flower": "Flower sticker",
+      "sticker_moon": "Moon and stars sticker",
+      "sticker_washi": "Paper tape",
+      "postmark_round": "Dated postmark",
+      "postmark_wavy": "Wavy cancellation mark"
+    }
   }
 }

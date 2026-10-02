@@ -1,14 +1,10 @@
-import { Ionicons } from '@expo/vector-icons';
-import type { ComponentProps } from 'react';
 import { View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { contentTextAlign } from '@/core/i18n/direction';
 import { useTheme } from '@/core/theme/useTheme';
 import type { TextDirection } from '@/domain/bodyDirection';
-import { inkOf, paperOf, resolveFont, stampOf, type Design } from '@/domain/design';
-
-type IconName = ComponentProps<typeof Ionicons>['name'];
+import { inkOf, paperOf, resolveFont, textSizeOf, type Design } from '@/domain/design';
 
 /** Letter text is read, not skimmed, so it sits above the UI's body size (fontSize.md = 16). */
 export const LETTER_BODY_SIZE = 18;
@@ -60,7 +56,6 @@ export function LetterRenderer({ design, subject, body, bodyDir, testID }: Lette
   const paper = paperOf(design);
   const ink = inkOf(design);
   const font = resolveFont(design, bodyDir);
-  const stamp = stampOf(design);
   const textAlign = contentTextAlign(bodyDir);
 
   return (
@@ -74,14 +69,6 @@ export function LetterRenderer({ design, subject, body, bodyDir, testID }: Lette
         minHeight: 160,
       }}
     >
-      {stamp ? (
-        <View
-          testID={testID ? `${testID}-stamp` : undefined}
-          style={{ position: 'absolute', top: spacing.sm, end: spacing.sm }}
-        >
-          <Ionicons name={stamp.icon as IconName} size={22} color={ink.color} />
-        </View>
-      ) : null}
       {subject ? (
         <AppText
           testID={testID ? `${testID}-subject` : undefined}
@@ -102,7 +89,7 @@ export function LetterRenderer({ design, subject, body, bodyDir, testID }: Lette
         style={{
           fontFamily: font.family,
           color: ink.color,
-          ...letterTextSize(font.key, LETTER_BODY_SIZE),
+          ...letterTextSize(font.key, textSizeOf(design)),
           textAlign,
           writingDirection: bodyDir,
         }}
