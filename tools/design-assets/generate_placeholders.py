@@ -25,10 +25,10 @@ SS = 2  # supersampling factor for smooth edges
 ELEMENT_PX = 512
 
 
-def out(kind: str, key: str, img: Image.Image) -> None:
+def out(kind: str, key: str, img: Image.Image, suffix: str = "") -> None:
     d = os.path.join(ROOT, kind)
     os.makedirs(d, exist_ok=True)
-    img.save(os.path.join(d, f"{key}.webp"), "WEBP", quality=88, method=6)
+    img.save(os.path.join(d, f"{key}{suffix}.webp"), "WEBP", quality=88, method=6)
 
 
 def rng(seed: int) -> np.random.Generator:
@@ -323,7 +323,9 @@ def postmark_wavy() -> None:
 
 def main() -> None:
     for key, (seed, mottle, fibres, tint) in PAPERS.items():
-        out("papers", key, paper_texture(seed, mottle, fibres, tint))
+        # @3x: React Native draws a repeat tile at its density-independent size, so the 512 px tile
+        # covers ~171 dp and stays crisp instead of being upscaled (RN picks it for any density).
+        out("papers", key, paper_texture(seed, mottle, fibres, tint), "@3x")
     out("papers", "edge_ageing", edge_ageing())
     stamp("stamp_dove", (46, 74, 112), (214, 226, 232), dove, "5")
     stamp("stamp_palm", (126, 50, 40), (236, 218, 186), palm, "10")
