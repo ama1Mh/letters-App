@@ -89,7 +89,13 @@
     "blockConfirmTitle": "Block this person?",
     "blockConfirmMessage": "They won't be able to write to you or find you, and they won't be told.",
     "blocked": "Blocked.",
-    "report": "Report"
+    "report": "Report",
+    "readPlain": "Read as plain text",
+    "readDesigned": "Show the designed letter",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "decorations": "Decorations: {{list}}",
+    "listSeparator": ","
   },
   "profile": {
     "language": "Language",

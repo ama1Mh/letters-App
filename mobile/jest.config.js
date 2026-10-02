@@ -16,5 +16,8 @@ module.exports = {
   testMatch: ['<rootDir>/__tests__/**/*.test.{ts,tsx}', '<rootDir>/src/**/*.test.{ts,tsx}'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    // Paper textures exist only as `name@3x.webp` (Metro resolves density suffixes; Jest does not).
+    '^.+/assets/designs/papers/(aged_cream|warm_ivory|parchment)\.webp$':
+      '<rootDir>/__tests__/helpers/imageStub.js',
   },
 };

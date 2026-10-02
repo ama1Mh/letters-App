@@ -89,7 +89,13 @@
     "blockConfirmTitle": "هل تريد حظر هذا الشخص؟",
     "blockConfirmMessage": "لن يتمكن من مراسلتك أو العثور عليك، ولن يُبلَّغ بذلك.",
     "blocked": "تم الحظر.",
-    "report": "إبلاغ"
+    "report": "إبلاغ",
+    "readPlain": "القراءة كنص عادي",
+    "readDesigned": "عرض الرسالة بتصميمها",
+    "zoomIn": "تكبير",
+    "zoomOut": "تصغير",
+    "decorations": "الزخارف: {{list}}",
+    "listSeparator": "،"
   },
   "profile": {
     "language": "اللغة",

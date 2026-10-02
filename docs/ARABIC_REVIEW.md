@@ -269,6 +269,12 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `letter.blockConfirmMessage` | They won't be able to write to you or find you, and they won't be told. | لن يتمكن من مراسلتك أو العثور عليك، ولن يُبلَّغ بذلك. | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `letter.blocked` | Blocked. | تم الحظر. | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `letter.report` | Report | إبلاغ | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.readPlain` | Read as plain text | القراءة كنص عادي | draft | Phase 12 reading view (DEC-061): plain-text mode |
+| `letter.readDesigned` | Show the designed letter | عرض الرسالة بتصميمها | draft | Phase 12 reading view: back to the designed sheet |
+| `letter.zoomIn` | Zoom in | تكبير | draft | Phase 12 reading view |
+| `letter.zoomOut` | Zoom out | تصغير | draft | Phase 12 reading view |
+| `letter.decorations` | Decorations: {{list}} | الزخارف: {{list}} | draft | Phase 12 plain-text mode: names of the stamps/stickers/postmarks |
+| `letter.listSeparator` | , | ، | draft | Separator for the decorations list (Hermes has no Intl.ListFormat); the app adds the space; Arabic comma |
 | `thread.title` | Conversation | المحادثة | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `thread.mine` | Your letter | رسالتك | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `thread.theirs` | Their letter | رسالة واردة | draft | Phase 8/9 (threads, delete-for-me, block, report) |

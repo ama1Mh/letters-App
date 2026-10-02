@@ -18,13 +18,13 @@ import {
   normalizeDesign,
   type Design,
 } from '@/domain/design';
-import { LetterRenderer } from '@/features/designs/LetterRenderer';
+import { LetterCanvas } from '@/features/designs/LetterCanvas';
 
 /**
  * Reached from the compose screen ("Change design"), draft id passed as a query param rather than
  * a second dynamic route segment. Every tap saves immediately (through the same drafts repository
  * compose autosaves through) - discrete choices, not continuous typing, so there is nothing to
- * debounce and no separate "Done" step; the live preview is the same LetterRenderer the compose
+ * debounce and no separate "Done" step; the live preview is the same LetterCanvas the compose
  * screen itself uses.
  */
 export default function PickDesignScreen() {
@@ -94,7 +94,7 @@ export default function PickDesignScreen() {
         <AppText style={{ color: colors.primary }}>{t('compose.title')}</AppText>
       </Pressable>
 
-      <LetterRenderer
+      <LetterCanvas
         testID="pick-design-preview"
         design={design}
         subject={draft?.subject}

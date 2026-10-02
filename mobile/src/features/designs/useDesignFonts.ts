@@ -17,7 +17,7 @@ import { useFonts } from 'expo-font';
  *
  * Until loaded, RN silently renders with the system font for an unregistered family name: no crash,
  * just not the intended look yet. Callers are not required to gate rendering on the returned value;
- * `LetterRenderer` looks correct either way, just plainer before this resolves.
+ * `LetterCanvas` looks correct either way, just plainer before this resolves.
  */
 export function useDesignFonts(): boolean {
   const [loaded] = useFonts({
