@@ -1,12 +1,8 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import type { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text } from 'react-native';
+import { Image, Text, type ImageSourcePropType } from 'react-native';
 
 import { useTheme } from '@/core/theme/useTheme';
-
-type IconName = ComponentProps<typeof Ionicons>['name'];
 
 /**
  * The tab bar has a fixed height, so at the largest system font sizes the labels were cut off at
@@ -15,12 +11,21 @@ type IconName = ComponentProps<typeof Ionicons>['name'];
  */
 const TAB_LABEL_MAX_FONT_SCALE = 1.5;
 
+/**
+ * Mirsal's own stationery icons (Phase 13; drawn by tools/brand/generate_brand.py): an opened
+ * envelope, a quill, a stamped envelope and a cameo portrait. One-colour PNGs tinted by the tab bar
+ * (active heritage green, inactive sepia), so they follow both themes.
+ */
 const TABS = [
-  { name: 'inbox', titleKey: 'tabs.inbox', icon: 'mail-outline' },
-  { name: 'drafts', titleKey: 'tabs.drafts', icon: 'document-text-outline' },
-  { name: 'sent', titleKey: 'tabs.sent', icon: 'paper-plane-outline' },
-  { name: 'profile', titleKey: 'tabs.profile', icon: 'person-outline' },
-] as const satisfies readonly { name: string; titleKey: string; icon: IconName }[];
+  { name: 'inbox', titleKey: 'tabs.inbox', icon: require('../../assets/icons/tab-inbox.png') },
+  { name: 'drafts', titleKey: 'tabs.drafts', icon: require('../../assets/icons/tab-drafts.png') },
+  { name: 'sent', titleKey: 'tabs.sent', icon: require('../../assets/icons/tab-sent.png') },
+  {
+    name: 'profile',
+    titleKey: 'tabs.profile',
+    icon: require('../../assets/icons/tab-profile.png'),
+  },
+] as const satisfies readonly { name: string; titleKey: string; icon: ImageSourcePropType }[];
 
 export default function TabsLayout() {
   const { t } = useTranslation();
@@ -46,7 +51,13 @@ export default function TabsLayout() {
             title: t(tab.titleKey),
             // Language-independent selector for Maestro (.maestro/) and tests.
             tabBarButtonTestID: `tab-${tab.name}`,
-            tabBarIcon: ({ color, size }) => <Ionicons name={tab.icon} size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={tab.icon}
+                accessible={false}
+                style={{ width: size + 2, height: size + 2, tintColor: color }}
+              />
+            ),
             tabBarLabel: ({ color, children }) => (
               <Text
                 testID={`tab-${tab.name}-label`}
