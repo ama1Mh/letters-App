@@ -7,8 +7,8 @@ Run from the repo root:  python tools/brand/generate_brand.py
 Outputs (deterministic):
   mobile/assets/brand/stamp-mark.png   1170 x 1350, transparent with a soft shadow (in-app mark)
   mobile/assets/brand/stamp-mark.svg   vector master (same geometry; text needs Amiri installed)
-The final launcher icon, notification icon and splash are produced from this mark only after the
-Phase 13 visual QA (owner's sequencing, 2026-10-03).
+Also writes the final launcher, adaptive, themed (monochrome), notification and splash images into
+mobile/assets/images/ (after the owner's Phase 13 visual review, 2026-10-03; DEC-065).
 """
 
 from __future__ import annotations
@@ -107,9 +107,57 @@ def svg() -> str:
 """
 
 
+CREAM = (246, 240, 227, 255)
+IMAGES = os.path.join(ROOT, "mobile", "assets", "images")
+
+
+def silhouette(size: int) -> Image.Image:
+    """One-colour mark for Android's themed icon and the status-bar notification icon (Android uses
+    only the alpha): the perforated stamp outline with the meem inside, white on transparent."""
+    ss = 4
+    k = size * ss / H  # fit the 140-unit height
+    w, h = int(W * k), int(H * k)
+    stamp = Image.new("L", (w, h), 0)
+    d = ImageDraw.Draw(stamp)
+    d.rectangle([EDGE * k, EDGE * k, (W - EDGE) * k, (H - EDGE) * k], fill=255)
+    for x, y in perforation_centres():
+        d.ellipse([(x - PERF_R) * k, (y - PERF_R) * k, (x + PERF_R) * k, (y + PERF_R) * k], fill=0)
+    d.rectangle([18 * k, 18 * k, 102 * k, 122 * k], fill=0)
+    font = ImageFont.truetype(FONT, int(60 * k))
+    x0, y0, x1, y1 = d.textbbox((0, 0), "م", font=font)
+    d.text((62 * k - (x0 + x1) / 2, 72 * k - (y0 + y1) / 2), "م", font=font, fill=255)
+    out = Image.new("RGBA", (w, h), (255, 255, 255, 0))
+    out.putalpha(stamp)
+    return out.resize((max(1, w // ss), size), Image.LANCZOS)
+
+
+def centred(canvas: Image.Image, mark: Image.Image, height_ratio: float) -> Image.Image:
+    target_h = int(canvas.height * height_ratio)
+    m = mark.resize((int(mark.width * target_h / mark.height), target_h), Image.LANCZOS)
+    canvas.alpha_composite(m, ((canvas.width - m.width) // 2, (canvas.height - m.height) // 2))
+    return canvas
+
+
+def app_icons(mark: Image.Image) -> None:
+    """Launcher, adaptive, themed, notification and splash images (Phase 13 final, DEC-065)."""
+    # Legacy/full icon: the stamp on aged cream.
+    centred(Image.new("RGBA", (1024, 1024), CREAM), mark, 0.74).save(os.path.join(IMAGES, "icon.png"), optimize=True)
+    # Adaptive icon (108 dp canvas; launchers show the inner 72 dp, round ones as a circle): the
+    # stamp's half-diagonal (0.66 x its height) must stay inside that circle, so height <= 0.47.
+    centred(Image.new("RGBA", (512, 512), (0, 0, 0, 0)), mark, 0.46).save(os.path.join(IMAGES, "android-icon-foreground.png"), optimize=True)
+    Image.new("RGBA", (512, 512), CREAM).save(os.path.join(IMAGES, "android-icon-background.png"), optimize=True)
+    # Themed icon (Android 13+) and status-bar notification icon: one-colour silhouette.
+    centred(Image.new("RGBA", (432, 432), (0, 0, 0, 0)), silhouette(256), 0.46).save(os.path.join(IMAGES, "android-icon-monochrome.png"), optimize=True)
+    centred(Image.new("RGBA", (96, 96), (0, 0, 0, 0)), silhouette(192), 0.86).save(os.path.join(IMAGES, "notification-icon.png"), optimize=True)
+    # Splash image (drawn at imageWidth dp by expo-splash-screen on a cream or night background).
+    mark.save(os.path.join(IMAGES, "splash-icon.png"), optimize=True)
+
+
 def main() -> None:
     os.makedirs(OUT, exist_ok=True)
-    render_png(9).save(os.path.join(OUT, "stamp-mark.png"), optimize=True)
+    mark = render_png(9)
+    mark.save(os.path.join(OUT, "stamp-mark.png"), optimize=True)
+    app_icons(mark)
     with open(os.path.join(OUT, "stamp-mark.svg"), "w", encoding="utf-8", newline="\n") as f:
         f.write(svg())
 
