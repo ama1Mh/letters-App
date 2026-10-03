@@ -26,6 +26,7 @@ import {
 } from '@/domain/design';
 import { LETTER_BODY_MAX, LETTER_SUBJECT_MAX } from '@/domain/letterLimits';
 import { ELEMENT_IMAGES, PAPER_TEXTURES } from '@/features/designs/designAssets';
+import { DraggableElement, type ElementPatch } from './DraggableElement';
 import {
   CANVAS_PADDING,
   CANVAS_WIDTH,
@@ -62,6 +63,8 @@ export interface DeskSheetProps {
   onBodyChange: (value: string) => void;
   bodyDir: TextDirection;
   postmarkDate: Date;
+  /** Drag / pinch / rotate results (one call per finished gesture); omitted = no gestures. */
+  onElementCommit?: (id: string, patch: ElementPatch) => void;
   /** Reports the sheet's position in the scroll content and its display width. */
   onSheetLayout?: (layout: { y: number; width: number }) => void;
   testID: string;
@@ -158,21 +161,36 @@ export function DeskSheet(props: DeskSheetProps) {
           pointerEvents={mode === 'decorate' ? 'box-none' : 'none'}
           style={{ position: 'absolute', top: 0, start: 0, width: CANVAS_WIDTH, height: '100%' }}
         >
-          {paintOrder(design.elements).map((el) => (
-            <ElementImage
-              key={el.id}
-              testID={`${props.testID}-element-${el.id}`}
-              el={el}
-              bodyDir={bodyDir}
-              postmarkDate={props.postmarkDate}
-              selected={mode === 'decorate' && el.id === props.selectedId}
-              onPress={
-                mode === 'decorate'
-                  ? () => props.onSelect(el.id === props.selectedId ? null : el.id)
-                  : undefined
-              }
-            />
-          ))}
+          {paintOrder(design.elements).map((el) =>
+            mode === 'decorate' && props.onElementCommit ? (
+              <DraggableElement
+                key={el.id}
+                testID={`${props.testID}-element-${el.id}`}
+                el={el}
+                sheetScale={(width ?? CANVAS_WIDTH) / CANVAS_WIDTH}
+                bodyDir={bodyDir}
+                postmarkDate={props.postmarkDate}
+                selected={el.id === props.selectedId}
+                onSelect={props.onSelect}
+                onToggle={(id) => props.onSelect(id === props.selectedId ? null : id)}
+                onCommit={props.onElementCommit}
+              />
+            ) : (
+              <ElementImage
+                key={el.id}
+                testID={`${props.testID}-element-${el.id}`}
+                el={el}
+                bodyDir={bodyDir}
+                postmarkDate={props.postmarkDate}
+                selected={mode === 'decorate' && el.id === props.selectedId}
+                onPress={
+                  mode === 'decorate'
+                    ? () => props.onSelect(el.id === props.selectedId ? null : el.id)
+                    : undefined
+                }
+              />
+            ),
+          )}
         </View>
       </CanvasFrame>
     </View>

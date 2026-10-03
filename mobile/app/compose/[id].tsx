@@ -15,7 +15,7 @@ import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import { getLettersRepository } from '@/data/letters/lettersRepository';
 import { detectBodyDirection } from '@/domain/bodyDirection';
 import { CANVAS_WIDTH } from '@/features/designs/LetterCanvas';
-import { defaultDesign, readDesign, type Design } from '@/domain/design';
+import { defaultDesign, readDesign, updateElement, type Design } from '@/domain/design';
 import { LETTER_BODY_MAX, shouldShowBodyCounter } from '@/domain/letterLimits';
 import { defaultScheduleTime, validateScheduleTime } from '@/domain/schedule';
 import { DeskSheet, DeskToolbar, type DeskMode } from '@/features/compose/LetterDesk';
@@ -337,6 +337,11 @@ export default function ComposeScreen() {
         onBodyChange={setBody}
         bodyDir={bodyDir}
         postmarkDate={new Date(openedAt)}
+        onElementCommit={
+          designEditable
+            ? (elementId, patch) => setDesign((d) => updateElement(d, elementId, patch))
+            : undefined
+        }
         onSheetLayout={(layout) => {
           sheet.current = layout;
         }}

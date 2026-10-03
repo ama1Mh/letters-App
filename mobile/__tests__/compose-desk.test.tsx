@@ -138,7 +138,10 @@ describe('compose desk (Phase 12.5)', () => {
     // Outside Decorate mode decorations are not buttons (they never block the text).
     expect(screen.getByTestId('compose-element-a1stamp1').props.accessibilityRole).toBe('image');
     await fireEvent.press(screen.getByTestId('compose-mode-decorate'));
-    await fireEvent.press(screen.getByTestId('compose-element-a1stamp1'));
+    // In Decorate mode a decoration is a gesture target; TalkBack's double-tap (accessibility tap)
+    // selects it, the same as a finger tap.
+    expect(screen.getByTestId('compose-element-a1stamp1').props.accessibilityRole).toBe('button');
+    await fireEvent(screen.getByTestId('compose-element-a1stamp1'), 'accessibilityTap');
     expect(screen.getByText('Selected: Palm tree stamp')).toBeTruthy();
     expect(screen.getByTestId('compose-element-a1stamp1').props.accessibilityState).toMatchObject({
       selected: true,
