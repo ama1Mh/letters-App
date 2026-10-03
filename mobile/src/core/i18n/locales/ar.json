@@ -29,7 +29,6 @@
     "deleteConfirmMessage": "لا يمكن التراجع عن هذا الإجراء.",
     "deleteConfirmCancel": "إلغاء",
     "deleteConfirmConfirm": "حذف",
-    "changeDesign": "تغيير التصميم",
     "recipientLabel": "إلى",
     "noRecipient": "اختر المستلم",
     "recipientChosen": "تم اختيار المستلم",
@@ -424,5 +423,37 @@
       "postmark_round": "ختم بريدي مؤرَّخ",
       "postmark_wavy": "ختم إلغاء متموّج"
     }
+  },
+  "desk": {
+    "modes": {
+      "paper": "الورق",
+      "write": "الكتابة",
+      "decorate": "الزينة"
+    },
+    "sections": {
+      "stamp": "طوابع",
+      "sticker": "ملصقات",
+      "postmark": "أختام بريدية"
+    },
+    "add": "إضافة {{name}}",
+    "limit": "يمكن أن تحمل الرسالة حتى {{max}} من الزخارف.",
+    "selectHint": "المس زخرفة على الرسالة لتحريكها أو تغيير حجمها أو تدويرها أو إزالتها.",
+    "selected": "المحدد: {{name}}",
+    "moveLeft": "تحريك لليسار",
+    "moveRight": "تحريك لليمين",
+    "moveUp": "تحريك للأعلى",
+    "moveDown": "تحريك للأسفل",
+    "smaller": "تصغير",
+    "bigger": "تكبير",
+    "rotateLeft": "تدوير عكس عقارب الساعة",
+    "rotateRight": "تدوير مع عقارب الساعة",
+    "sendBackward": "إرسال للخلف",
+    "bringForward": "إحضار للأمام",
+    "remove": "إزالة",
+    "done": "تم",
+    "removed": "تمت إزالة {{name}}.",
+    "undo": "تراجع",
+    "readOnly": "صُمّمت هذه الرسالة بإصدار أحدث من التطبيق. حدّث التطبيق لتعديل تصميمها.",
+    "paperLabel": "ورقة الرسالة"
   }
 }

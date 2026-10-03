@@ -130,7 +130,14 @@ export function LetterReader({
           ) : null}
         </View>
       ) : (
-        <ScrollView horizontal scrollEnabled={zoom > 0} showsHorizontalScrollIndicator={zoom > 0}>
+        <ScrollView
+          horizontal
+          scrollEnabled={zoom > 0}
+          showsHorizontalScrollIndicator={zoom > 0}
+          // The sheet is physical: a zoomed letter opens at its left edge in both UI directions
+          // (an RTL ScrollView would start at the right, mid-line; device check 12.4).
+          style={{ direction: 'ltr' }}
+        >
           <LetterCanvas
             testID={testID}
             design={design}

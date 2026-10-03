@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 
 import { formatDate } from '@/core/i18n/format';
 import type { TextDirection } from '@/domain/bodyDirection';
@@ -192,44 +192,45 @@ export function postmarkDateText(date: Date, bodyDir: TextDirection): string {
   return language === 'en' ? text.toUpperCase() : text;
 }
 
-/** One placed element, static. `children` lets the editor add a selection outline. */
+/**
+ * One placed element. Static (an image with an accessible name) unless `onPress` is given: then it
+ * is a button the editor uses for selection, outlined while `selected`.
+ */
 export function ElementImage({
   el,
   bodyDir,
   postmarkDate,
   testID,
-  children,
+  onPress,
+  selected = false,
 }: {
   el: DesignElement;
   bodyDir: TextDirection;
   postmarkDate: Date;
   testID?: string;
-  children?: ReactNode;
+  onPress?: () => void;
+  selected?: boolean;
 }) {
   const { t } = useTranslation();
   const entry = elementEntry(el.type, el.asset);
   const { width, height } = elementBox(el);
   const dateText = entry?.dated ? postmarkDateText(postmarkDate, bodyDir) : null;
   const name = t(`design.elementNames.${el.asset}` as 'design.elementNames.stamp_dove');
-  return (
-    <View
-      testID={testID}
-      accessible
-      accessibilityRole="image"
-      accessibilityLabel={dateText ? `${name}, ${dateText}` : name}
-      style={{
-        position: 'absolute',
-        top: 0,
-        start: 0,
-        width,
-        height,
-        transform: [
-          { translateX: el.x * CANVAS_WIDTH - width / 2 },
-          { translateY: el.y * CANVAS_WIDTH - height / 2 },
-          { rotate: `${el.rotation}deg` },
-        ],
-      }}
-    >
+  const label = dateText ? `${name}, ${dateText}` : name;
+  const style = {
+    position: 'absolute' as const,
+    top: 0,
+    start: 0,
+    width,
+    height,
+    transform: [
+      { translateX: el.x * CANVAS_WIDTH - width / 2 },
+      { translateY: el.y * CANVAS_WIDTH - height / 2 },
+      { rotate: `${el.rotation}deg` },
+    ],
+  };
+  const content = (
+    <>
       <Image source={ELEMENT_IMAGES[el.asset]} resizeMode="contain" style={{ width, height }} />
       {dateText ? (
         <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center' }]}>
@@ -247,7 +248,40 @@ export function ElementImage({
           </Text>
         </View>
       ) : null}
-      {children}
+      {selected ? (
+        <View
+          pointerEvents="none"
+          style={[
+            StyleSheet.absoluteFill,
+            { borderWidth: 2, borderStyle: 'dashed', borderColor: '#B45309', borderRadius: 4 },
+          ]}
+        />
+      ) : null}
+    </>
+  );
+  if (onPress) {
+    return (
+      <Pressable
+        testID={testID}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityState={{ selected }}
+        onPress={onPress}
+        style={style}
+      >
+        {content}
+      </Pressable>
+    );
+  }
+  return (
+    <View
+      testID={testID}
+      accessible
+      accessibilityRole="image"
+      accessibilityLabel={label}
+      style={style}
+    >
+      {content}
     </View>
   );
 }

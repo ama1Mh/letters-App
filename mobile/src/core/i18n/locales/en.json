@@ -29,7 +29,6 @@
     "deleteConfirmMessage": "This cannot be undone.",
     "deleteConfirmCancel": "Cancel",
     "deleteConfirmConfirm": "Delete",
-    "changeDesign": "Change design",
     "recipientLabel": "To",
     "noRecipient": "Choose a recipient",
     "recipientChosen": "Recipient selected",
@@ -424,5 +423,37 @@
       "postmark_round": "Dated postmark",
       "postmark_wavy": "Wavy cancellation mark"
     }
+  },
+  "desk": {
+    "modes": {
+      "paper": "Paper",
+      "write": "Write",
+      "decorate": "Decorate"
+    },
+    "sections": {
+      "stamp": "Stamps",
+      "sticker": "Stickers",
+      "postmark": "Postmarks"
+    },
+    "add": "Add {{name}}",
+    "limit": "A letter can hold up to {{max}} decorations.",
+    "selectHint": "Tap a decoration on the letter to move, resize, rotate or remove it.",
+    "selected": "Selected: {{name}}",
+    "moveLeft": "Move left",
+    "moveRight": "Move right",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "smaller": "Smaller",
+    "bigger": "Bigger",
+    "rotateLeft": "Rotate anticlockwise",
+    "rotateRight": "Rotate clockwise",
+    "sendBackward": "Send backward",
+    "bringForward": "Bring forward",
+    "remove": "Remove",
+    "done": "Done",
+    "removed": "{{name}} removed.",
+    "undo": "Undo",
+    "readOnly": "This letter's design was made in a newer version of the app. Update the app to change it.",
+    "paperLabel": "Letter paper"
   }
 }

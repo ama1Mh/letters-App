@@ -31,7 +31,32 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `compose.deleteConfirmMessage` | This cannot be undone. | لا يمكن التراجع عن هذا الإجراء. | draft | |
 | `compose.deleteConfirmCancel` | Cancel | إلغاء | draft | |
 | `compose.deleteConfirmConfirm` | Delete | حذف | draft | |
-| `compose.changeDesign` | Change design | تغيير التصميم | draft | |
+| `desk.modes.paper` | Paper | الورق | draft | Phase 12 editor tab |
+| `desk.modes.write` | Write | الكتابة | draft | Phase 12 editor tab |
+| `desk.modes.decorate` | Decorate | الزينة | draft | Phase 12 editor tab |
+| `desk.sections.stamp` | Stamps | طوابع | draft | Phase 12 decorate tray section |
+| `desk.sections.sticker` | Stickers | ملصقات | draft | Phase 12 decorate tray section |
+| `desk.sections.postmark` | Postmarks | أختام بريدية | draft | Phase 12 decorate tray section |
+| `desk.add` | Add {{name}} | إضافة {{name}} | draft | Accessibility label of a decoration in the tray |
+| `desk.limit` | A letter can hold up to {{max}} decorations. | يمكن أن تحمل الرسالة حتى {{max}} من الزخارف. | draft | Shown when the element limit is reached (DEC-061: 24) |
+| `desk.selectHint` | Tap a decoration on the letter to move, resize, rotate or remove it. | المس زخرفة على الرسالة لتحريكها أو تغيير حجمها أو تدويرها أو إزالتها. | draft | Decorate mode hint |
+| `desk.selected` | Selected: {{name}} | المحدد: {{name}} | draft | Selection bar title |
+| `desk.moveLeft` | Move left | تحريك لليسار | draft | Physical direction on the sheet (the sheet does not mirror) |
+| `desk.moveRight` | Move right | تحريك لليمين | draft | Physical direction on the sheet |
+| `desk.moveUp` | Move up | تحريك للأعلى | draft | |
+| `desk.moveDown` | Move down | تحريك للأسفل | draft | |
+| `desk.smaller` | Smaller | تصغير | draft | |
+| `desk.bigger` | Bigger | تكبير | draft | |
+| `desk.rotateLeft` | Rotate anticlockwise | تدوير عكس عقارب الساعة | draft | |
+| `desk.rotateRight` | Rotate clockwise | تدوير مع عقارب الساعة | draft | |
+| `desk.sendBackward` | Send backward | إرسال للخلف | draft | Layer order |
+| `desk.bringForward` | Bring forward | إحضار للأمام | draft | Layer order |
+| `desk.remove` | Remove | إزالة | draft | |
+| `desk.done` | Done | تم | draft | Deselect |
+| `desk.removed` | {{name}} removed. | تمت إزالة {{name}}. | draft | Snackbar after removing a decoration |
+| `desk.undo` | Undo | تراجع | draft | |
+| `desk.readOnly` | This letter's design was made in a newer version of the app. Update the app to change it. | صُمّمت هذه الرسالة بإصدار أحدث من التطبيق. حدّث التطبيق لتعديل تصميمها. | draft | Shown when the stored design is newer than this app (DEC-060 (4)) |
+| `desk.paperLabel` | Letter paper | ورقة الرسالة | draft | Accessibility label of the writing sheet |
 | `design.paperLabel` | Paper | الورق | draft | |
 | `design.fontLabel` | Font | الخط | draft | |
 | `design.inkLabel` | Ink | الحبر | draft | |
