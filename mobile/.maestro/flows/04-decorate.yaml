@@ -52,8 +52,7 @@ name: Desk - decorate, reopen and delete a draft
     id: compose-undo
 - tapOn:
     id: compose-sel-done
-- tapOn:
-    id: compose-back
+- back # the native header's back (Phase 13: one back control)
 - tapOn:
     text: Maestro desk
 - tapOn:

@@ -5,7 +5,7 @@ the letter م in Amiri Bold, and a small dove-wing stroke. Palette B colours (DE
 
 Run from the repo root:  python tools/brand/generate_brand.py
 Outputs (deterministic):
-  mobile/assets/brand/stamp-mark.png   1080 x 1260, transparent (in-app mark, splash source)
+  mobile/assets/brand/stamp-mark.png   1170 x 1350, transparent with a soft shadow (in-app mark)
   mobile/assets/brand/stamp-mark.svg   vector master (same geometry; text needs Amiri installed)
 The final launcher icon, notification icon and splash are produced from this mark only after the
 Phase 13 visual QA (owner's sequencing, 2026-10-03).
@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import os
 
-from PIL import Image, ImageChops, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
 OUT = os.path.join(ROOT, "mobile", "assets", "brand")
@@ -28,6 +28,8 @@ WING = (233, 217, 180, 255)
 # Geometry in the 120 x 140 design units of the SVG master.
 W, H = 120, 140
 PERF_R, PERF_STEP, EDGE = 5, 14, 6
+# Transparent margin around the PNG for the drop shadow (design units).
+PAD = 5
 
 
 def perforation_centres():
@@ -76,7 +78,19 @@ def render_png(scale: int) -> Image.Image:
         y = (1 - t) ** 2 * 42 + 2 * (1 - t) * t * 44 + t * t * 52
         pts.append((x * k, y * k))
     d.line(pts, fill=WING, width=int(2.5 * k), joint="curve")
-    return img.resize((W * scale, H * scale), Image.LANCZOS)
+    # A soft ink shadow under the stamp so the ivory perforations read on cream (Phase 13 visual QA);
+    # on the dark theme it disappears into the ground. The canvas gains PAD units on every side.
+    pad = PAD * k
+    out = Image.new("RGBA", (img.width + 2 * pad, img.height + 2 * pad), (0, 0, 0, 0))
+    alpha = img.getchannel("A").point(lambda v: int(v * 0.30))
+    shadow = Image.new("RGBA", img.size, (43, 35, 28, 0))
+    shadow.putalpha(alpha)
+    shadow_layer = Image.new("RGBA", out.size, (0, 0, 0, 0))
+    shadow_layer.alpha_composite(shadow, (pad + int(0.6 * k), pad + int(1.2 * k)))
+    shadow_layer = shadow_layer.filter(ImageFilter.GaussianBlur(1.6 * k))
+    out.alpha_composite(shadow_layer)
+    out.alpha_composite(img, (pad, pad))
+    return out.resize(((W + 2 * PAD) * scale, (H + 2 * PAD) * scale), Image.LANCZOS)
 
 
 def svg() -> str:

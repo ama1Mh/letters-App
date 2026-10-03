@@ -259,8 +259,9 @@ export default function ComposeScreen() {
   return (
     <ScrollView
       testID="compose-screen"
-      // The desk toolbar (third child) stays on screen while the letter scrolls under it.
-      stickyHeaderIndices={[2]}
+      // The desk toolbar (second child, after the recipient row) stays on screen while the letter
+      // scrolls under it. Back is the native header's (one back control; Phase 13 visual QA).
+      stickyHeaderIndices={[1]}
       scrollEventThrottle={32}
       onScroll={(e) => {
         scrollY.current = e.nativeEvent.contentOffset.y;
@@ -268,20 +269,6 @@ export default function ComposeScreen() {
       contentContainerStyle={{ padding: spacing.lg, gap: spacing.md, flexGrow: 1 }}
       style={{ backgroundColor: colors.background }}
     >
-      <Pressable
-        testID="compose-back"
-        accessibilityRole="button"
-        onPress={() => router.back()}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: spacing.xs,
-          minHeight: MIN_TOUCH_TARGET,
-        }}
-      >
-        <DirectionalIcon name="chevron-back" size={18} color={colors.primary} />
-        <AppText style={{ color: colors.primary }}>{t('tabs.drafts')}</AppText>
-      </Pressable>
       {isReply ? (
         <AppText testID="compose-reply-recipient" variant="muted">
           {t('compose.replyRecipient')}

@@ -13,7 +13,8 @@ import { AppText } from './AppText';
  * tools/brand/generate_brand.py.
  */
 const STAMP_MARK = require('../../assets/brand/stamp-mark.png');
-const STAMP_ASPECT = 140 / 120;
+// The PNG is 130 x 150 design units: the 120 x 140 stamp plus a 5-unit shadow margin.
+const STAMP_ASPECT = 150 / 130;
 
 export function BrandMark({
   size = 'large',
@@ -39,8 +40,8 @@ export function BrandMark({
         accessible={false}
         importantForAccessibility="no"
         style={{
-          width: big ? 76 : 44,
-          height: Math.round((big ? 76 : 44) * STAMP_ASPECT),
+          width: big ? 82 : 48,
+          height: Math.round((big ? 82 : 48) * STAMP_ASPECT),
           marginBottom: big ? spacing.sm : spacing.xs,
         }}
       />

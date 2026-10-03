@@ -19,8 +19,7 @@ name: Compose - write, reopen and delete a draft
 - hideKeyboard
 - assertVisible:
     text: Written by the Maestro E2E flow. # typed directly on the letter sheet (Phase 12 desk)
-- tapOn:
-    id: compose-back
+- back # the native header's back (Phase 13: one back control)
 - assertVisible:
     text: Maestro subject
 - tapOn:
