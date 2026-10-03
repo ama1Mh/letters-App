@@ -12,6 +12,7 @@ import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import type { LocalDraft } from '@/data/local/draftsStore';
 import { useDrafts } from '@/features/drafts/useDrafts';
+import { EnvelopeRow } from '@/features/letters/EnvelopeRow';
 
 export default function DraftsScreen() {
   const { t } = useTranslation();
@@ -29,17 +30,10 @@ export default function DraftsScreen() {
 
   function renderItem({ item }: { item: LocalDraft }) {
     return (
-      <Pressable
+      // An unposted envelope: empty stamp frame, no postmark (Phase 13).
+      <EnvelopeRow
         testID={`draft-row-${item.id}`}
-        accessibilityRole="button"
         onPress={() => router.push(`/compose/${item.id}`)}
-        style={{
-          paddingHorizontal: spacing.lg,
-          paddingVertical: spacing.md,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
-          gap: spacing.xs,
-        }}
       >
         <AppText variant="title">
           {item.subject && item.subject.trim() ? item.subject : t('drafts.untitled')}
@@ -58,7 +52,7 @@ export default function DraftsScreen() {
             {item.body}
           </AppText>
         ) : null}
-      </Pressable>
+      </EnvelopeRow>
     );
   }
 
@@ -77,11 +71,12 @@ export default function DraftsScreen() {
           minHeight: MIN_TOUCH_TARGET,
           paddingVertical: spacing.md,
           borderRadius: radius.md,
-          backgroundColor: colors.primary,
+          // The burgundy seal: writing is this screen's one main action (DEC-063).
+          backgroundColor: colors.accent,
         }}
       >
-        <Ionicons name="add" size={18} color={colors.onPrimary} />
-        <AppText style={{ color: colors.onPrimary, fontWeight: '600' }}>
+        <Ionicons name="create-outline" size={18} color={colors.onAccent} />
+        <AppText style={{ color: colors.onAccent, fontWeight: '600' }}>
           {t('drafts.newButton')}
         </AppText>
       </Pressable>

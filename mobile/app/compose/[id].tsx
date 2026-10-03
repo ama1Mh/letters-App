@@ -403,6 +403,7 @@ export default function ComposeScreen() {
         <>
           <Button
             testID="compose-send"
+            variant="seal"
             title={t('compose.send')}
             loading={sending}
             disabled={!canSend}

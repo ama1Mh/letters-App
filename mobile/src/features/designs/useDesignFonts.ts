@@ -1,4 +1,4 @@
-import { Amiri_400Regular } from '@expo-google-fonts/amiri';
+import { Amiri_400Regular, Amiri_700Bold } from '@expo-google-fonts/amiri';
 import { ArefRuqaa_400Regular } from '@expo-google-fonts/aref-ruqaa';
 import { Cairo_400Regular } from '@expo-google-fonts/cairo';
 import { Caveat_400Regular } from '@expo-google-fonts/caveat';
@@ -26,6 +26,8 @@ export function useDesignFonts(): boolean {
     Cairo_400Regular,
     Tajawal_400Regular,
     Amiri_400Regular,
+    // App titles (theme fonts.display, DEC-063).
+    Amiri_700Bold,
     ArefRuqaa_400Regular,
     ReemKufi_400Regular,
     IMFellEnglish_400Regular,

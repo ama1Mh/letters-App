@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { BrandMark } from '@/components/BrandMark';
 import { SwitchRow } from '@/components/SwitchRow';
 import { Button } from '@/components/Button';
 import { TextField } from '@/components/TextField';
@@ -133,6 +134,7 @@ export default function OnboardingScreen() {
         justifyContent: 'center',
       }}
     >
+      <BrandMark size="small" />
       <AppText variant="title">{t('auth.onboarding.title')}</AppText>
       <View style={{ gap: spacing.xs }}>
         <TextField

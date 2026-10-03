@@ -29,7 +29,8 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
         placeholderTextColor={colors.textMuted}
         style={[
           {
-            borderWidth: 1,
+            borderWidth: 1.5,
+            backgroundColor: colors.surface,
             borderColor: error ? colors.danger : colors.border,
             borderRadius: radius.sm,
             minHeight: MIN_TOUCH_TARGET,

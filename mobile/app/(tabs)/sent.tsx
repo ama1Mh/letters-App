@@ -19,6 +19,7 @@ import {
   type SentKind,
 } from '@/data/letters/lettersRepository';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
+import { EnvelopeRow } from '@/features/letters/EnvelopeRow';
 import { useLetterEvents } from '@/features/letters/LetterEventsProvider';
 import { letterErrorKey, type TranslatedLetterError } from '@/features/letters/letterErrors';
 import { usePagedList } from '@/features/letters/usePagedList';
@@ -168,19 +169,19 @@ function SentList({ kind }: { kind: SentKind }) {
     }
 
     return (
-      <Pressable
+      <EnvelopeRow
         testID={`sent-row-${item.id}`}
-        accessibilityRole="button"
         onPress={() => router.push(`/letter/${item.id}`)}
-        style={{
-          paddingHorizontal: spacing.lg,
-          paddingVertical: spacing.md,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
-          gap: spacing.xs,
-        }}
+        person={item.recipient}
+        date={
+          item.deliveredAt
+            ? new Date(item.deliveredAt)
+            : item.scheduledAt
+              ? new Date(item.scheduledAt)
+              : null
+        }
       >
-        <CorrespondentName person={item.recipient} prefix={t('sent.to')} />
+        <CorrespondentName person={item.recipient} prefix={t('sent.to')} hideAvatar />
         {item.subject ? <AppText>{item.subject}</AppText> : null}
         {item.preview ? (
           <AppText
@@ -219,7 +220,7 @@ function SentList({ kind }: { kind: SentKind }) {
             onPress={() => confirmUnschedule(item)}
           />
         ) : null}
-      </Pressable>
+      </EnvelopeRow>
     );
   }
 

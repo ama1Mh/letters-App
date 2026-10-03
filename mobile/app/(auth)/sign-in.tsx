@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { BrandMark } from '@/components/BrandMark';
 import { Button } from '@/components/Button';
 import { TextField } from '@/components/TextField';
 import { TEXT_LINK_HIT_SLOP } from '@/core/theme/tokens';
@@ -54,6 +55,7 @@ export default function SignInScreen() {
         justifyContent: 'center',
       }}
     >
+      <BrandMark testID="brand-mark" />
       <AppText variant="title">{t('auth.signIn.title')}</AppText>
       <TextField
         testID="sign-in-email"

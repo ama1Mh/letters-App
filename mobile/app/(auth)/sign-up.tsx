@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { BrandMark } from '@/components/BrandMark';
 import { Button } from '@/components/Button';
 import { TextField } from '@/components/TextField';
 import { currentLanguage } from '@/core/i18n';
@@ -97,6 +98,7 @@ export default function SignUpScreen() {
         justifyContent: 'center',
       }}
     >
+      <BrandMark size="small" />
       <TextField
         testID="sign-up-email"
         label={t('auth.signUp.email')}

@@ -24,16 +24,18 @@ const TABS = [
 
 export default function TabsLayout() {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle: { backgroundColor: colors.background, borderTopColor: colors.border },
+        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
         headerStyle: { backgroundColor: colors.background },
+        headerShadowVisible: false,
         headerTintColor: colors.text,
+        headerTitleStyle: { fontFamily: fonts.display, fontSize: 26 },
       }}
     >
       {TABS.map((tab) => (
@@ -50,7 +52,7 @@ export default function TabsLayout() {
                 testID={`tab-${tab.name}-label`}
                 maxFontSizeMultiplier={TAB_LABEL_MAX_FONT_SCALE}
                 numberOfLines={1}
-                style={{ color, fontSize: 10, textAlign: 'center' }}
+                style={{ color, fontSize: 11, textAlign: 'center' }}
               >
                 {children}
               </Text>

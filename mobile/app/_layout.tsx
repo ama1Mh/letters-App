@@ -26,7 +26,7 @@ installForegroundNotificationHandler();
 
 export default function RootLayout() {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
   useDesignFonts(); // loaded once, app-wide; see the hook for why nothing needs to wait on it
 
   return (
@@ -41,6 +41,8 @@ export default function RootLayout() {
                 screenOptions={{
                   headerStyle: { backgroundColor: colors.background },
                   headerTintColor: colors.text,
+                  headerShadowVisible: false,
+                  headerTitleStyle: { fontFamily: fonts.display, fontSize: 22 },
                   contentStyle: { backgroundColor: colors.background },
                 }}
               >

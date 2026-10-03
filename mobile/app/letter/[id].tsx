@@ -220,6 +220,7 @@ export default function LetterScreen() {
       {isRecipient && letter.status === 'delivered' ? (
         <Button
           testID="letter-reply"
+          variant="seal"
           title={t('letter.reply')}
           onPress={() => void onReply(letter)}
         />
