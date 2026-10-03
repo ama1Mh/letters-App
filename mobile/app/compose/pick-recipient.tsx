@@ -17,6 +17,7 @@ import {
   type DiscoveryErrorCode,
   type SearchResult,
 } from '@/data/discovery/discoveryRepository';
+import { defaultDesign } from '@/domain/design';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
 import { PersonActionsButton } from '@/features/safety/PersonActionsButton';
@@ -117,7 +118,10 @@ export default function PickRecipientScreen() {
       id,
       subject: draft?.subject ?? null,
       body: draft?.body ?? '',
-      design: draft?.design,
+      // A brand-new draft is only stored once it has content (composer autosave), so choosing the
+      // recipient first finds no draft yet: save the default design, never `undefined`, which the
+      // local store rejects (NOT NULL; found in Phase 12.6 phone QA).
+      design: draft?.design ?? defaultDesign(),
       recipientId: user.id,
     });
     router.back();
