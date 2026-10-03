@@ -50,6 +50,9 @@ describe('compose desk (Phase 12.5)', () => {
     expect(
       StyleSheet.flatten(screen.getByTestId('compose-preview').props.style).backgroundColor,
     ).toBe('#EFE2C4');
+    // The subject wraps like on the finished letter but stays one line of text.
+    await fireEvent.changeText(screen.getByTestId('compose-subject'), 'Two\nlines');
+    expect(screen.getByTestId('compose-subject')).toHaveDisplayValue('Two lines');
     // Text on the sheet keeps the composition: no system font scaling (DEC-061).
     expect(screen.getByTestId('compose-body').props.allowFontScaling).toBe(false);
 

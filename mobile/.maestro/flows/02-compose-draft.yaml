@@ -1,4 +1,4 @@
-# Compose a draft (live preview), leave and come back to it, then delete it. Leaves no data behind.
+# Compose a draft (typed on the letter sheet), leave and come back to it, then delete it. Leaves no data behind.
 appId: com.letterapp.dev
 name: Compose - write, reopen and delete a draft
 ---
@@ -12,13 +12,13 @@ name: Compose - write, reopen and delete a draft
 - tapOn:
     id: compose-subject
 - inputText: Maestro subject
+- hideKeyboard # the keyboard shifts the sheet; tap the body only once it has settled
 - tapOn:
     id: compose-body
 - inputText: Written by the Maestro E2E flow.
 - hideKeyboard
 - assertVisible:
-    text: Written by the Maestro E2E flow.
-    index: 1 # the input is index 0; the live preview is the second match
+    text: Written by the Maestro E2E flow. # typed directly on the letter sheet (Phase 12 desk)
 - tapOn:
     id: compose-back
 - assertVisible:

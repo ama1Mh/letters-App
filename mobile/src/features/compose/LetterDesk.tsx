@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import type { ComponentProps } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
@@ -44,7 +44,6 @@ export const DESK_MODES: readonly DeskMode[] = ['paper', 'write', 'decorate'];
 const MOVE_STEP = 0.02;
 const SCALE_STEP = 1.15;
 const ROTATE_STEP = 15;
-const UNDO_MS = 5000;
 
 // ---------------------------------------------------------------------------------------------
 // The sheet
@@ -108,8 +107,13 @@ export function DeskSheet(props: DeskSheetProps) {
                 placeholder={t('compose.subjectLabel')}
                 placeholderTextColor={placeholderColor}
                 value={props.subject}
-                onChangeText={props.onSubjectChange}
+                // Multi-line so a long subject wraps exactly as on the finished letter; it is still
+                // one line of text: line breaks are dropped and Enter closes the keyboard.
+                onChangeText={(value) => props.onSubjectChange(value.replace(/[\r\n]+/g, ' '))}
                 maxLength={LETTER_SUBJECT_MAX}
+                multiline
+                scrollEnabled={false}
+                submitBehavior="blurAndSubmit"
                 allowFontScaling={false}
                 style={[styles.subject, { fontWeight: '600', padding: 0 }]}
               />
@@ -199,28 +203,22 @@ export function DeskToolbar(props: DeskToolbarProps) {
   const { t } = useTranslation();
   const { colors, spacing } = useTheme();
   const { design, mode, testID } = props;
+  // The last removed decoration. Undo stays offered until the next design change: no timer, so it
+  // works at any pace (TalkBack, switch access; WCAG 2.2.1).
   const [removed, setRemoved] = useState<DesignElement | null>(null);
-  const undoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(
-    () => () => {
-      if (undoTimer.current) clearTimeout(undoTimer.current);
-    },
-    [],
-  );
 
   const selected = design.elements.find((el) => el.id === props.selectedId) ?? null;
 
-  function change(next: Design) {
-    if (props.designEditable) props.onDesignChange(next);
+  function change(next: Design, keepUndo = false) {
+    if (!props.designEditable) return;
+    props.onDesignChange(next);
+    if (!keepUndo) setRemoved(null);
   }
 
   function onRemove(el: DesignElement) {
-    change(removeElement(design, el.id));
+    change(removeElement(design, el.id), true);
     props.onSelect(null);
     setRemoved(el);
-    if (undoTimer.current) clearTimeout(undoTimer.current);
-    undoTimer.current = setTimeout(() => setRemoved(null), UNDO_MS);
   }
 
   function onUndo() {
