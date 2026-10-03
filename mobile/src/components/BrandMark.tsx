@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 
 import { useTheme } from '@/core/theme/useTheme';
 
@@ -9,8 +9,12 @@ import { AppText } from './AppText';
 /**
  * The Mirsal wordmark (Phase 13, DEC-063): مرسال in Amiri over MIRSAL in spaced capitals, joined by a
  * burgundy rule. Both scripts always appear, whatever the UI language, with equal weight. TalkBack
- * reads the name once, in the UI language. The icon mark joins it once the logo concept is chosen.
+ * reads the name once, in the UI language. Above it, the stamp mark (concept 1, DEC-064), drawn by
+ * tools/brand/generate_brand.py.
  */
+const STAMP_MARK = require('../../assets/brand/stamp-mark.png');
+const STAMP_ASPECT = 140 / 120;
+
 export function BrandMark({
   size = 'large',
   testID,
@@ -30,6 +34,16 @@ export function BrandMark({
       accessibilityLabel={t('app.name')}
       style={{ alignItems: 'center', gap: big ? spacing.xs : 2, alignSelf: 'center' }}
     >
+      <Image
+        source={STAMP_MARK}
+        accessible={false}
+        importantForAccessibility="no"
+        style={{
+          width: big ? 76 : 44,
+          height: Math.round((big ? 76 : 44) * STAMP_ASPECT),
+          marginBottom: big ? spacing.sm : spacing.xs,
+        }}
+      />
       <AppText
         allowFontScaling={false}
         style={{
