@@ -362,6 +362,11 @@
     "none": "No avatar",
     "option": "Avatar {{number}}"
   },
+  "displayName": {
+    "title": "Display name",
+    "save": "Save",
+    "edit": "Change display name"
+  },
   "notifications": {
     "channelName": "Letters",
     "title": "Notifications",

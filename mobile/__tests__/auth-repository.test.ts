@@ -370,4 +370,35 @@ describe('createSupabaseAuthRepository', () => {
       await expect(failing.updateLocale('en')).rejects.toEqual(new AuthActionError('unknown'));
     });
   });
+
+  describe('updateDisplayName (owner request 2026-10-04)', () => {
+    it('updates display_name on the own profile row', async () => {
+      const updates: { payload: unknown; id: string }[] = [];
+      const repo = createSupabaseAuthRepository(
+        fakeClient({
+          sessionUserId: 'user-1',
+          onUpdate: (payload, id) => updates.push({ payload, id }),
+        }),
+      );
+      await repo.updateDisplayName('Layla Haddad');
+      expect(updates).toEqual([{ payload: { display_name: 'Layla Haddad' }, id: 'user-1' }]);
+    });
+
+    it('maps signed out, the CHECK violation, the reserved-word trigger and anything else', async () => {
+      await expect(
+        createSupabaseAuthRepository(fakeClient()).updateDisplayName('Name'),
+      ).rejects.toEqual(new AuthActionError('not_authenticated'));
+      const failing = (updateError: unknown) =>
+        createSupabaseAuthRepository(fakeClient({ sessionUserId: 'user-1', updateError }));
+      await expect(
+        failing({ code: '23514', message: 'violates check constraint' }).updateDisplayName('x'),
+      ).rejects.toEqual(new AuthActionError('display_name_invalid'));
+      await expect(
+        failing({ code: 'P0001', message: 'display_name_reserved' }).updateDisplayName('Mirsal'),
+      ).rejects.toEqual(new AuthActionError('display_name_reserved'));
+      await expect(failing({ code: '42501' }).updateDisplayName('Name')).rejects.toEqual(
+        new AuthActionError('unknown'),
+      );
+    });
+  });
 });

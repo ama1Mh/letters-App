@@ -89,6 +89,27 @@ export default function ProfileScreen() {
         <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
       </Pressable>
       <Pressable
+        testID="profile-display-name-row"
+        accessibilityRole="button"
+        accessibilityHint={t('displayName.edit')}
+        onPress={() => router.push('/settings/display-name')}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: spacing.md,
+          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.lg,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
+      >
+        <AppText style={{ flex: 1 }}>{t('displayName.title')}</AppText>
+        <AppText variant="muted" numberOfLines={1} style={{ flexShrink: 1 }}>
+          {auth.profile?.displayName ?? ''}
+        </AppText>
+        <DirectionalIcon name="chevron-forward" size={18} color={colors.textMuted} />
+      </Pressable>
+      <Pressable
         testID="profile-language-row"
         accessibilityRole="button"
         onPress={() => router.push('/settings/language')}

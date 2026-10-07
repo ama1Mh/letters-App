@@ -57,6 +57,10 @@ export default function RootLayout() {
                   options={{ title: t('notifications.title') }}
                 />
                 <Stack.Screen name="settings/avatar" options={{ title: t('avatar.title') }} />
+                <Stack.Screen
+                  name="settings/display-name"
+                  options={{ title: t('displayName.title') }}
+                />
                 <Stack.Screen name="compose/[id]" options={{ title: t('compose.title') }} />
                 <Stack.Screen name="compose/pick-recipient" options={{ headerShown: false }} />
                 <Stack.Screen name="letter/[id]" options={{ title: t('letter.title') }} />

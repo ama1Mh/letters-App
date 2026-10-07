@@ -362,6 +362,11 @@
     "none": "بدون صورة رمزية",
     "option": "الصورة الرمزية {{number}}"
   },
+  "displayName": {
+    "title": "الاسم المعروض",
+    "save": "حفظ",
+    "edit": "تغيير الاسم المعروض"
+  },
   "notifications": {
     "channelName": "الرسائل",
     "title": "الإشعارات",

@@ -124,6 +124,15 @@ export function createFakeAuthRepository(initial?: {
       };
     },
 
+    async updateDisplayName(displayName) {
+      if (!session) throw new AuthActionError('not_authenticated');
+      // Stands in for the database's reserved-word trigger, for a word the app's own list lacks.
+      if (displayName === 'Server Reserved') {
+        throw new AuthActionError('display_name_reserved');
+      }
+      profile = { ...(profile ?? fakeProfile(session.userId)), displayName };
+    },
+
     async updateAvatar(avatarKey) {
       if (!session) throw new AuthActionError('not_authenticated');
       profile = { ...(profile ?? fakeProfile(session.userId)), avatarKey };
