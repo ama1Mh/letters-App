@@ -182,19 +182,20 @@ function stringProp(value: object, key: string): string | undefined {
   return typeof raw === 'string' ? raw : undefined;
 }
 
-/** Reads `error.code` (an Auth error) falling back to `error.message` (an RPC exception message,
- *  which *is* the code), and returns it only if it is one this caller declared it understands. */
+/** Reads `error.code` (an Auth error) or `error.message` (an RPC exception message, which *is* the
+ *  code), and returns the first one this caller declared it understands. Both are tried: a
+ *  PostgREST error from `raise exception` carries the generic `code` `P0001`, so stopping at a
+ *  present-but-unknown `code` turned every database error into 'unknown'. */
 function resolveErrorCode<Code extends string>(
   error: unknown,
   knownCodes: readonly Code[],
 ): Code | 'unknown' {
-  const candidate =
-    error !== null && typeof error === 'object'
-      ? (stringProp(error, 'code') ?? stringProp(error, 'message'))
-      : undefined;
-  return candidate !== undefined && (knownCodes as readonly string[]).includes(candidate)
-    ? (candidate as Code)
-    : 'unknown';
+  if (error === null || typeof error !== 'object') return 'unknown';
+  const known = knownCodes as readonly string[];
+  for (const candidate of [stringProp(error, 'code'), stringProp(error, 'message')]) {
+    if (candidate !== undefined && known.includes(candidate)) return candidate as Code;
+  }
+  return 'unknown';
 }
 
 const SIGN_UP_CODES: readonly SignUpErrorCode[] = [

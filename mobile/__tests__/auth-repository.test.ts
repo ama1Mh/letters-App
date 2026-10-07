@@ -150,6 +150,26 @@ describe('createSupabaseAuthRepository', () => {
       ).rejects.toEqual(new AuthActionError('username_unavailable'));
     });
 
+    it('maps the message of a real PostgREST error, whose code is the generic P0001', async () => {
+      // `raise exception 'username_unavailable'` reaches the client as { code: 'P0001', message }.
+      const repo = createSupabaseAuthRepository(
+        fakeClient({
+          rpc: async () => ({
+            data: null,
+            error: { code: 'P0001', message: 'username_unavailable', details: null, hint: null },
+          }),
+        }),
+      );
+      await expect(
+        repo.completeOnboarding({
+          username: 'taken_name',
+          displayName: 'Name',
+          locale: 'en',
+          discoverableByEmail: false,
+        }),
+      ).rejects.toEqual(new AuthActionError('username_unavailable'));
+    });
+
     it('falls back to "unknown" for an unrecognized RPC message', async () => {
       const repo = createSupabaseAuthRepository(
         fakeClient({
