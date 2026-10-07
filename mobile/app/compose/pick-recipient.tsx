@@ -19,6 +19,7 @@ import {
 } from '@/data/discovery/discoveryRepository';
 import { defaultDesign } from '@/domain/design';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
+import { rememberRecipient } from '@/features/compose/recipientCards';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
 import { PersonActionsButton } from '@/features/safety/PersonActionsButton';
 
@@ -123,6 +124,12 @@ export default function PickRecipientScreen() {
       // local store rejects (NOT NULL; found in Phase 12.6 phone QA).
       design: draft?.design ?? defaultDesign(),
       recipientId: user.id,
+    });
+    rememberRecipient({
+      id: user.id,
+      username: user.username,
+      displayName: user.displayName,
+      avatarKey: user.avatarKey,
     });
     router.back();
   }

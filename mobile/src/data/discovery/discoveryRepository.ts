@@ -7,6 +7,7 @@
  */
 import type { SupabaseClient } from '@supabase/supabase-js';
 
+import type { Correspondent } from '../letters/lettersRepository';
 import { getSupabase } from '../supabase';
 import type { Database } from '../supabase/database.types';
 
@@ -91,6 +92,12 @@ export interface DiscoveryRepository {
   regenerateInvite(): Promise<Invite>;
   /** Resolves with the resulting connection id. */
   redeemInvite(code: string): Promise<string>;
+
+  /** Another person's public card (username, display name, avatar), read straight from `profiles`
+   *  under its RLS policies: visible for anyone I have a pending or accepted connection with
+   *  (DEC-043 (2)), null otherwise (including on any error). Used by the composer to name a
+   *  draft's recipient when it has no remembered card. */
+  getProfileCard(userId: string): Promise<Correspondent | null>;
 }
 
 export interface ConnectionRow {
@@ -295,6 +302,21 @@ export function createDiscoveryRepository(client: SupabaseClient): DiscoveryRepo
       const { data, error } = await client.rpc('redeem_invite', { p_code: code });
       if (error) throw toDiscoveryError(error);
       return data as string;
+    },
+
+    async getProfileCard(userId) {
+      const { data, error } = await client
+        .from('profiles')
+        .select('id, username, display_name, avatar_key')
+        .eq('id', userId)
+        .maybeSingle();
+      if (error || !data) return null;
+      return {
+        id: data.id,
+        username: data.username,
+        displayName: data.display_name,
+        avatarKey: data.avatar_key,
+      };
     },
   };
 }

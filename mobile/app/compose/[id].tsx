@@ -1,24 +1,28 @@
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useDeferredValue, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Pressable, ScrollView, useWindowDimensions } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { Avatar } from '@/components/Avatar';
 import { Button } from '@/components/Button';
 import { DirectionalIcon } from '@/components/DirectionalIcon';
 import { currentLanguage } from '@/core/i18n';
+import { ltrIsolate } from '@/core/i18n/bidi';
 import { formatDate, formatNumber } from '@/core/i18n/format';
 import { MIN_TOUCH_TARGET } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
 import { isLayoutRtl } from '@/core/i18n/direction';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import { getLettersRepository } from '@/data/letters/lettersRepository';
+import { avatarSourceFromKey } from '@/domain/avatar';
 import { detectBodyDirection } from '@/domain/bodyDirection';
 import { CANVAS_WIDTH } from '@/features/designs/LetterCanvas';
 import { defaultDesign, readDesign, updateElement, type Design } from '@/domain/design';
 import { LETTER_BODY_MAX, shouldShowBodyCounter } from '@/domain/letterLimits';
 import { defaultScheduleTime, validateScheduleTime } from '@/domain/schedule';
 import { DeskSheet, DeskToolbar, type DeskMode } from '@/features/compose/LetterDesk';
+import { useRecipientCard } from '@/features/compose/recipientCards';
 import { letterErrorKey, type TranslatedLetterError } from '@/features/letters/letterErrors';
 import { SchedulePicker } from '@/features/letters/SchedulePicker';
 
@@ -56,6 +60,7 @@ export default function ComposeScreen() {
   const sheet = useRef({ y: 0, width: CANVAS_WIDTH });
   const [openedAt] = useState(() => Date.now());
   const [recipientId, setRecipientId] = useState<string | null>(null);
+  const recipient = useRecipientCard(recipientId);
   // A reply's recipient is fixed (the server requires the parent letter's sender).
   const [isReply, setIsReply] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -286,9 +291,24 @@ export default function ComposeScreen() {
           }}
         >
           <AppText variant="muted">{t('compose.recipientLabel')}: </AppText>
-          <AppText style={{ color: recipientId ? colors.text : colors.primary, flex: 1 }}>
-            {recipientId ? t('compose.recipientChosen') : t('compose.noRecipient')}
-          </AppText>
+          {recipient?.username ? (
+            <View
+              testID="compose-recipient-name"
+              style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}
+            >
+              <Avatar source={avatarSourceFromKey(recipient.avatarKey)} size={24} />
+              <AppText numberOfLines={1} style={{ flexShrink: 1 }}>
+                {recipient.displayName ?? recipient.username}
+              </AppText>
+              <AppText variant="muted" numberOfLines={1} style={{ flexShrink: 1 }}>
+                {ltrIsolate(`@${recipient.username}`)}
+              </AppText>
+            </View>
+          ) : (
+            <AppText style={{ color: recipientId ? colors.text : colors.primary, flex: 1 }}>
+              {recipientId ? t('compose.recipientChosen') : t('compose.noRecipient')}
+            </AppText>
+          )}
           <DirectionalIcon name="chevron-forward" size={16} color={colors.textMuted} />
         </Pressable>
       )}

@@ -29,6 +29,7 @@ import {
   type OwnProfile,
 } from '@/data/supabase/auth';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
+import { forgetRecipients } from '@/features/compose/recipientCards';
 import { getPushRegistrar } from '@/features/notifications/pushRegistrar';
 
 export type AuthStatus = 'loading' | 'signedOut' | 'needsOnboarding' | 'ready';
@@ -131,6 +132,7 @@ export function AuthProvider({ children, repository }: AuthProviderProps) {
     // unsent edits, then clear this account's local drafts.
     await getPushRegistrar().unregister();
     await getDraftsRepository().releaseForSignOut();
+    forgetRecipients();
     await repo.signOut();
   }, [repo]);
 
@@ -140,6 +142,7 @@ export function AuthProvider({ children, repository }: AuthProviderProps) {
     // Server-side drafts are gone with the account; clear the local ones too (the sync step in
     // releaseForSignOut finds no session and does nothing).
     await getDraftsRepository().releaseForSignOut();
+    forgetRecipients();
   }, [repo]);
 
   return (

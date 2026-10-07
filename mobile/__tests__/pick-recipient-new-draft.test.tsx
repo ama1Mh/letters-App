@@ -44,5 +44,10 @@ describe('pick-recipient on a brand-new draft', () => {
       ),
     );
     await waitFor(() => expect(screen.getByTestId('compose-screen')).toBeTruthy());
+    // The composer names the chosen person instead of a generic "Recipient selected".
+    await waitFor(() =>
+      expect(screen.getByTestId('compose-recipient-name')).toHaveTextContent(/Everyone Guy/),
+    );
+    expect(screen.getByTestId('compose-recipient-name')).toHaveTextContent(/@everyone_guy/);
   });
 });

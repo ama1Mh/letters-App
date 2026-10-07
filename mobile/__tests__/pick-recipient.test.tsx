@@ -82,6 +82,6 @@ describe('pick-recipient', () => {
       ),
     );
     expect((await view.drafts.get(DRAFT.id))?.recipientId).toBe('user-everyone');
-    expect(screen.getByText('Recipient selected')).toBeTruthy();
+    expect(screen.getByTestId('compose-recipient-name')).toHaveTextContent(/Everyone Guy/);
   });
 });
