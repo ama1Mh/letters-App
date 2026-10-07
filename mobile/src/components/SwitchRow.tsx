@@ -58,6 +58,8 @@ export function SwitchRow({
         value={value}
         disabled={disabled}
         onValueChange={onValueChange}
+        trackColor={{ true: colors.primary, false: colors.border }}
+        thumbColor={colors.surface}
       />
     </Pressable>
   );

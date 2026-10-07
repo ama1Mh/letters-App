@@ -1,57 +1,101 @@
 {
-  "version": 1,
+  "version": 2,
   "papers": [
-    { "key": "cream", "color": "#FBF7EE" },
-    { "key": "blush", "color": "#FCEEF0" },
-    { "key": "sky", "color": "#EAF4FC" },
-    { "key": "mint", "color": "#EAF8F1" },
-    { "key": "sand", "color": "#F7F0E4" },
-    { "key": "lavender", "color": "#F2EEFB" }
+    { "key": "aged_cream", "color": "#EFE2C4" },
+    { "key": "warm_ivory", "color": "#F8F1E1" },
+    { "key": "parchment", "color": "#E9D8B0" }
   ],
   "fonts": [
-    { "key": "caveat", "family": "Caveat_400Regular", "scripts": ["latin"] },
+    {
+      "key": "caveat",
+      "family": "Caveat_400Regular",
+      "scripts": ["latin"],
+      "category": "handwriting"
+    },
+    {
+      "key": "im_fell_english",
+      "family": "IMFellEnglish_400Regular",
+      "scripts": ["latin"],
+      "category": "traditional"
+    },
     {
       "key": "playfair_display",
       "family": "PlayfairDisplay_400Regular",
-      "scripts": ["latin"]
+      "scripts": ["latin"],
+      "category": "formal"
     },
     {
-      "key": "cairo",
-      "family": "Cairo_400Regular",
-      "scripts": ["latin", "arabic"]
-    },
-    {
-      "key": "tajawal",
-      "family": "Tajawal_400Regular",
-      "scripts": ["latin", "arabic"]
+      "key": "aref_ruqaa",
+      "family": "ArefRuqaa_400Regular",
+      "scripts": ["latin", "arabic"],
+      "category": "handwriting"
     },
     {
       "key": "amiri",
       "family": "Amiri_400Regular",
-      "scripts": ["latin", "arabic"]
+      "scripts": ["latin", "arabic"],
+      "category": "traditional"
+    },
+    {
+      "key": "reem_kufi",
+      "family": "ReemKufi_400Regular",
+      "scripts": ["latin", "arabic"],
+      "category": "calligraphic"
+    },
+    {
+      "key": "cairo",
+      "family": "Cairo_400Regular",
+      "scripts": ["latin", "arabic"],
+      "category": "modern"
+    },
+    {
+      "key": "tajawal",
+      "family": "Tajawal_400Regular",
+      "scripts": ["latin", "arabic"],
+      "category": "modern"
     }
   ],
   "inks": [
-    { "key": "classic_black", "color": "#1F2937" },
-    { "key": "navy", "color": "#1E3A8A" },
-    { "key": "forest", "color": "#14532D" },
-    { "key": "burgundy", "color": "#7F1D1D" },
-    { "key": "charcoal", "color": "#374151" },
-    { "key": "royal_purple", "color": "#5B21B6" },
-    { "key": "warm_brown", "color": "#78350F" },
-    { "key": "teal", "color": "#115E59" }
+    { "key": "black", "color": "#23201C" },
+    { "key": "dark_brown", "color": "#4A3221" },
+    { "key": "faded_blue", "color": "#3E5A7E" },
+    { "key": "burgundy", "color": "#6E2230" },
+    { "key": "forest_green", "color": "#2F4A36" },
+    { "key": "sepia", "color": "#704C2E" }
   ],
-  "stamps": [
-    { "key": "heart", "icon": "heart" },
-    { "key": "star", "icon": "star" },
-    { "key": "ribbon", "icon": "ribbon" },
-    { "key": "rocket", "icon": "rocket" }
+  "textSizes": [
+    { "key": "s", "size": 16 },
+    { "key": "m", "size": 18 },
+    { "key": "l", "size": 22 }
   ],
-  "fallbackFonts": { "latin": "caveat", "arabic": "cairo" },
+  "elements": {
+    "stamp": [
+      { "key": "stamp_dove", "width": 0.2, "aspect": 1.2 },
+      { "key": "stamp_palm", "width": 0.2, "aspect": 1.2 },
+      { "key": "stamp_lighthouse", "width": 0.2, "aspect": 1.2 }
+    ],
+    "sticker": [
+      { "key": "sticker_flower", "width": 0.22, "aspect": 1 },
+      { "key": "sticker_moon", "width": 0.22, "aspect": 1 },
+      { "key": "sticker_washi", "width": 0.4, "aspect": 0.5 }
+    ],
+    "postmark": [
+      { "key": "postmark_round", "width": 0.26, "aspect": 1, "dated": true },
+      { "key": "postmark_wavy", "width": 0.42, "aspect": 0.3125 }
+    ]
+  },
+  "limits": {
+    "maxElements": 24,
+    "minScale": 0.3,
+    "maxScale": 3,
+    "maxY": 40,
+    "maxDesignBytes": 8192
+  },
+  "fallbackFonts": { "latin": "caveat", "arabic": "amiri" },
   "defaults": {
-    "paper": "cream",
+    "paper": "aged_cream",
     "font": "caveat",
-    "ink": "classic_black",
-    "stamp": null
+    "ink": "black",
+    "textSize": "m"
   }
 }

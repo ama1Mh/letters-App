@@ -7,6 +7,7 @@ import {
   type Invite,
   type SearchResult,
 } from '@/data/discovery/discoveryRepository';
+import type { Correspondent } from '@/data/letters/lettersRepository';
 
 /** In-memory DiscoveryRepository for tests, mirroring fakeAuthRepository.ts's style. */
 export function createFakeDiscoveryRepository(
@@ -17,6 +18,8 @@ export function createFakeDiscoveryRepository(
     pending?: { incoming: ConnectionRow[]; outgoing: ConnectionRow[] };
     fail?: Partial<Record<keyof DiscoveryRepository, DiscoveryErrorCode>>;
     blocked?: BlockedUser[];
+    /** Cards `getProfileCard` can see (the RLS-visible profiles). */
+    profileCards?: Correspondent[];
   } = {},
 ): DiscoveryRepository {
   function maybeThrow(method: keyof DiscoveryRepository) {
@@ -86,6 +89,9 @@ export function createFakeDiscoveryRepository(
     async redeemInvite(_code) {
       maybeThrow('redeemInvite');
       return 'connection-redeemed';
+    },
+    async getProfileCard(userId) {
+      return options.profileCards?.find((card) => card.id === userId) ?? null;
     },
   };
 }

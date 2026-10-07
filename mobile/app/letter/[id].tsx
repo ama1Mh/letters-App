@@ -13,9 +13,9 @@ import { getDraftsRepository } from '@/data/letters/draftsRepository';
 import { getLettersRepository, type Letter } from '@/data/letters/lettersRepository';
 import { defaultDesign } from '@/domain/design';
 import { useAuth } from '@/features/auth/AuthProvider';
-import { LetterRenderer } from '@/features/designs/LetterRenderer';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
 import { useLetterEvents } from '@/features/letters/LetterEventsProvider';
+import { LetterReader } from '@/features/letters/LetterReader';
 import { letterErrorKey, type TranslatedLetterError } from '@/features/letters/letterErrors';
 
 /** letters.subject is limited to 120 characters (letters_subject_length). */
@@ -31,7 +31,7 @@ const WHEN_FORMAT: Intl.DateTimeFormatOptions = {
 };
 
 /**
- * Reading view (DEC-048 M6): one letter through `get_letter`, rendered with LetterRenderer in the
+ * Reading view (DEC-048 M6): one letter through `get_letter`, rendered with LetterReader (the designed sheet, zoom, or plain text) in the
  * letter's stored direction (body_dir), independent of the UI language. The recipient marks it read
  * on open (once; `mark_read` is idempotent server-side). Every "can't see it" case shows the same
  * neutral message, never why (CLAUDE.md: no revealing blocks or existence).
@@ -47,6 +47,8 @@ export default function LetterScreen() {
   const [actionNotice, setActionNotice] = useState<'letter.blocked' | null>(null);
   const [actionError, setActionError] = useState(false);
   const markedRead = useRef(false);
+  // "Today" for a dated postmark on a letter that has no date yet; fixed when the screen opens.
+  const [openedAt] = useState(() => Date.now());
   const { profile } = useAuth();
   const myId = profile?.id ?? null;
 
@@ -207,16 +209,18 @@ export default function LetterScreen() {
           {t('sent.read')}
         </AppText>
       ) : null}
-      <LetterRenderer
+      <LetterReader
         testID="letter-body"
         design={letter.design}
         subject={letter.subject}
         body={letter.body}
         bodyDir={letter.bodyDir}
+        postmarkDate={new Date(letter.deliveredAt ?? letter.scheduledAt ?? openedAt)}
       />
       {isRecipient && letter.status === 'delivered' ? (
         <Button
           testID="letter-reply"
+          variant="seal"
           title={t('letter.reply')}
           onPress={() => void onReply(letter)}
         />

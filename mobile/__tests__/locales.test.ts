@@ -21,12 +21,11 @@ const SAME_IN_BOTH = new Set([
   'app.name',
   'language.english',
   'language.arabic',
-  // Font names are proper nouns (PLAN §3.8); not translated, same as the language endonyms above.
+  // Latin-only font names are proper nouns (PLAN §3.8); not translated, like the language endonyms
+  // above. Fonts with an official Arabic name (Amiri, Cairo, Aref Ruqaa...) use it in ar.json.
   'design.fontNames.caveat',
   'design.fontNames.playfair_display',
-  'design.fontNames.cairo',
-  'design.fontNames.tajawal',
-  'design.fontNames.amiri',
+  'design.fontNames.im_fell_english',
 ]);
 
 describe('locale files', () => {

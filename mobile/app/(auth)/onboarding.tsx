@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { BrandMark } from '@/components/BrandMark';
 import { SwitchRow } from '@/components/SwitchRow';
 import { Button } from '@/components/Button';
+import { FormScreen } from '@/components/FormScreen';
 import { TextField } from '@/components/TextField';
 import { currentLanguage } from '@/core/i18n';
 import { useTheme } from '@/core/theme/useTheme';
@@ -123,16 +125,8 @@ export default function OnboardingScreen() {
       : undefined;
 
   return (
-    <View
-      testID="onboarding-screen"
-      style={{
-        flex: 1,
-        backgroundColor: colors.background,
-        padding: spacing.lg,
-        gap: spacing.md,
-        justifyContent: 'center',
-      }}
-    >
+    <FormScreen testID="onboarding-screen">
+      <BrandMark size="small" />
       <AppText variant="title">{t('auth.onboarding.title')}</AppText>
       <View style={{ gap: spacing.xs }}>
         <TextField
@@ -177,6 +171,6 @@ export default function OnboardingScreen() {
         loading={submitting}
         disabled={!canSubmit}
       />
-    </View>
+    </FormScreen>
   );
 }

@@ -31,35 +31,69 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `compose.deleteConfirmMessage` | This cannot be undone. | لا يمكن التراجع عن هذا الإجراء. | draft | |
 | `compose.deleteConfirmCancel` | Cancel | إلغاء | draft | |
 | `compose.deleteConfirmConfirm` | Delete | حذف | draft | |
-| `compose.changeDesign` | Change design | تغيير التصميم | draft | |
+| `desk.modes.paper` | Paper | الورق | draft | Phase 12 editor tab |
+| `desk.modes.write` | Write | الكتابة | draft | Phase 12 editor tab |
+| `desk.modes.decorate` | Decorate | الزينة | draft | Phase 12 editor tab |
+| `desk.sections.stamp` | Stamps | طوابع | draft | Phase 12 decorate tray section |
+| `desk.sections.sticker` | Stickers | ملصقات | draft | Phase 12 decorate tray section |
+| `desk.sections.postmark` | Postmarks | أختام بريدية | draft | Phase 12 decorate tray section |
+| `desk.add` | Add {{name}} | إضافة {{name}} | draft | Accessibility label of a decoration in the tray |
+| `desk.limit` | A letter can hold up to {{max}} decorations. | يمكن أن تحمل الرسالة حتى {{max}} من الزخارف. | draft | Shown when the element limit is reached (DEC-061: 24) |
+| `desk.selectHint` | Tap a decoration on the letter to move, resize, rotate or remove it. | المس زخرفة على الرسالة لتحريكها أو تغيير حجمها أو تدويرها أو إزالتها. | draft | Decorate mode hint |
+| `desk.selected` | Selected: {{name}} | المحدد: {{name}} | draft | Selection bar title |
+| `desk.moveLeft` | Move left | تحريك لليسار | draft | Physical direction on the sheet (the sheet does not mirror) |
+| `desk.moveRight` | Move right | تحريك لليمين | draft | Physical direction on the sheet |
+| `desk.moveUp` | Move up | تحريك للأعلى | draft | |
+| `desk.moveDown` | Move down | تحريك للأسفل | draft | |
+| `desk.smaller` | Smaller | تصغير | draft | |
+| `desk.bigger` | Bigger | تكبير | draft | |
+| `desk.rotateLeft` | Rotate anticlockwise | تدوير عكس عقارب الساعة | draft | |
+| `desk.rotateRight` | Rotate clockwise | تدوير مع عقارب الساعة | draft | |
+| `desk.sendBackward` | Send backward | إرسال للخلف | draft | Layer order |
+| `desk.bringForward` | Bring forward | إحضار للأمام | draft | Layer order |
+| `desk.remove` | Remove | إزالة | draft | |
+| `desk.done` | Done | تم | draft | Deselect |
+| `desk.removed` | {{name}} removed. | تمت إزالة {{name}}. | draft | Snackbar after removing a decoration |
+| `desk.undo` | Undo | تراجع | draft | |
+| `desk.readOnly` | This letter's design was made in a newer version of the app. Update the app to change it. | صُمّمت هذه الرسالة بإصدار أحدث من التطبيق. حدّث التطبيق لتعديل تصميمها. | draft | Shown when the stored design is newer than this app (DEC-060 (4)) |
+| `desk.paperLabel` | Letter paper | ورقة الرسالة | draft | Accessibility label of the writing sheet |
 | `design.paperLabel` | Paper | الورق | draft | |
 | `design.fontLabel` | Font | الخط | draft | |
 | `design.inkLabel` | Ink | الحبر | draft | |
-| `design.stampLabel` | Stamp | الطابع | draft | |
-| `design.noStamp` | No stamp | بلا طابع | draft | |
-| `design.paperNames.cream` | Cream | كريمي | draft | |
-| `design.paperNames.blush` | Blush | وردي فاتح | draft | |
-| `design.paperNames.sky` | Sky | سماوي | draft | |
-| `design.paperNames.mint` | Mint | نعناعي | draft | |
-| `design.paperNames.sand` | Sand | رملي | draft | |
-| `design.paperNames.lavender` | Lavender | خزامي | draft | |
+| `design.sizeLabel` | Text size | حجم الخط | draft | Phase 12: per-letter text size S/M/L (DEC-061) |
+| `design.paperNames.aged_cream` | Aged cream | كريمي عتيق | draft | Phase 12 vintage paper |
+| `design.paperNames.warm_ivory` | Warm ivory | عاجي دافئ | draft | Phase 12 vintage paper |
+| `design.paperNames.parchment` | Parchment | رَقّ | draft | Phase 12 vintage paper; رَقّ = parchment (writing skin) |
 | `design.fontNames.caveat` | Caveat | Caveat | draft | Font name, a proper noun: intentionally the same in both files (like the language endonyms) |
+| `design.fontNames.im_fell_english` | IM Fell English | IM Fell English | draft | Font name, not translated |
 | `design.fontNames.playfair_display` | Playfair Display | Playfair Display | draft | Font name, not translated |
-| `design.fontNames.cairo` | Cairo | Cairo | draft | Font name, not translated |
-| `design.fontNames.tajawal` | Tajawal | Tajawal | draft | Font name, not translated |
-| `design.fontNames.amiri` | Amiri | Amiri | draft | Font name, not translated |
-| `design.inkNames.classic_black` | Classic black | أسود كلاسيكي | draft | |
-| `design.inkNames.navy` | Navy | كحلي | draft | |
-| `design.inkNames.forest` | Forest | أخضر غابي | draft | |
-| `design.inkNames.burgundy` | Burgundy | عنّابي | draft | |
-| `design.inkNames.charcoal` | Charcoal | رمادي فحمي | draft | |
-| `design.inkNames.royal_purple` | Royal purple | بنفسجي ملكي | draft | |
-| `design.inkNames.warm_brown` | Warm brown | بني دافئ | draft | |
-| `design.inkNames.teal` | Teal | أزرق مخضر | draft | |
-| `design.stampNames.heart` | Heart | قلب | draft | |
-| `design.stampNames.star` | Star | نجمة | draft | |
-| `design.stampNames.ribbon` | Ribbon | شريط | draft | |
-| `design.stampNames.rocket` | Rocket | صاروخ | draft | |
+| `design.fontNames.aref_ruqaa` | Aref Ruqaa | عارف رقعة | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontNames.amiri` | Amiri | أميري | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontNames.reem_kufi` | Reem Kufi | ريم كوفي | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontNames.cairo` | Cairo | القاهرة | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontNames.tajawal` | Tajawal | تجوال | draft | Font name; the Arabic is the font's own Arabic name |
+| `design.fontCategories.handwriting` | Handwriting | خط يدوي | draft | Phase 12 font category |
+| `design.fontCategories.traditional` | Traditional | تقليدي | draft | Phase 12 font category |
+| `design.fontCategories.formal` | Formal | رسمي | draft | Phase 12 font category |
+| `design.fontCategories.calligraphic` | Calligraphic | خط زخرفي | draft | Phase 12 font category |
+| `design.fontCategories.modern` | Modern | حديث | draft | Phase 12 font category |
+| `design.inkNames.black` | Black | أسود | draft | Phase 12 ink |
+| `design.inkNames.dark_brown` | Dark brown | بني داكن | draft | Phase 12 ink |
+| `design.inkNames.faded_blue` | Faded blue | أزرق باهت | draft | Phase 12 ink |
+| `design.inkNames.burgundy` | Burgundy | عنّابي | draft | Phase 12 ink |
+| `design.inkNames.forest_green` | Forest green | أخضر غابي | draft | Phase 12 ink |
+| `design.inkNames.sepia` | Sepia | بني عتيق | draft | Phase 12 ink; sepia rendered descriptively |
+| `design.textSizes.s` | Small | صغير | draft | Phase 12 text size |
+| `design.textSizes.m` | Medium | متوسط | draft | Phase 12 text size |
+| `design.textSizes.l` | Large | كبير | draft | Phase 12 text size |
+| `design.elementNames.stamp_dove` | Dove stamp | طابع الحمامة | draft | Phase 12 element; also its accessibility label |
+| `design.elementNames.stamp_palm` | Palm tree stamp | طابع النخلة | draft | Phase 12 element |
+| `design.elementNames.stamp_lighthouse` | Lighthouse stamp | طابع المنارة | draft | Phase 12 element |
+| `design.elementNames.sticker_flower` | Flower sticker | ملصق الزهرة | draft | Phase 12 element |
+| `design.elementNames.sticker_moon` | Moon and stars sticker | ملصق الهلال والنجوم | draft | Phase 12 element |
+| `design.elementNames.sticker_washi` | Paper tape | شريط ورقي | draft | Phase 12 element (washi tape) |
+| `design.elementNames.postmark_round` | Dated postmark | ختم بريدي مؤرَّخ | draft | Phase 12 element |
+| `design.elementNames.postmark_wavy` | Wavy cancellation mark | ختم إلغاء متموّج | draft | Phase 12 element |
 | `sent.emptyTitle` | No sent letters | لا توجد رسائل مرسلة | draft | |
 | `sent.emptyBody` | Letters you send will appear here. | ستظهر هنا الرسائل المرسلة. | draft | Reworded in Phase 6 M4: the Sent kind only (Scheduled has its own empty state) |
 | `sent.tabScheduled` | Scheduled | المجدولة | draft | Phase 6 M4 Sent tab |
@@ -129,12 +163,12 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `auth.forgotPassword.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | |
 | `auth.onboarding.title` | Set up your profile | إعداد ملفك الشخصي | draft | |
 | `auth.onboarding.usernameLabel` | Username | اسم المستخدم | draft | |
-| `auth.onboarding.usernameHint` | 3–20 characters: lowercase letters, numbers, underscore. Shown as @username. | من 3 إلى 20 حرفًا: أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. يظهر باسم @username. | draft | `@username` isolated LTR per DEC-010 when actually rendered next to Arabic text (the hint text itself is plain, the isolation happens in the component) |
+| `auth.onboarding.usernameHint` | 3–20 characters: lowercase letters, numbers, underscore. Shown as @username. | من 3 إلى 20 حرفًا: أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. يظهر باسم ⁦@username⁩. | draft | `@username` isolated LTR per DEC-010 when actually rendered next to Arabic text (the hint text itself is plain, the isolation happens in the component); `@username` is wrapped in invisible LTR isolate marks (U+2066/U+2069) so it does not show as "username@" in RTL (2026-10-04) |
 | `auth.onboarding.usernameChecking` | Checking… | جارٍ التحقق… | draft | |
 | `auth.onboarding.usernameAvailable` | Available | متاح | draft | |
 | `auth.onboarding.usernameUnavailable` | Not available | غير متاح | draft | |
 | `auth.onboarding.displayNameLabel` | Display name | الاسم المعروض | draft | |
-| `auth.onboarding.displayNameHint` | Any language. Shown next to @username. | بأي لغة. يظهر بجانب @username. | draft | |
+| `auth.onboarding.displayNameHint` | Any language. Shown next to @username. | بأي لغة. يظهر بجانب ⁦@username⁩. | draft | `@username` is wrapped in invisible LTR isolate marks (U+2066/U+2069) so it does not show as "username@" in RTL (2026-10-04) |
 | `auth.onboarding.discoverableByEmailLabel` | Let people find me by email | السماح للآخرين بالعثور عليّ عبر البريد الإلكتروني | draft | |
 | `auth.onboarding.submit` | Continue | متابعة | draft | |
 | `auth.onboarding.usernameError.invalid_characters` | Only lowercase letters, numbers and underscore. | أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. | draft | |
@@ -260,6 +294,12 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `letter.blockConfirmMessage` | They won't be able to write to you or find you, and they won't be told. | لن يتمكن من مراسلتك أو العثور عليك، ولن يُبلَّغ بذلك. | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `letter.blocked` | Blocked. | تم الحظر. | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `letter.report` | Report | إبلاغ | draft | Phase 8/9 (threads, delete-for-me, block, report) |
+| `letter.readPlain` | Read as plain text | القراءة كنص عادي | draft | Phase 12 reading view (DEC-061): plain-text mode |
+| `letter.readDesigned` | Show the designed letter | عرض الرسالة بتصميمها | draft | Phase 12 reading view: back to the designed sheet |
+| `letter.zoomIn` | Zoom in | تكبير | draft | Phase 12 reading view |
+| `letter.zoomOut` | Zoom out | تصغير | draft | Phase 12 reading view |
+| `letter.decorations` | Decorations: {{list}} | الزخارف: {{list}} | draft | Phase 12 plain-text mode: names of the stamps/stickers/postmarks |
+| `letter.listSeparator` | , | ، | draft | Separator for the decorations list (Hermes has no Intl.ListFormat); the app adds the space; Arabic comma |
 | `thread.title` | Conversation | المحادثة | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `thread.mine` | Your letter | رسالتك | draft | Phase 8/9 (threads, delete-for-me, block, report) |
 | `thread.theirs` | Their letter | رسالة واردة | draft | Phase 8/9 (threads, delete-for-me, block, report) |
@@ -295,6 +335,9 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `avatar.change` | Choose avatar | اختيار صورة رمزية | draft | Preset avatars (DEC-011) |
 | `avatar.none` | No avatar | بدون صورة رمزية | draft | Preset avatars (DEC-011) |
 | `avatar.option` | Avatar {{number}} | الصورة الرمزية {{number}} | draft | Preset avatars (DEC-011); `{{number}}` is 1-24, for screen readers |
+| `displayName.title` | Display name | الاسم المعروض | draft | Profile row and screen title for changing the display name (2026-10-04); same wording as onboarding's label |
+| `displayName.save` | Save | حفظ | draft | Display-name screen button |
+| `displayName.edit` | Change display name | تغيير الاسم المعروض | draft | Screen-reader hint on the Profile row |
 | `language.reopenMessage` | Close the app and open it again to switch the layout direction. | أغلق التطبيق وافتحه مرة أخرى لتغيير اتجاه الواجهة. | draft | OPEN-8: release builds, until expo-updates |
 | `notifications.channelName` | Letters | الرسائل | draft | Android notification channel name (system settings), Phase 7 |
 | `notifications.title` | Notifications | الإشعارات | draft | Notification settings screen (DEC-052) |

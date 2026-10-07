@@ -17,7 +17,7 @@ describe.each([
   ['light', lightColors],
   ['dark', darkColors],
 ] as [string, ColorTokens][])('%s theme contrast (WCAG AA, Phase 10)', (_name, colors) => {
-  it.each(['text', 'textMuted', 'primary', 'danger'] as const)(
+  it.each(['text', 'textMuted', 'primary', 'accent', 'link', 'success', 'danger'] as const)(
     '%s is at least 4.5:1 on background and surface',
     (token) => {
       expect(contrast(colors[token], colors.background)).toBeGreaterThanOrEqual(4.5);
@@ -25,7 +25,8 @@ describe.each([
     },
   );
 
-  it('onPrimary is at least 4.5:1 on primary (button labels)', () => {
+  it('onPrimary and onAccent are at least 4.5:1 on their buttons', () => {
     expect(contrast(colors.onPrimary, colors.primary)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(colors.onAccent, colors.accent)).toBeGreaterThanOrEqual(4.5);
   });
 });

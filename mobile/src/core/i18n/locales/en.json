@@ -29,7 +29,6 @@
     "deleteConfirmMessage": "This cannot be undone.",
     "deleteConfirmCancel": "Cancel",
     "deleteConfirmConfirm": "Delete",
-    "changeDesign": "Change design",
     "recipientLabel": "To",
     "noRecipient": "Choose a recipient",
     "recipientChosen": "Recipient selected",
@@ -56,44 +55,6 @@
     "minuteLabel": "Minutes (steps of {{step}})",
     "minuteEarlier": "Move {{step}} minutes earlier",
     "minuteLater": "Move {{step}} minutes later"
-  },
-  "design": {
-    "paperLabel": "Paper",
-    "fontLabel": "Font",
-    "inkLabel": "Ink",
-    "stampLabel": "Stamp",
-    "noStamp": "No stamp",
-    "paperNames": {
-      "cream": "Cream",
-      "blush": "Blush",
-      "sky": "Sky",
-      "mint": "Mint",
-      "sand": "Sand",
-      "lavender": "Lavender"
-    },
-    "fontNames": {
-      "caveat": "Caveat",
-      "playfair_display": "Playfair Display",
-      "cairo": "Cairo",
-      "tajawal": "Tajawal",
-      "amiri": "Amiri"
-    },
-    "inkNames": {
-      "classic_black": "Classic black",
-      "navy": "Navy",
-      "forest": "Forest",
-      "burgundy": "Burgundy",
-      "charcoal": "Charcoal",
-      "royal_purple": "Royal purple",
-      "warm_brown": "Warm brown",
-      "teal": "Teal"
-    },
-    "stampNames": {
-      "heart": "Heart",
-      "star": "Star",
-      "ribbon": "Ribbon",
-      "rocket": "Rocket"
-    }
   },
   "sent": {
     "emptyTitle": "No sent letters",
@@ -127,7 +88,13 @@
     "blockConfirmTitle": "Block this person?",
     "blockConfirmMessage": "They won't be able to write to you or find you, and they won't be told.",
     "blocked": "Blocked.",
-    "report": "Report"
+    "report": "Report",
+    "readPlain": "Read as plain text",
+    "readDesigned": "Show the designed letter",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "decorations": "Decorations: {{list}}",
+    "listSeparator": ","
   },
   "profile": {
     "language": "Language",
@@ -395,6 +362,11 @@
     "none": "No avatar",
     "option": "Avatar {{number}}"
   },
+  "displayName": {
+    "title": "Display name",
+    "save": "Save",
+    "edit": "Change display name"
+  },
   "notifications": {
     "channelName": "Letters",
     "title": "Notifications",
@@ -405,5 +377,88 @@
   },
   "network": {
     "offline": "You're offline. Drafts are saved on this phone; letters will update when you're back online."
+  },
+  "design": {
+    "paperLabel": "Paper",
+    "fontLabel": "Font",
+    "inkLabel": "Ink",
+    "sizeLabel": "Text size",
+    "paperNames": {
+      "aged_cream": "Aged cream",
+      "warm_ivory": "Warm ivory",
+      "parchment": "Parchment"
+    },
+    "fontNames": {
+      "caveat": "Caveat",
+      "im_fell_english": "IM Fell English",
+      "playfair_display": "Playfair Display",
+      "aref_ruqaa": "Aref Ruqaa",
+      "amiri": "Amiri",
+      "reem_kufi": "Reem Kufi",
+      "cairo": "Cairo",
+      "tajawal": "Tajawal"
+    },
+    "fontCategories": {
+      "handwriting": "Handwriting",
+      "traditional": "Traditional",
+      "formal": "Formal",
+      "calligraphic": "Calligraphic",
+      "modern": "Modern"
+    },
+    "inkNames": {
+      "black": "Black",
+      "dark_brown": "Dark brown",
+      "faded_blue": "Faded blue",
+      "burgundy": "Burgundy",
+      "forest_green": "Forest green",
+      "sepia": "Sepia"
+    },
+    "textSizes": {
+      "s": "Small",
+      "m": "Medium",
+      "l": "Large"
+    },
+    "elementNames": {
+      "stamp_dove": "Dove stamp",
+      "stamp_palm": "Palm tree stamp",
+      "stamp_lighthouse": "Lighthouse stamp",
+      "sticker_flower": "Flower sticker",
+      "sticker_moon": "Moon and stars sticker",
+      "sticker_washi": "Paper tape",
+      "postmark_round": "Dated postmark",
+      "postmark_wavy": "Wavy cancellation mark"
+    }
+  },
+  "desk": {
+    "modes": {
+      "paper": "Paper",
+      "write": "Write",
+      "decorate": "Decorate"
+    },
+    "sections": {
+      "stamp": "Stamps",
+      "sticker": "Stickers",
+      "postmark": "Postmarks"
+    },
+    "add": "Add {{name}}",
+    "limit": "A letter can hold up to {{max}} decorations.",
+    "selectHint": "Tap a decoration on the letter to move, resize, rotate or remove it.",
+    "selected": "Selected: {{name}}",
+    "moveLeft": "Move left",
+    "moveRight": "Move right",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "smaller": "Smaller",
+    "bigger": "Bigger",
+    "rotateLeft": "Rotate anticlockwise",
+    "rotateRight": "Rotate clockwise",
+    "sendBackward": "Send backward",
+    "bringForward": "Bring forward",
+    "remove": "Remove",
+    "done": "Done",
+    "removed": "{{name}} removed.",
+    "undo": "Undo",
+    "readOnly": "This letter's design was made in a newer version of the app. Update the app to change it.",
+    "paperLabel": "Letter paper"
   }
 }

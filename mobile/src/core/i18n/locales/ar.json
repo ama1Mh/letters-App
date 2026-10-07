@@ -29,7 +29,6 @@
     "deleteConfirmMessage": "لا يمكن التراجع عن هذا الإجراء.",
     "deleteConfirmCancel": "إلغاء",
     "deleteConfirmConfirm": "حذف",
-    "changeDesign": "تغيير التصميم",
     "recipientLabel": "إلى",
     "noRecipient": "اختر المستلم",
     "recipientChosen": "تم اختيار المستلم",
@@ -56,44 +55,6 @@
     "minuteLabel": "الدقائق (كل {{step}} دقائق)",
     "minuteEarlier": "تقديم {{step}} دقائق",
     "minuteLater": "تأخير {{step}} دقائق"
-  },
-  "design": {
-    "paperLabel": "الورق",
-    "fontLabel": "الخط",
-    "inkLabel": "الحبر",
-    "stampLabel": "الطابع",
-    "noStamp": "بلا طابع",
-    "paperNames": {
-      "cream": "كريمي",
-      "blush": "وردي فاتح",
-      "sky": "سماوي",
-      "mint": "نعناعي",
-      "sand": "رملي",
-      "lavender": "خزامي"
-    },
-    "fontNames": {
-      "caveat": "Caveat",
-      "playfair_display": "Playfair Display",
-      "cairo": "Cairo",
-      "tajawal": "Tajawal",
-      "amiri": "Amiri"
-    },
-    "inkNames": {
-      "classic_black": "أسود كلاسيكي",
-      "navy": "كحلي",
-      "forest": "أخضر غابي",
-      "burgundy": "عنّابي",
-      "charcoal": "رمادي فحمي",
-      "royal_purple": "بنفسجي ملكي",
-      "warm_brown": "بني دافئ",
-      "teal": "أزرق مخضر"
-    },
-    "stampNames": {
-      "heart": "قلب",
-      "star": "نجمة",
-      "ribbon": "شريط",
-      "rocket": "صاروخ"
-    }
   },
   "sent": {
     "emptyTitle": "لا توجد رسائل مرسلة",
@@ -127,7 +88,13 @@
     "blockConfirmTitle": "هل تريد حظر هذا الشخص؟",
     "blockConfirmMessage": "لن يتمكن من مراسلتك أو العثور عليك، ولن يُبلَّغ بذلك.",
     "blocked": "تم الحظر.",
-    "report": "إبلاغ"
+    "report": "إبلاغ",
+    "readPlain": "القراءة كنص عادي",
+    "readDesigned": "عرض الرسالة بتصميمها",
+    "zoomIn": "تكبير",
+    "zoomOut": "تصغير",
+    "decorations": "الزخارف: {{list}}",
+    "listSeparator": "،"
   },
   "profile": {
     "language": "اللغة",
@@ -304,12 +271,12 @@
     "onboarding": {
       "title": "إعداد ملفك الشخصي",
       "usernameLabel": "اسم المستخدم",
-      "usernameHint": "من 3 إلى 20 حرفًا: أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. يظهر باسم @username.",
+      "usernameHint": "من 3 إلى 20 حرفًا: أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. يظهر باسم ⁦@username⁩.",
       "usernameChecking": "جارٍ التحقق…",
       "usernameAvailable": "متاح",
       "usernameUnavailable": "غير متاح",
       "displayNameLabel": "الاسم المعروض",
-      "displayNameHint": "بأي لغة. يظهر بجانب @username.",
+      "displayNameHint": "بأي لغة. يظهر بجانب ⁦@username⁩.",
       "discoverableByEmailLabel": "السماح للآخرين بالعثور عليّ عبر البريد الإلكتروني",
       "submit": "متابعة",
       "usernameError": {
@@ -395,6 +362,11 @@
     "none": "بدون صورة رمزية",
     "option": "الصورة الرمزية {{number}}"
   },
+  "displayName": {
+    "title": "الاسم المعروض",
+    "save": "حفظ",
+    "edit": "تغيير الاسم المعروض"
+  },
   "notifications": {
     "channelName": "الرسائل",
     "title": "الإشعارات",
@@ -405,5 +377,88 @@
   },
   "network": {
     "offline": "أنت غير متصل بالإنترنت. المسودات محفوظة على هذا الهاتف، وستُحدَّث الرسائل عند عودة الاتصال."
+  },
+  "design": {
+    "paperLabel": "الورق",
+    "fontLabel": "الخط",
+    "inkLabel": "الحبر",
+    "sizeLabel": "حجم الخط",
+    "paperNames": {
+      "aged_cream": "كريمي عتيق",
+      "warm_ivory": "عاجي دافئ",
+      "parchment": "رَقّ"
+    },
+    "fontNames": {
+      "caveat": "Caveat",
+      "im_fell_english": "IM Fell English",
+      "playfair_display": "Playfair Display",
+      "aref_ruqaa": "عارف رقعة",
+      "amiri": "أميري",
+      "reem_kufi": "ريم كوفي",
+      "cairo": "القاهرة",
+      "tajawal": "تجوال"
+    },
+    "fontCategories": {
+      "handwriting": "خط يدوي",
+      "traditional": "تقليدي",
+      "formal": "رسمي",
+      "calligraphic": "خط زخرفي",
+      "modern": "حديث"
+    },
+    "inkNames": {
+      "black": "أسود",
+      "dark_brown": "بني داكن",
+      "faded_blue": "أزرق باهت",
+      "burgundy": "عنّابي",
+      "forest_green": "أخضر غابي",
+      "sepia": "بني عتيق"
+    },
+    "textSizes": {
+      "s": "صغير",
+      "m": "متوسط",
+      "l": "كبير"
+    },
+    "elementNames": {
+      "stamp_dove": "طابع الحمامة",
+      "stamp_palm": "طابع النخلة",
+      "stamp_lighthouse": "طابع المنارة",
+      "sticker_flower": "ملصق الزهرة",
+      "sticker_moon": "ملصق الهلال والنجوم",
+      "sticker_washi": "شريط ورقي",
+      "postmark_round": "ختم بريدي مؤرَّخ",
+      "postmark_wavy": "ختم إلغاء متموّج"
+    }
+  },
+  "desk": {
+    "modes": {
+      "paper": "الورق",
+      "write": "الكتابة",
+      "decorate": "الزينة"
+    },
+    "sections": {
+      "stamp": "طوابع",
+      "sticker": "ملصقات",
+      "postmark": "أختام بريدية"
+    },
+    "add": "إضافة {{name}}",
+    "limit": "يمكن أن تحمل الرسالة حتى {{max}} من الزخارف.",
+    "selectHint": "المس زخرفة على الرسالة لتحريكها أو تغيير حجمها أو تدويرها أو إزالتها.",
+    "selected": "المحدد: {{name}}",
+    "moveLeft": "تحريك لليسار",
+    "moveRight": "تحريك لليمين",
+    "moveUp": "تحريك للأعلى",
+    "moveDown": "تحريك للأسفل",
+    "smaller": "تصغير",
+    "bigger": "تكبير",
+    "rotateLeft": "تدوير عكس عقارب الساعة",
+    "rotateRight": "تدوير مع عقارب الساعة",
+    "sendBackward": "إرسال للخلف",
+    "bringForward": "إحضار للأمام",
+    "remove": "إزالة",
+    "done": "تم",
+    "removed": "تمت إزالة {{name}}.",
+    "undo": "تراجع",
+    "readOnly": "صُمّمت هذه الرسالة بإصدار أحدث من التطبيق. حدّث التطبيق لتعديل تصميمها.",
+    "paperLabel": "ورقة الرسالة"
   }
 }

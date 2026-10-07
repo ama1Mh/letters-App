@@ -5,6 +5,7 @@ import { ActivityIndicator, Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
+import { FormScreen } from '@/components/FormScreen';
 import { TextField } from '@/components/TextField';
 import { TEXT_LINK_HIT_SLOP } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
@@ -130,7 +131,7 @@ export default function ResetPasswordScreen() {
   }
 
   return (
-    <View testID="reset-password-screen" style={container}>
+    <FormScreen testID="reset-password-screen">
       <AppText variant="title">{t('auth.resetPassword.title')}</AppText>
       <TextField
         testID="reset-password-new"
@@ -164,6 +165,6 @@ export default function ResetPasswordScreen() {
         loading={submitting}
         disabled={!password || !confirm}
       />
-    </View>
+    </FormScreen>
   );
 }

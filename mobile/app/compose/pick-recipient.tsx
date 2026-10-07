@@ -17,7 +17,9 @@ import {
   type DiscoveryErrorCode,
   type SearchResult,
 } from '@/data/discovery/discoveryRepository';
+import { defaultDesign } from '@/domain/design';
 import { getDraftsRepository } from '@/data/letters/draftsRepository';
+import { rememberRecipient } from '@/features/compose/recipientCards';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
 import { PersonActionsButton } from '@/features/safety/PersonActionsButton';
 
@@ -117,8 +119,17 @@ export default function PickRecipientScreen() {
       id,
       subject: draft?.subject ?? null,
       body: draft?.body ?? '',
-      design: draft?.design,
+      // A brand-new draft is only stored once it has content (composer autosave), so choosing the
+      // recipient first finds no draft yet: save the default design, never `undefined`, which the
+      // local store rejects (NOT NULL; found in Phase 12.6 phone QA).
+      design: draft?.design ?? defaultDesign(),
       recipientId: user.id,
+    });
+    rememberRecipient({
+      id: user.id,
+      username: user.username,
+      displayName: user.displayName,
+      avatarKey: user.avatarKey,
     });
     router.back();
   }
@@ -258,7 +269,7 @@ export default function PickRecipientScreen() {
       {/* A plain map, not FlatList: results are capped at 20 (search_users()'s own `limit 20`),
           too few to need virtualization, and it keeps in-place row updates (e.g. a request just
           sent) simple and immediate. */}
-      <ScrollView>{results.map(renderResultRow)}</ScrollView>
+      <ScrollView keyboardShouldPersistTaps="handled">{results.map(renderResultRow)}</ScrollView>
     </View>
   );
 }

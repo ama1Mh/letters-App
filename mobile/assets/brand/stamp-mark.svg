@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" width="480" height="560">
+  <title>Mirsal stamp mark</title>
+  <defs><mask id="perf"><rect width="120" height="140" fill="#fff"/><g fill="#000"><circle cx="6" cy="6" r="5"/><circle cx="6" cy="20" r="5"/><circle cx="6" cy="34" r="5"/><circle cx="6" cy="48" r="5"/><circle cx="6" cy="62" r="5"/><circle cx="6" cy="76" r="5"/><circle cx="6" cy="90" r="5"/><circle cx="6" cy="104" r="5"/><circle cx="6" cy="118" r="5"/><circle cx="6" cy="132" r="5"/><circle cx="6" cy="134" r="5"/><circle cx="20" cy="6" r="5"/><circle cx="20" cy="134" r="5"/><circle cx="34" cy="6" r="5"/><circle cx="34" cy="134" r="5"/><circle cx="48" cy="6" r="5"/><circle cx="48" cy="134" r="5"/><circle cx="62" cy="6" r="5"/><circle cx="62" cy="134" r="5"/><circle cx="76" cy="6" r="5"/><circle cx="76" cy="134" r="5"/><circle cx="90" cy="6" r="5"/><circle cx="90" cy="134" r="5"/><circle cx="104" cy="6" r="5"/><circle cx="104" cy="134" r="5"/><circle cx="114" cy="6" r="5"/><circle cx="114" cy="20" r="5"/><circle cx="114" cy="34" r="5"/><circle cx="114" cy="48" r="5"/><circle cx="114" cy="62" r="5"/><circle cx="114" cy="76" r="5"/><circle cx="114" cy="90" r="5"/><circle cx="114" cy="104" r="5"/><circle cx="114" cy="118" r="5"/><circle cx="114" cy="132" r="5"/><circle cx="114" cy="134" r="5"/></g></mask></defs>
+  <rect x="6" y="6" width="108" height="128" fill="#FDF9F0" mask="url(#perf)"/>
+  <rect x="18" y="18" width="84" height="104" fill="#2F5B48"/>
+  <rect x="23" y="23" width="74" height="94" fill="none" stroke="#FDF9F0" stroke-width="1.5"/>
+  <text x="60" y="74" text-anchor="middle" dominant-baseline="central" font-family="Amiri" font-weight="700" font-size="64" fill="#FDF9F0">م</text>
+  <path d="M34 46 Q48 36 64 42 Q52 44 46 52" fill="none" stroke="#E9D9B4" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

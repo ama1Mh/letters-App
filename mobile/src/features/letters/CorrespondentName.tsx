@@ -19,8 +19,11 @@ export function CorrespondentName({
   person,
   prefix,
   testID,
+  hideAvatar = false,
 }: {
   person: Correspondent;
+  /** In an envelope row the stamp frame already shows the avatar. */
+  hideAvatar?: boolean;
   /** Optional translated lead-in such as "To", shown before the name. */
   prefix?: string;
   testID?: string;
@@ -31,7 +34,7 @@ export function CorrespondentName({
   if (!person.username) {
     return (
       <View testID={testID} style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-        <Avatar source={null} size={AVATAR_SIZE} />
+        {hideAvatar ? null : <Avatar source={null} size={AVATAR_SIZE} />}
         <AppText variant="title" style={{ flexShrink: 1 }}>
           {prefix ? `${prefix} ` : ''}
           {t('letters.deletedAccount')}
@@ -42,11 +45,13 @@ export function CorrespondentName({
 
   return (
     <View testID={testID} style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-      <Avatar
-        testID={testID ? `${testID}-avatar` : undefined}
-        source={avatarSourceFromKey(person.avatarKey)}
-        size={AVATAR_SIZE}
-      />
+      {hideAvatar ? null : (
+        <Avatar
+          testID={testID ? `${testID}-avatar` : undefined}
+          source={avatarSourceFromKey(person.avatarKey)}
+          size={AVATAR_SIZE}
+        />
+      )}
       <View
         style={{
           flexDirection: 'row',

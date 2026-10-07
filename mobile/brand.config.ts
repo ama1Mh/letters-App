@@ -40,6 +40,9 @@ const OPERATOR_NAME = 'Amal Faqihi';
  * Brand words that usernames and display names may not take (DEC-010): the dev slug and the public
  * name in both scripts. The database keeps its own copy of this list, so change both together.
  */
+/** The public name in both scripts, for the in-app wordmark (Phase 13, BrandMark). */
+export const BRAND_WORDMARK = { latin: PUBLIC_NAME, arabic: PUBLIC_NAME_AR } as const;
+
 export const RESERVED_BRAND_WORDS: readonly string[] = [SLUG, 'mirsal', PUBLIC_NAME_AR];
 
 const DEFAULT_VARIANT: AppVariant = 'dev';

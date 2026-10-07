@@ -1,4 +1,5 @@
-import { fireEvent, screen, waitFor } from 'expo-router/testing-library';
+import { act, fireEvent, screen, waitFor } from 'expo-router/testing-library';
+import { router } from 'expo-router';
 import { Alert } from 'react-native';
 
 import { renderShellIn } from './helpers/renderShell';
@@ -29,7 +30,7 @@ describe('compose (drafts)', () => {
       { timeout: 2000 },
     );
 
-    await fireEvent.press(screen.getByTestId('compose-back'));
+    await act(async () => router.back()); // the native header's back (one back control, Phase 13)
     await waitFor(() => expect(screen.getByTestId('drafts-screen')).toBeTruthy());
     await waitFor(() => expect(screen.getByText('My subject')).toBeTruthy(), { timeout: 2000 });
     expect(screen.getByText('My body')).toBeTruthy();

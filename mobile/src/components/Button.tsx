@@ -7,7 +7,9 @@ import { AppText } from './AppText';
 interface ButtonProps extends Omit<PressableProps, 'style'> {
   title: string;
   loading?: boolean;
-  variant?: 'primary' | 'secondary';
+  /** primary: heritage green. seal: burgundy, for the one most important action on a screen
+   *  (write, send). secondary: outlined. danger: outlined in the danger colour. */
+  variant?: 'primary' | 'seal' | 'secondary' | 'danger';
   testID?: string;
 }
 
@@ -20,8 +22,17 @@ export function Button({
   ...props
 }: ButtonProps) {
   const { colors, spacing, radius } = useTheme();
-  const isPrimary = variant === 'primary';
   const isDisabled = disabled === true || loading;
+  const filled = variant === 'primary' || variant === 'seal';
+  const fill = variant === 'seal' ? colors.accent : colors.primary;
+  const label =
+    variant === 'primary'
+      ? colors.onPrimary
+      : variant === 'seal'
+        ? colors.onAccent
+        : variant === 'danger'
+          ? colors.danger
+          : colors.text;
 
   return (
     <Pressable
@@ -30,9 +41,9 @@ export function Button({
       accessibilityState={{ disabled: isDisabled, busy: loading }}
       disabled={isDisabled}
       style={{
-        backgroundColor: isPrimary ? colors.primary : 'transparent',
-        borderWidth: isPrimary ? 0 : 1,
-        borderColor: colors.border,
+        backgroundColor: filled ? fill : 'transparent',
+        borderWidth: filled ? 0 : 1.5,
+        borderColor: variant === 'danger' ? colors.danger : colors.border,
         borderRadius: radius.sm,
         paddingVertical: spacing.md,
         // Compact buttons (e.g. Accept/Decline in a row) must not hug their label, and every
@@ -46,11 +57,9 @@ export function Button({
       {...props}
     >
       {loading ? (
-        <ActivityIndicator color={isPrimary ? colors.onPrimary : colors.primary} />
+        <ActivityIndicator color={filled ? label : colors.primary} />
       ) : (
-        <AppText style={{ color: isPrimary ? colors.onPrimary : colors.text, fontWeight: '600' }}>
-          {title}
-        </AppText>
+        <AppText style={{ color: label, fontWeight: '600' }}>{title}</AppText>
       )}
     </Pressable>
   );

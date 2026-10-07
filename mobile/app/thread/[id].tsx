@@ -158,6 +158,7 @@ export default function ThreadScreen() {
       {lastReceived ? (
         <Button
           testID="thread-reply"
+          variant="seal"
           title={t('letter.reply')}
           onPress={() => void onReply(lastReceived)}
         />

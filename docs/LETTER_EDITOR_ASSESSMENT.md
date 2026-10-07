@@ -126,6 +126,8 @@ Rules:
 
 ## 6. Editor interaction approach
 
+> **Amended by the 12.0 spike (DEC-062):** width-relative font sizes did not give identical line breaks across widths. The canvas is laid out at a **fixed logical width of 360 dp** and scaled uniformly to the screen; positions remain fractions of the canvas width. The rest of this section is the original proposal.
+
 **Layout model: width-relative canvas.** Every measurement inside the canvas (margins, font size, line
 height, element positions and sizes) is a fraction of the canvas width, and canvas text ignores the
 system font scale. Line breaks then depend only on the bundled font and the text, not on the phone's

@@ -1,7 +1,7 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, Pressable, RefreshControl, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
@@ -16,6 +16,7 @@ import {
   type ListCursor,
 } from '@/data/letters/lettersRepository';
 import { CorrespondentName } from '@/features/letters/CorrespondentName';
+import { EnvelopeRow } from '@/features/letters/EnvelopeRow';
 import { useLetterEvents } from '@/features/letters/LetterEventsProvider';
 import { usePagedList } from '@/features/letters/usePagedList';
 
@@ -56,53 +57,35 @@ export default function InboxScreen() {
   function renderItem({ item }: { item: InboxItem }) {
     const unread = item.readAt === null;
     return (
-      <Pressable
+      <EnvelopeRow
         testID={`inbox-row-${item.id}`}
-        accessibilityRole="button"
         accessibilityHint={unread ? t('inbox.unread') : undefined}
         onPress={() => router.push(`/letter/${item.id}`)}
-        style={{
-          flexDirection: 'row',
-          gap: spacing.sm,
-          paddingHorizontal: spacing.lg,
-          paddingVertical: spacing.md,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
-        }}
+        person={item.sender}
+        date={new Date(item.deliveredAt)}
+        unreadTestID={unread ? `inbox-row-${item.id}-unread` : undefined}
       >
-        <View
-          testID={unread ? `inbox-row-${item.id}-unread` : undefined}
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: 4,
-            marginTop: spacing.sm,
-            backgroundColor: unread ? colors.primary : 'transparent',
-          }}
-        />
-        <View style={{ flex: 1, gap: spacing.xs }}>
-          <CorrespondentName person={item.sender} />
-          {item.subject ? (
-            <AppText style={{ fontWeight: unread ? '700' : '400' }}>{item.subject}</AppText>
-          ) : null}
-          {item.preview ? (
-            <AppText
-              variant="muted"
-              numberOfLines={2}
-              // The letter's own direction (body_dir), independent of the UI's (see drafts list).
-              style={{
-                textAlign: contentTextAlign(item.bodyDir),
-                writingDirection: item.bodyDir,
-              }}
-            >
-              {item.preview}
-            </AppText>
-          ) : null}
-          <AppText variant="muted">
-            {formatDate(new Date(item.deliveredAt), currentLanguage(), WHEN_FORMAT)}
+        <CorrespondentName person={item.sender} hideAvatar />
+        {item.subject ? (
+          <AppText style={{ fontWeight: unread ? '700' : '400' }}>{item.subject}</AppText>
+        ) : null}
+        {item.preview ? (
+          <AppText
+            variant="muted"
+            numberOfLines={2}
+            // The letter's own direction (body_dir), independent of the UI's (see drafts list).
+            style={{
+              textAlign: contentTextAlign(item.bodyDir),
+              writingDirection: item.bodyDir,
+            }}
+          >
+            {item.preview}
           </AppText>
-        </View>
-      </Pressable>
+        ) : null}
+        <AppText variant="muted">
+          {formatDate(new Date(item.deliveredAt), currentLanguage(), WHEN_FORMAT)}
+        </AppText>
+      </EnvelopeRow>
     );
   }
 

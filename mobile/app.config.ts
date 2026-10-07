@@ -27,7 +27,7 @@ const config: ExpoConfig = {
     package: brand.androidPackage,
     ...(googleServicesFile ? { googleServicesFile } : {}),
     adaptiveIcon: {
-      backgroundColor: '#E6F4FE',
+      backgroundColor: '#F6F0E3', // aged cream behind the stamp mark (DEC-065)
       foregroundImage: './assets/images/android-icon-foreground.png',
       backgroundImage: './assets/images/android-icon-background.png',
       monochromeImage: './assets/images/android-icon-monochrome.png',
@@ -39,13 +39,13 @@ const config: ExpoConfig = {
     'expo-secure-store',
     // `letters` must match the channelId sent by supabase/functions/send-notifications. The icon is
     // the status-bar small icon: white on transparent (Android uses only its alpha); `color` tints
-    // it in the shade (light-theme primary, src/core/theme/tokens.ts).
+    // it in the shade (heritage green, src/core/theme/tokens.ts). The icon is the stamp silhouette.
     [
       'expo-notifications',
       {
         defaultChannel: 'letters',
         icon: './assets/images/notification-icon.png',
-        color: '#1D4ED8',
+        color: '#2F5B48', // heritage green, palette B primary (DEC-063)
       },
     ],
     // Declares en/ar to the OS (per-app language on Android 13+) and RTL support. `forcesRTL` is
@@ -54,9 +54,11 @@ const config: ExpoConfig = {
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#208AEF',
+        // The stamp mark on aged cream, or on the night ground in dark mode (DEC-065).
+        backgroundColor: '#F6F0E3',
         image: './assets/images/splash-icon.png',
-        imageWidth: 76,
+        imageWidth: 120,
+        dark: { backgroundColor: '#161B17', image: './assets/images/splash-icon.png' },
       },
     ],
   ],

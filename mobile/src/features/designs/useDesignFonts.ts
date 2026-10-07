@@ -1,7 +1,10 @@
-import { Amiri_400Regular } from '@expo-google-fonts/amiri';
+import { Amiri_400Regular, Amiri_700Bold } from '@expo-google-fonts/amiri';
+import { ArefRuqaa_400Regular } from '@expo-google-fonts/aref-ruqaa';
 import { Cairo_400Regular } from '@expo-google-fonts/cairo';
 import { Caveat_400Regular } from '@expo-google-fonts/caveat';
+import { IMFellEnglish_400Regular } from '@expo-google-fonts/im-fell-english';
 import { PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
+import { ReemKufi_400Regular } from '@expo-google-fonts/reem-kufi';
 import { Tajawal_400Regular } from '@expo-google-fonts/tajawal';
 import { useFonts } from 'expo-font';
 
@@ -14,7 +17,7 @@ import { useFonts } from 'expo-font';
  *
  * Until loaded, RN silently renders with the system font for an unregistered family name: no crash,
  * just not the intended look yet. Callers are not required to gate rendering on the returned value;
- * `LetterRenderer` looks correct either way, just plainer before this resolves.
+ * `LetterCanvas` looks correct either way, just plainer before this resolves.
  */
 export function useDesignFonts(): boolean {
   const [loaded] = useFonts({
@@ -23,6 +26,11 @@ export function useDesignFonts(): boolean {
     Cairo_400Regular,
     Tajawal_400Regular,
     Amiri_400Regular,
+    // App titles (theme fonts.display, DEC-063).
+    Amiri_700Bold,
+    ArefRuqaa_400Regular,
+    ReemKufi_400Regular,
+    IMFellEnglish_400Regular,
   });
   return loaded;
 }

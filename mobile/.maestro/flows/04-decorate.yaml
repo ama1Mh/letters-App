@@ -1,0 +1,74 @@
+# Decorate a draft with the desk's accessible controls (Phase 12.5), leave, reopen and check the
+# decorations are still there, then delete the draft. Gestures are not scripted here: Maestro cannot
+# pinch or rotate reliably, and every gesture has a labelled button equivalent. Leaves no data behind.
+appId: com.letterapp.dev
+name: Desk - decorate, reopen and delete a draft
+---
+- runFlow: ../subflows/open-app.yaml
+- tapOn:
+    id: tab-drafts-label
+- tapOn:
+    id: drafts-new-button
+- assertVisible:
+    id: compose-screen
+- tapOn:
+    id: compose-subject
+- inputText: Maestro desk
+- hideKeyboard # the keyboard shifts the sheet; tap the body only once it has settled
+- tapOn:
+    id: compose-body
+- inputText: Decorated by the Maestro E2E flow.
+- hideKeyboard
+- tapOn:
+    id: compose-mode-paper
+- tapOn:
+    id: compose-paper-parchment
+- tapOn:
+    id: compose-mode-decorate
+# A stamp: added in the corner and selected, then resized, rotated and moved with the buttons.
+- tapOn:
+    id: compose-add-stamp_dove
+- assertVisible:
+    id: compose-selection
+- tapOn:
+    id: compose-sel-bigger
+- tapOn:
+    id: compose-sel-rotate-right
+- tapOn:
+    id: compose-sel-move-down
+- tapOn:
+    id: compose-sel-done
+# A second stamp on top of it (the first tray items are visible in both UI directions).
+- tapOn:
+    id: compose-add-stamp_palm
+- tapOn:
+    id: compose-sel-done
+# Remove and undo.
+- tapOn:
+    id: compose-add-sticker_flower
+- tapOn:
+    id: compose-sel-remove
+- tapOn:
+    id: compose-undo
+- tapOn:
+    id: compose-sel-done
+- back # the native header's back (Phase 13: one back control)
+- tapOn:
+    text: Maestro desk
+- tapOn:
+    id: compose-mode-decorate
+- assertVisible:
+    id: compose-element-.*
+    index: 2 # three decorations came back (two stamps, flower)
+- scrollUntilVisible:
+    element:
+      id: compose-delete
+    direction: DOWN
+- tapOn:
+    id: compose-delete
+- tapOn:
+    id: android:id/button1
+- assertVisible:
+    id: drafts-screen
+- assertNotVisible:
+    text: Maestro desk

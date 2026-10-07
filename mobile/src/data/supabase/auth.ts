@@ -77,6 +77,9 @@ export type OnboardingErrorCode =
   | 'already_onboarded'
   | 'unknown';
 
+export type UpdateDisplayNameErrorCode =
+  'not_authenticated' | 'display_name_invalid' | 'display_name_reserved' | 'unknown';
+
 /** Thrown by every repository method that can fail; `code` is one of the sets above. Never carries
  *  a free-text server message, so it is always safe to log. */
 export class AuthActionError<Code extends string> extends Error {
@@ -130,6 +133,10 @@ export interface AuthRepository {
     discoverableByUsername: boolean;
     discoverableByEmail: boolean;
   }): Promise<void>;
+  /** Changes the display name, a direct column update (DEC-038 grants it). The database rejects an
+   *  invalid name (CHECK) or a reserved one (trigger). Throws
+   *  `AuthActionError<UpdateDisplayNameErrorCode>`. */
+  updateDisplayName(displayName: string): Promise<void>;
   /** Sets (or, with null, removes) the preset avatar (DEC-011). The database checks the key
    *  against the catalog. Throws `AuthActionError<'not_authenticated' | 'unknown'>`. */
   updateAvatar(avatarKey: string | null): Promise<void>;
@@ -182,19 +189,20 @@ function stringProp(value: object, key: string): string | undefined {
   return typeof raw === 'string' ? raw : undefined;
 }
 
-/** Reads `error.code` (an Auth error) falling back to `error.message` (an RPC exception message,
- *  which *is* the code), and returns it only if it is one this caller declared it understands. */
+/** Reads `error.code` (an Auth error) or `error.message` (an RPC exception message, which *is* the
+ *  code), and returns the first one this caller declared it understands. Both are tried: a
+ *  PostgREST error from `raise exception` carries the generic `code` `P0001`, so stopping at a
+ *  present-but-unknown `code` turned every database error into 'unknown'. */
 function resolveErrorCode<Code extends string>(
   error: unknown,
   knownCodes: readonly Code[],
 ): Code | 'unknown' {
-  const candidate =
-    error !== null && typeof error === 'object'
-      ? (stringProp(error, 'code') ?? stringProp(error, 'message'))
-      : undefined;
-  return candidate !== undefined && (knownCodes as readonly string[]).includes(candidate)
-    ? (candidate as Code)
-    : 'unknown';
+  if (error === null || typeof error !== 'object') return 'unknown';
+  const known = knownCodes as readonly string[];
+  for (const candidate of [stringProp(error, 'code'), stringProp(error, 'message')]) {
+    if (candidate !== undefined && known.includes(candidate)) return candidate as Code;
+  }
+  return 'unknown';
 }
 
 const SIGN_UP_CODES: readonly SignUpErrorCode[] = [
@@ -230,6 +238,15 @@ const ONBOARDING_CODES: readonly OnboardingErrorCode[] = [
   'profile_not_found',
   'already_onboarded',
 ];
+
+const DISPLAY_NAME_CODES: readonly UpdateDisplayNameErrorCode[] = [
+  'not_authenticated',
+  'display_name_invalid',
+  'display_name_reserved',
+];
+
+/** Postgres SQLSTATE for a CHECK constraint violation. */
+const CHECK_VIOLATION = '23514';
 
 const PROFILE_COLUMNS =
   'id, username, display_name, avatar_key, locale, receive_mode, discoverable_by_username, discoverable_by_email, read_receipts_enabled, push_on_delivery, onboarded_at, deleted_at';
@@ -351,6 +368,23 @@ export function createSupabaseAuthRepository(client: SupabaseClient): AuthReposi
         })
         .eq('id', session.user.id);
       if (error) throw new AuthActionError<'not_authenticated' | 'unknown'>('unknown');
+    },
+
+    async updateDisplayName(displayName) {
+      const {
+        data: { session },
+      } = await client.auth.getSession();
+      if (!session) throw new AuthActionError('not_authenticated');
+      const { error } = await client
+        .from('profiles')
+        .update({ display_name: displayName })
+        .eq('id', session.user.id);
+      if (!error) return;
+      // A CHECK violation (23514) is the format rule; the reserved-word trigger raises its code.
+      if (stringProp(error, 'code') === CHECK_VIOLATION) {
+        throw new AuthActionError<UpdateDisplayNameErrorCode>('display_name_invalid');
+      }
+      throw new AuthActionError(resolveErrorCode(error, DISPLAY_NAME_CODES));
     },
 
     async updateAvatar(avatarKey) {
