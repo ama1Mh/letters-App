@@ -3,6 +3,7 @@ import type { ExpoConfig } from 'expo/config';
 // The explicit .ts extension is required: Expo loads this file as CommonJS via Node's native
 // TypeScript stripping, which does not resolve extensionless .ts imports.
 import { getBrandConfig, resolveVariant } from './brand.config.ts';
+import { withReleaseSigning } from './plugins/withReleaseSigning.ts';
 
 const brand = getBrandConfig(resolveVariant(process.env.APP_VARIANT));
 
@@ -72,4 +73,4 @@ const config: ExpoConfig = {
   },
 };
 
-export default config;
+export default withReleaseSigning(config);
