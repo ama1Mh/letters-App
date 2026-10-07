@@ -269,7 +269,7 @@ export default function PickRecipientScreen() {
       {/* A plain map, not FlatList: results are capped at 20 (search_users()'s own `limit 20`),
           too few to need virtualization, and it keeps in-place row updates (e.g. a request just
           sent) simple and immediate. */}
-      <ScrollView>{results.map(renderResultRow)}</ScrollView>
+      <ScrollView keyboardShouldPersistTaps="handled">{results.map(renderResultRow)}</ScrollView>
     </View>
   );
 }

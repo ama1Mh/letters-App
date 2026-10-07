@@ -70,6 +70,11 @@ describe('pick-recipient', () => {
     expect(screen.getByText('⁦@invite_gal⁩')).toBeTruthy();
     // invite_only, not connected: offered a connection request, not a "Write letter" button.
     expect(screen.getByTestId('pick-recipient-request-user-invite-only')).toBeTruthy();
+    // With the search keyboard open, one tap on a result's button must act, not only close the
+    // keyboard (phone QA 2026-10-07): the results list hands taps to its buttons.
+    let list = screen.getByTestId('pick-recipient-write-user-everyone').parent;
+    while (list && list.props.keyboardShouldPersistTaps === undefined) list = list.parent;
+    expect(list?.props.keyboardShouldPersistTaps).toBe('handled');
 
     await fireEvent.press(screen.getByTestId('pick-recipient-request-user-invite-only'));
     await waitFor(() => expect(screen.getByText('Requested')).toBeTruthy());
