@@ -271,12 +271,12 @@
     "onboarding": {
       "title": "إعداد ملفك الشخصي",
       "usernameLabel": "اسم المستخدم",
-      "usernameHint": "من 3 إلى 20 حرفًا: أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. يظهر باسم @username.",
+      "usernameHint": "من 3 إلى 20 حرفًا: أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. يظهر باسم ⁦@username⁩.",
       "usernameChecking": "جارٍ التحقق…",
       "usernameAvailable": "متاح",
       "usernameUnavailable": "غير متاح",
       "displayNameLabel": "الاسم المعروض",
-      "displayNameHint": "بأي لغة. يظهر بجانب @username.",
+      "displayNameHint": "بأي لغة. يظهر بجانب ⁦@username⁩.",
       "discoverableByEmailLabel": "السماح للآخرين بالعثور عليّ عبر البريد الإلكتروني",
       "submit": "متابعة",
       "usernameError": {

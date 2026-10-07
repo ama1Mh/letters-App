@@ -163,12 +163,12 @@ Arabic strings written by Claude are **provisional** (DEC-014). Only the owner c
 | `auth.forgotPassword.error.unknown` | Something went wrong. Try again. | حدث خطأ ما. حاول مرة أخرى. | draft | |
 | `auth.onboarding.title` | Set up your profile | إعداد ملفك الشخصي | draft | |
 | `auth.onboarding.usernameLabel` | Username | اسم المستخدم | draft | |
-| `auth.onboarding.usernameHint` | 3–20 characters: lowercase letters, numbers, underscore. Shown as @username. | من 3 إلى 20 حرفًا: أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. يظهر باسم @username. | draft | `@username` isolated LTR per DEC-010 when actually rendered next to Arabic text (the hint text itself is plain, the isolation happens in the component) |
+| `auth.onboarding.usernameHint` | 3–20 characters: lowercase letters, numbers, underscore. Shown as @username. | من 3 إلى 20 حرفًا: أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. يظهر باسم ⁦@username⁩. | draft | `@username` isolated LTR per DEC-010 when actually rendered next to Arabic text (the hint text itself is plain, the isolation happens in the component); `@username` is wrapped in invisible LTR isolate marks (U+2066/U+2069) so it does not show as "username@" in RTL (2026-10-04) |
 | `auth.onboarding.usernameChecking` | Checking… | جارٍ التحقق… | draft | |
 | `auth.onboarding.usernameAvailable` | Available | متاح | draft | |
 | `auth.onboarding.usernameUnavailable` | Not available | غير متاح | draft | |
 | `auth.onboarding.displayNameLabel` | Display name | الاسم المعروض | draft | |
-| `auth.onboarding.displayNameHint` | Any language. Shown next to @username. | بأي لغة. يظهر بجانب @username. | draft | |
+| `auth.onboarding.displayNameHint` | Any language. Shown next to @username. | بأي لغة. يظهر بجانب ⁦@username⁩. | draft | `@username` is wrapped in invisible LTR isolate marks (U+2066/U+2069) so it does not show as "username@" in RTL (2026-10-04) |
 | `auth.onboarding.discoverableByEmailLabel` | Let people find me by email | السماح للآخرين بالعثور عليّ عبر البريد الإلكتروني | draft | |
 | `auth.onboarding.submit` | Continue | متابعة | draft | |
 | `auth.onboarding.usernameError.invalid_characters` | Only lowercase letters, numbers and underscore. | أحرف إنجليزية صغيرة وأرقام وشرطة سفلية فقط. | draft | |
