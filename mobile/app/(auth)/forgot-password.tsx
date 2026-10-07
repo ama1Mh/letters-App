@@ -5,6 +5,7 @@ import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
+import { FormScreen } from '@/components/FormScreen';
 import { TextField } from '@/components/TextField';
 import { TEXT_LINK_HIT_SLOP } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
@@ -75,16 +76,7 @@ export default function ForgotPasswordScreen() {
   }
 
   return (
-    <View
-      testID="forgot-password-screen"
-      style={{
-        flex: 1,
-        backgroundColor: colors.background,
-        padding: spacing.lg,
-        gap: spacing.md,
-        justifyContent: 'center',
-      }}
-    >
+    <FormScreen testID="forgot-password-screen">
       <AppText variant="muted">{t('auth.forgotPassword.body')}</AppText>
       <TextField
         testID="forgot-password-email"
@@ -108,6 +100,6 @@ export default function ForgotPasswordScreen() {
         loading={submitting}
         disabled={!email}
       />
-    </View>
+    </FormScreen>
   );
 }

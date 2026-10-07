@@ -6,6 +6,7 @@ import { Pressable, View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { BrandMark } from '@/components/BrandMark';
 import { Button } from '@/components/Button';
+import { FormScreen } from '@/components/FormScreen';
 import { TextField } from '@/components/TextField';
 import { TEXT_LINK_HIT_SLOP } from '@/core/theme/tokens';
 import { useTheme } from '@/core/theme/useTheme';
@@ -45,16 +46,7 @@ export default function SignInScreen() {
   }
 
   return (
-    <View
-      testID="sign-in-screen"
-      style={{
-        flex: 1,
-        backgroundColor: colors.background,
-        padding: spacing.lg,
-        gap: spacing.md,
-        justifyContent: 'center',
-      }}
-    >
+    <FormScreen testID="sign-in-screen">
       <BrandMark testID="brand-mark" />
       <AppText variant="title">{t('auth.signIn.title')}</AppText>
       <TextField
@@ -110,6 +102,6 @@ export default function SignInScreen() {
           <AppText style={{ color: colors.primary }}>{t('auth.signIn.signUpLink')}</AppText>
         </Pressable>
       </View>
-    </View>
+    </FormScreen>
   );
 }

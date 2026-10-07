@@ -6,6 +6,7 @@ import { Pressable, View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { BrandMark } from '@/components/BrandMark';
 import { Button } from '@/components/Button';
+import { FormScreen } from '@/components/FormScreen';
 import { TextField } from '@/components/TextField';
 import { currentLanguage } from '@/core/i18n';
 import { TEXT_LINK_HIT_SLOP } from '@/core/theme/tokens';
@@ -88,16 +89,7 @@ export default function SignUpScreen() {
   }
 
   return (
-    <View
-      testID="sign-up-screen"
-      style={{
-        flex: 1,
-        backgroundColor: colors.background,
-        padding: spacing.lg,
-        gap: spacing.md,
-        justifyContent: 'center',
-      }}
-    >
+    <FormScreen testID="sign-up-screen">
       <BrandMark size="small" />
       <TextField
         testID="sign-up-email"
@@ -165,6 +157,6 @@ export default function SignUpScreen() {
           <AppText style={{ color: colors.primary }}>{t('auth.signUp.privacyLink')}</AppText>
         </Pressable>
       </View>
-    </View>
+    </FormScreen>
   );
 }
